@@ -32,6 +32,10 @@ echo "=== EMP-003 STATIC CREATE COUPON CONTRACT ==="
 python3 scripts/check_emp003.py
 
 echo
+echo "=== EMP-004 REFINEMENT CONTRACT ==="
+python3 scripts/check_emp004_refinement.py
+
+echo
 echo "=== EMP-006 REFINEMENT CONTRACT ==="
 python3 scripts/check_emp006_refinement.py
 
@@ -51,6 +55,7 @@ PYTHONPYCACHEPREFIX="$PYCACHE_DIR" python3 -m py_compile \
   scripts/check_documentation.py \
   scripts/check_bootstrap.py \
   scripts/check_emp003.py \
+  scripts/check_emp004_refinement.py \
   scripts/check_emp006_refinement.py \
   scripts/check_emp006.py \
   scripts/check_emp007.py \
@@ -64,6 +69,7 @@ grep -Fqx 'MAVEN ?= ./mvnw' Makefile
 grep -Fqx 'SOURCE_EXPORT_DIR ?= $(HOME)/Downloads' Makefile
 grep -Eq '^bootstrap-check:$' Makefile
 grep -Eq '^emp003-check:$' Makefile
+grep -Eq '^emp004-refinement-check:$' Makefile
 grep -Eq '^emp006-refinement-check:$' Makefile
 grep -Eq '^emp006-check:$' Makefile
 grep -Eq '^emp007-check:$' Makefile
@@ -77,6 +83,7 @@ grep -Eq '^maven-verify: java-check docker-check$' Makefile
 grep -Eq '^export-source:$' Makefile
 make -n bootstrap-check >/dev/null
 make -n emp003-check >/dev/null
+make -n emp004-refinement-check >/dev/null
 make -n emp006-refinement-check >/dev/null
 make -n emp006-check >/dev/null
 make -n emp007-check >/dev/null

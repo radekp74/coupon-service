@@ -44,6 +44,8 @@ UNIQUE (coupon_id, user_id)
 CHECK (resolved_country_code ~ '^[A-Z]{2}$')
 ```
 
+V1 sprawdza dla `user_id` wyłącznie niepustość po trimie. Zaakceptowany amendment EMP-001 dla endpointu redemption wymaga podczas implementacji EMP-004 osobnej migracji z `CHECK` równoważnym `^[!-~]{1,128}$`; `userId` będzie opaque, case-sensitive, bez trimowania i normalizacji.
+
 ## Canonicalizacja kodu
 
 Publiczny kod:
@@ -70,4 +72,4 @@ Surowy adres IP nie jest utrwalany. Rejestr użycia przechowuje wyłącznie rozp
 
 ## Stan wdrożenia
 
-Schemat V1 i jego runtime evidence z EMP-002 są zweryfikowane. Kandydat EMP-003 wykorzystuje istniejące kolumny bez nowej migracji; `CreateCouponApiIT` sprawdza zapis prezentacyjnego i canonical code oraz exact-count concurrent create. Pełny evidence tego testu pozostaje oczekujący do lokalnego `make verify`.
+Schemat V1 oraz runtime evidence EMP-002/003 są zweryfikowane. `CreateCouponApiIT` potwierdza zapis prezentacyjnego i canonical code oraz exact-count concurrent create. Tabela `coupon_redemptions` i jej constrainty istnieją, lecz use case redemption nie jest jeszcze zaimplementowany. Zaakceptowany amendment EMP-001 wymaga, aby implementacja EMP-004 dodała migrację egzekwującą pełny kontrakt `userId`; obecny V1 nie jest samodzielnym dowodem takiego enforcementu.

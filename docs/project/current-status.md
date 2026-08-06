@@ -2,56 +2,59 @@
 
 - **Data:** 2026-08-06
 - **Termin:** 2026-08-10, koniec dnia
-- **Faza:** `CLIENT_IP_GEOIP_DONE_AND_VERIFIED`
-- **Active task:** `EMP-004 — refinement`
+- **Faza:** `TRANSACTIONAL_REDEMPTION_READY`
+- **Active task:** `EMP-004 — implementation`
+- **EMP-004 refinement:** `ACCEPTED`
+- **Implementation EMP-004:** `NOT_STARTED`
+- **Implementation allowed:** `YES` dla `EMP-004` na podstawie accepted własnego refinementu
+- **EMP-005:** `MERGED_INTO_EMP-004`; implementation i evidence ownerem jest EMP-004
+- **EMP-006:** `DONE_AND_VERIFIED`
 - **EMP-006 refinement:** `ACCEPTED`
 - **Implementation EMP-006:** `DONE_AND_VERIFIED`
-- **Implementation allowed EMP-006:** `YES`; zaakceptowany refinement został zrealizowany
-- **Implementation allowed:** `NO` dla `EMP-004` do czasu accepted własnego refinementu
-- **Kod aplikacji:** `CREATE_COUPON_DONE_AND_VERIFIED`
-- **OpenAPI/Swagger UI:** `DONE_AND_VERIFIED`
+- **Implementation allowed EMP-006:** `YES`
+- **EMP-007:** `DONE_AND_VERIFIED`
+- **Kod aplikacji:** create coupon i Client IP/GeoIP są zweryfikowane; redemption nie istnieje
+- **OpenAPI/Swagger UI:** `DONE_AND_VERIFIED` dla aktualnie zaimplementowanego API; canonical spec nadal nie zawiera redemption
 - **Javadoc/DocLint policy:** `ACTIVE_AND_VERIFIED`
 - **Runtime verification:** `LOCAL_EMP006_GATE_PASS`
-- **Historyczne evidence EMP-007:** `OPENAPI_DOCUMENTATION_DONE_AND_VERIFIED`
-- **Historyczne runtime evidence EMP-007:** `LOCAL_EMP007_GATE_PASS`
+- **Historyczne evidence bootstrapu:** `BOOTSTRAP_DONE_AND_VERIFIED`, `LOCAL_DOCKER_GATE_PASS`
+- **Historyczne evidence EMP-003:** `CREATE_COUPON_DONE_AND_VERIFIED`, `LOCAL_EMP003_GATE_PASS`
+- **Historyczne evidence EMP-007:** `OPENAPI_DOCUMENTATION_DONE_AND_VERIFIED`, `LOCAL_EMP007_GATE_PASS`
 
 ## Ukończone i zweryfikowane
 
-- `EMP-000`, `EMP-001`, `EMP-002` i `EMP-003` mają status `DONE_AND_VERIFIED`;
-- Java 21, Spring Boot, Maven Wrapper, PostgreSQL 18, Flyway, Testcontainers, Dockerfile i Docker Compose przeszły lokalny pełny gate;
-- `POST /api/v1/coupons` przeszedł unit, HTTP/PostgreSQL, concurrent create i Docker runtime smoke;
-- publiczny branch przed EMP-007 wskazuje commit `f268556c6c5f2ddbcf52ff567d14befc76221381`.
-- evidence bootstrapu: `BOOTSTRAP_DONE_AND_VERIFIED`, `LOCAL_DOCKER_GATE_PASS`;
-- evidence EMP-003: `LOCAL_EMP003_GATE_PASS`.
+- `EMP-000`, `EMP-001`, `EMP-002`, `EMP-003`, `EMP-006` i `EMP-007` mają status `DONE_AND_VERIFIED`;
+- `POST /api/v1/coupons` działa z case-insensitive uniqueness;
+- Client IP, trusted proxy, public-IP policy, adapter GeoIP i local/test stub przeszły pełny gate;
+- Swagger UI pokazuje canonical OpenAPI wyłącznie dla endpointów istniejących w runtime;
+- Docker smoke używa dynamicznego portu loopback i sprząta wyłącznie własny stos.
 
-## EMP-007 — zweryfikowane
+## EMP-004 — refinement zaakceptowany
 
-- canonical `docs/api/openapi.yaml`;
-- Swagger UI skonfigurowany do użycia `/openapi.yaml`;
-- Maven pakuje canonical spec do classpath;
-- publiczne kontrakty EMP-003 otrzymują znaczący Javadoc;
-- DocLint i statyczny checker EMP-007 są częścią bramki;
-- `OpenApiDocumentationIT`, DocLint, Maven clean verify i Docker smoke przeszły lokalnie.
+Zaakceptowany refinement zamraża:
 
-## Zmiana kolejności
+- `POST /api/v1/coupons/{code}/redemptions`;
+- snapshot lookup przed GeoIP;
+- Client IP i GeoIP poza transakcją;
+- osobny proxied bean dla krótkiej transakcji;
+- PostgreSQL `READ COMMITTED` i `SELECT ... FOR UPDATE`;
+- precedence `country → already redeemed → exhausted` pod lockiem;
+- atomowy insert redemption i conditional increment;
+- rollback, named unique constraint i exact-count concurrency;
+- OpenAPI, Swagger UI i Javadoc jako obowiązkowy element implementacji.
 
-`EMP-004` jest czasowo `BLOCKED`. Publiczny endpoint redemption wymaga najpierw `EMP-006` (client IP i GeoIP) oraz aktualnego kontraktu tester-facing. Jest to zgodne z kolejnością fal zaakceptowaną w `EMP-001`.
+## Zaakceptowane decyzje właściciela
 
-## EMP-006 — zweryfikowane
-
-- rozdzielono wiarygodne ustalenie Client IP od zewnętrznego GeoIP i domeny kuponu;
-- default `direct` ignoruje spoofowane nagłówki, a trusted proxy wymaga CIDR i wybiera pierwszy niezaufany hop od prawej;
-- ścisłe parsowanie IPv4/IPv6 bez DNS egzekwuje limity 4096 znaków i 20 hopów oraz fail-closed;
-- adapter provider ma HTTPS, 500 ms connect, 1 s response, brak retry, redirectów i cache oraz limit body 16 KiB;
-- raw IP nie jest utrwalany ani logowany, a local/test używa profilowego stubu bez publicznego bypassu;
-- pierwszy review został odrzucony z powodu pięciu luk bezpieczeństwa, a security amendment je doprecyzował;
-- właściciel formalnie zaakceptował amendment i pięć decyzji: adapter demonstracyjny `ipwho.is`, publiczne `503 GEOLOCATION_UNAVAILABLE`, brak cache/retry/fallbacku, fail-closed dla błędnego `Forwarded` oraz stub `PL` tylko w `local`/`test`;
-- refinement jest `ACCEPTED`; pełny `make verify` przeszedł z 53 unit i 10 integration tests oraz izolowanym Docker smoke na dynamicznym porcie loopback. Redemption nadal nie jest implementowane.
+1. Włączenie EMP-005 do implementacji i closeoutu EMP-004.
+2. Opaque, case-sensitive UserId `^[!-~]{1,128}$`, bez trimowania i normalizacji; amendment EMP-001 wymaga zgodnego PostgreSQL, Bean Validation i OpenAPI.
+3. Retry tego samego userId jako 409, bez replay pierwotnego 201.
+4. Precedence: not found → GeoIP → country → already redeemed → exhausted.
+5. `READ COMMITTED + SELECT FOR UPDATE`, bez custom lock timeout i automatycznego retry DB.
 
 ## Następny krok
 
-Przygotować i poddać review własny refinement EMP-004. Implementacja EMP-004 pozostaje niedozwolona.
+Rozpocząć implementację EMP-004 w osobnym checkpointcie. Endpoint redemption nadal nie istnieje.
 
 ## Blokery
 
-Brak blockerów EMP-006/007. Izolowane bramki Compose używają dynamicznego portu na loopback i nie zakładają dostępności konkretnego portu hosta.
+Brak blockerów refinementu. Dowody implementacyjne i runtime są nadal wymagane przed `DONE_AND_VERIFIED`.

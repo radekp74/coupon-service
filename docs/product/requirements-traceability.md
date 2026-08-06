@@ -11,10 +11,10 @@
 | kraj kuponu | `country_code` ISO alpha-2 | EMP-003 | validation test |
 | kto pierwszy, ten lepszy | `SELECT FOR UPDATE` | EMP-004/009 | 100 request concurrency test |
 | tylko użytkownicy z kraju | trusted Client IP + provider-neutral GeoIP; porównanie dopiero w EMP-004 | EMP-006/004 | parser/proxy/WireMock tests + API test |
-| informacja o wyczerpaniu | 409 `COUPON_EXHAUSTED` | EMP-007 | API test |
-| informacja o braku kodu | 404 `COUPON_NOT_FOUND` | EMP-007 | API test |
-| informacja o złym kraju | 403 `COUNTRY_NOT_ALLOWED` | EMP-006/007 | API test |
-| jedno użycie użytkownika | unique `(coupon_id,user_id)` | EMP-005 | duplicate + concurrency test |
+| informacja o wyczerpaniu | 409 `COUPON_EXHAUSTED` | EMP-004/007 | API test |
+| informacja o braku kodu | 404 `COUPON_NOT_FOUND` | EMP-004/007 | API test |
+| informacja o złym kraju | 403 `COUNTRY_NOT_ALLOWED` | EMP-006/004/007 | API test |
+| jedno użycie użytkownika | unique `(coupon_id,user_id)` w atomowej transakcji redemption; EMP-005 jest scalone z EMP-004 | EMP-004 | duplicate + same-user concurrency test |
 | dane w bazie | PostgreSQL + Flyway | EMP-002 | Testcontainers |
 | Java lub Kotlin | Java 21 | EMP-002 | Maven build |
 | Maven lub Gradle | Maven Wrapper | EMP-002 | `./mvnw verify` |

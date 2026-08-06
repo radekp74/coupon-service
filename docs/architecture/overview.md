@@ -96,7 +96,7 @@ request
 → 201 Created
 ```
 
-## Przepływ wykorzystania kuponu
+## Planowany przepływ wykorzystania kuponu — draft EMP-004
 
 ```text
 request
@@ -104,7 +104,7 @@ request
 → lekki odczyt kuponu
 → ustalenie client IP
 → GeoIP poza transakcją
-→ transaction
+→ osobny proxied transaction bean
    → SELECT coupon FOR UPDATE
    → country check
    → duplicate user check
@@ -134,4 +134,4 @@ request
 
 ## Stan implementacji
 
-EMP-002, EMP-003, EMP-006 i EMP-007 są zweryfikowane. Kod zawiera `CreateCouponUseCase`, adapter PostgreSQL i HTTP oraz niezależne porty/adapters Client IP i GeoIP. Przepływ redemption nadal pozostaje planem: nie istnieje endpoint, migracja ani ścieżka OpenAPI dla wykorzystania kuponu.
+EMP-002, EMP-003, EMP-006 i EMP-007 są zweryfikowane. Kod zawiera `CreateCouponUseCase`, adapter PostgreSQL i HTTP oraz niezależne porty/adapters Client IP i GeoIP. Przepływ redemption nadal pozostaje planem: draft EMP-004 jest gotowy do owner review, lecz nie istnieje endpoint ani ścieżka OpenAPI dla wykorzystania kuponu. Schemat V1 zawiera już tabelę redemption, ale nie jest to dowód implementacji use case.

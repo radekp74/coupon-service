@@ -5,22 +5,23 @@ REST-owy serwis do tworzenia i bezpiecznego wykorzystywania kuponów rabatowych.
 
 ## Aktualny stan
 
-- **Checkpoint:** `0.0.13-emp-006-verified`
+- **Checkpoint:** `0.0.15-emp-004-refinement-accepted`
 - **Data stanu:** `2026-08-06`
 - **Termin oddania:** `2026-08-10`, koniec dnia
 - **EMP-000–EMP-003:** `DONE_AND_VERIFIED`
 - **EMP-007:** `DONE_AND_VERIFIED`
 - **EMP-006:** `DONE_AND_VERIFIED`
-- **Aktywne zadanie:** `EMP-004 — refinement`
+- **Aktywne zadanie:** `EMP-004 — implementation`
 - **Refinement EMP-006:** `ACCEPTED`
 - **Implementation EMP-006:** `DONE_AND_VERIFIED`
-- **EMP-004:** `REFINEMENT`; implementation allowed `NO` do accepted własnego refinementu
+- **EMP-004:** `READY`; refinement `ACCEPTED`, implementation `NOT_STARTED`, implementation allowed `YES`
+- **EMP-005:** `MERGED_INTO_EMP-004`; user-once pozostaje obowiązkowym invariantem i evidence EMP-004
 - **Kod biznesowy:** `CREATE_COUPON_DONE_AND_VERIFIED`
 - **OpenAPI/Swagger UI:** `DONE_AND_VERIFIED`
 - **Javadoc/DocLint policy:** `ACTIVE_AND_VERIFIED`
 - **Weryfikacja runtime EMP-007:** `PASS`
 
-EMP-007 dostarcza tester-facing dokumentację istniejącego endpointu create coupon. EMP-006 dostarcza bezpieczne ustalanie Client IP, trusted proxy i wymienny GeoIP bez nowego publicznego endpointu. Redemption nadal nie jest zaimplementowane.
+EMP-007 dostarcza tester-facing dokumentację istniejącego endpointu create coupon. EMP-006 dostarcza bezpieczne ustalanie Client IP, trusted proxy i wymienny GeoIP bez nowego publicznego endpointu. Zaakceptowany refinement EMP-004 zamraża transakcyjny redemption, lecz endpoint nadal nie jest zaimplementowany i nie występuje w canonical OpenAPI.
 
 
 ## Zweryfikowany zakres EMP-003
@@ -39,7 +40,7 @@ EMP-007 dostarcza tester-facing dokumentację istniejącego endpointu create cou
 - test 24 równoległych wariantów case z dokładnie jednym sukcesem;
 - machine-readable `docs/api/openapi.yaml` dla operacji create.
 
-Endpoint wykorzystania kuponu i GeoIP pozostają w kolejnych zadaniach. EMP-007 udostępnia testerom pełny kontrakt aktualnie zaimplementowanego create coupon przez Swagger UI.
+Endpoint wykorzystania kuponu pozostaje niezaimplementowany. EMP-007 udostępnia testerom pełny kontrakt aktualnie zaimplementowanego create coupon przez Swagger UI, a EMP-006 dostarcza wewnętrzne porty potrzebne przyszłemu redemption.
 
 ## Zamrożony kierunek techniczny
 
@@ -89,6 +90,7 @@ Lżejsze bramki bez Dockera i pobierania zależności:
 make docs-check
 make bootstrap-check
 make emp003-check
+make emp004-refinement-check
 make emp006-refinement-check
 make emp006-check
 make emp007-check
@@ -208,16 +210,17 @@ Najlepsza kolejność czytania:
 
 1. [Aktualny status](docs/project/current-status.md)
 2. [Podsumowanie refinementu EMP-001](docs/project/refinements/EMP-001-summary.md)
-3. [Zaakceptowany refinement EMP-006](docs/project/refinements/EMP-006.md)
-4. [Refinement EMP-007](docs/project/refinements/EMP-007.md)
-5. [Refinement EMP-003](docs/project/refinements/EMP-003.md)
-6. [Pełny refinement EMP-001](docs/project/refinements/EMP-001.md)
-7. [Backlog](docs/project/backlog.md)
-8. [Kontrakt API](docs/api/api-contract.md)
-9. [Architektura](docs/architecture/overview.md)
-10. [Strategia testów](docs/testing/test-strategy.md)
-9. [Rejestr ryzyk](docs/project/risk-register.md)
-10. [Pełny indeks dokumentacji](docs/DOCUMENTATION_INDEX.md)
+3. [Zaakceptowany refinement EMP-004](docs/project/refinements/EMP-004.md)
+4. [Zaakceptowany refinement EMP-006](docs/project/refinements/EMP-006.md)
+5. [Refinement EMP-007](docs/project/refinements/EMP-007.md)
+6. [Refinement EMP-003](docs/project/refinements/EMP-003.md)
+7. [Pełny refinement EMP-001](docs/project/refinements/EMP-001.md)
+8. [Backlog](docs/project/backlog.md)
+9. [Kontrakt API](docs/api/api-contract.md)
+10. [Architektura](docs/architecture/overview.md)
+11. [Strategia testów](docs/testing/test-strategy.md)
+12. [Rejestr ryzyk](docs/project/risk-register.md)
+13. [Pełny indeks dokumentacji](docs/DOCUMENTATION_INDEX.md)
 
 ## Konwencje językowe
 

@@ -160,9 +160,12 @@ def validate_project_state(errors: List[str]) -> None:
         for state in [
             "| EMP-004 | EMP-001 | P0 | BLOCKED | EMP-001 |",
             "| EMP-004 | EMP-001 | P0 | REFINEMENT | EMP-004 |",
+            "| EMP-004 | EMP-001 | P0 | READY | EMP-004 |",
+            "| EMP-004 | EMP-001 | P0 | IN_PROGRESS | EMP-004 |",
+            "| EMP-004 | EMP-001 | P0 | DONE_AND_VERIFIED | EMP-004 |",
         ]
     ):
-        errors.append("backlog must keep EMP-004 blocked or in its own refinement")
+        errors.append("backlog must keep EMP-004 in a governance-recognized state")
 
     verified = "| EMP-007 | EMP-001 | P0 | DONE_AND_VERIFIED | EMP-007 |" in backlog
     candidate = "| EMP-007 | EMP-001 | P0 | IN_PROGRESS | EMP-007 |" in backlog

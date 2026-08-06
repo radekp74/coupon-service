@@ -158,3 +158,23 @@ Wymagane asercje bezpieczeństwa:
 - canonical OpenAPI nadal nie zawiera redemption przed EMP-004.
 - wielokrotne physical `Forwarded`/XFF, conflict obu nagłówków i trusted boundary proxy są fail-closed zgodnie z kontraktem;
 - redirect 300–399 nie wykonuje drugiego requestu, a limit 16 KiB obejmuje Content-Length i streaming;
+
+
+## EMP-004 — zaakceptowany refinement transakcyjnego redemption
+
+Refinement wymaga snapshot lookup przed GeoIP, osobnego proxied transaction bean, `READ COMMITTED`, `SELECT ... FOR UPDATE`, named unique constraint mapping oraz conditional increment. OpenAPI nie może zostać rozszerzone przed implementacją.
+
+`UserId` będzie testowany jako opaque i case-sensitive `^[!-~]{1,128}$`, bez trimowania i normalizacji. Testy integracyjne muszą potwierdzić zgodność Bean Validation, PostgreSQL `CHECK` i OpenAPI; ta migracja nie należy do dokumentacyjnego checkpointu.
+
+Nowe wymagane scenariusze po akceptacji:
+
+- 404 nie wywołuje GeoIP;
+- GeoIP failure i wrong country nie rozpoczynają transakcji;
+- precedence pod lockiem: country, already redeemed, exhausted;
+- 100 requestów / limit 10 daje dokładnie 10 sukcesów i 90 exhausted;
+- 20 requestów tego samego userId daje dokładnie 1 sukces i 19 already redeemed;
+- wyścig o ostatnie miejsce daje dokładnie jeden sukces;
+- fault injection po insercie dowodzi rollbacku;
+- `current_uses == count(coupon_redemptions)`;
+- retry tego samego userId daje 409 bez replay;
+- wszystkie testy używają PostgreSQL i deterministycznego GeoIP stubu, bez `Thread.sleep`.

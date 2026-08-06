@@ -2,7 +2,7 @@
 
 - **Status:** Accepted
 - **Data:** 2026-08-06
-- **Powiązane zadania:** EMP-004, EMP-005, EMP-009
+- **Powiązane zadania:** EMP-004 (w tym scalone EMP-005), EMP-009
 
 ## Kontekst
 
@@ -67,3 +67,10 @@ Odrzucony. Wymagałby rozwiązania spójności z trwałym rejestrem użyć i rec
 - użycia jednego bardzo popularnego kuponu są serializowane;
 - transakcja musi być krótka i pozbawiona wywołań sieciowych;
 - test współbieżności jest obowiązkową częścią Definition of Done.
+
+
+## Doprecyzowanie i akceptacja EMP-004
+
+Własny refinement EMP-004 został formalnie zaakceptowany 2026-08-06. Wymaga osobnego nietransakcyjnego orchestratora oraz osobnego, niefinalnego proxied beana dla części DB. Snapshot kuponu poprzedza Client IP i GeoIP; pod lockiem kolejność wynosi: kraj, wcześniejsze użycie, wyczerpanie. Insert redemption i conditional increment muszą należeć do jednego commita. Jest to zamrożony kontrakt przyszłej implementacji, nie dowód istnienia endpointu.
+
+Kontrakt `userId` jest amendmentem EMP-001: opaque, case-sensitive, `^[!-~]{1,128}$`, bez trimowania ani normalizacji. Przyszła implementacja musi spójnie egzekwować go przez Bean Validation, PostgreSQL `CHECK`, OpenAPI i testy integracyjne. EMP-005 jest scalone z EMP-004, ponieważ user-once pozostaje invariantem tej samej transakcji.

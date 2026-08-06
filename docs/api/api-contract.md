@@ -54,7 +54,9 @@ Sukces:
 }
 ```
 
-## Wykorzystanie kuponu
+## Wykorzystanie kuponu — planowany kontrakt zaakceptowanego EMP-004
+
+Endpoint nie istnieje jeszcze w runtime i nie jest obecny w canonical OpenAPI. Poniższy kontrakt jest zaakceptowany dla przyszłej implementacji EMP-004.
 
 ```http
 POST /api/v1/coupons/{code}/redemptions
@@ -72,7 +74,7 @@ Request:
 Walidacja:
 
 - `code` w ścieżce podlega tej samej canonicalizacji co przy tworzeniu;
-- `userId`: po trimie 1–128 znaków, bez znaków kontrolnych;
+- `userId`: opaque, case-sensitive, dokładnie 1–128 widocznych znaków ASCII U+0021–U+007E, regex `^[!-~]{1,128}$`, bez trimowania i normalizacji;
 - IP pochodzi z połączenia lub zaufanego proxy, nie z body.
 
 Sukces:
@@ -111,7 +113,7 @@ Przykład:
 | HTTP | `code` | Znaczenie |
 |---:|---|---|
 | 400 | `INVALID_REQUEST` | niepoprawny JSON, pole lub format |
-| 403 | `COUNTRY_NOT_ALLOWED` | kraj IP nie odpowiada krajowi kuponu |
+| 403 | `COUNTRY_NOT_ALLOWED` | kraj IP nie odpowiada krajowi kuponu; oczekiwany i rozpoznany kraj nie są ujawniane |
 | 404 | `COUPON_NOT_FOUND` | canonical code nie istnieje |
 | 409 | `COUPON_CODE_CONFLICT` | kod istnieje bez względu na wielkość liter |
 | 409 | `COUPON_ALREADY_REDEEMED` | użytkownik wykorzystał kupon wcześniej |

@@ -398,3 +398,52 @@ Port 18080 pozostał zajęty przez istniejący, healthy `coupon-service-app-1`. 
 - refinement: `ACCEPTED`, implementation: `DONE_AND_VERIFIED`;
 - `EMP-004`: `REFINEMENT`, implementation allowed `NO` do accepted własnego refinementu;
 - canonical OpenAPI nadal nie opisuje redemption.
+
+
+## 2026-08-06 — `0.0.14-emp-004-refinement-candidate`
+
+### Zakres
+
+- kompletny draft własnego refinementu EMP-004;
+- endpoint/request/response i stabilne Problem Details;
+- snapshot przed GeoIP i brak network calla pod lockiem;
+- osobny proxied transaction bean;
+- `READ COMMITTED`, `SELECT ... FOR UPDATE`, named unique constraint i conditional increment;
+- rollback, retry semantics, OpenAPI/Javadoc DoD i exact-count concurrency;
+- propozycja atomowego włączenia EMP-005;
+- `make emp004-refinement-check`.
+
+### Stan
+
+- `EMP-004`: `REFINEMENT`;
+- refinement: `DRAFT_READY_FOR_OWNER_REVIEW`;
+- implementation: `NOT_STARTED`;
+- implementation allowed: `NO`;
+- canonical OpenAPI nadal nie zawiera redemption.
+
+### Decyzje oczekujące
+
+Włączenie EMP-005, format userId wraz z amendmentem EMP-001 i decyzją o DB enforcement, retry jako 409, precedence błędów oraz `READ COMMITTED + row lock` bez retry/lock timeout.
+
+## 2026-08-06 — `0.0.15-emp-004-refinement-accepted`
+
+### Formalna decyzja właściciela
+
+Radosław Piątek formalnie zaakceptował refinement EMP-004 i security/contract amendment po historycznej rekomendacji `REJECT`. Utrzymano zapis pierwotnego draftu oraz przyczyny `REJECT`: niespójność `userId` z EMP-001 i potrzebę rozdzielenia odpowiedzialności kontrolera od orchestratora.
+
+Zaakceptowane decyzje:
+
+- EMP-005 jest `MERGED_INTO_EMP-004`; jego user-once pozostaje invariantem, kryterium i evidence wspólnej transakcji;
+- `userId` jest opaque i case-sensitive, spełnia `^[!-~]{1,128}$`, bez trimowania i normalizacji; formalny amendment EMP-001 wymaga zgodnych Bean Validation, PostgreSQL `CHECK`, OpenAPI i testów integracyjnych;
+- pierwszy sukces zwraca `201`, a retry tego samego `coupon/userId` zwraca `409 COUPON_ALREADY_REDEEMED`, bez replay, Idempotency-Key i deklaracji pełnej idempotencji;
+- publiczna precedence to not found → GeoIP unavailable → wrong country → already redeemed → exhausted, a pod lockiem country → already redeemed → exhausted;
+- transakcja użyje PostgreSQL `READ COMMITTED` i `SELECT ... FOR UPDATE`; Client IP i GeoIP pozostają poza nią, bez HTTP pod lockiem, JVM/Redis/distributed locków, automatycznego retry i custom lock timeout.
+
+### Stan
+
+- `EMP-004`: `READY`;
+- refinement: `ACCEPTED`, implementation: `NOT_STARTED`, implementation allowed: `YES`;
+- `EMP-005`: `DONE` z disposition `MERGED_INTO_EMP-004`; ownerem implementation i evidence jest EMP-004;
+- endpoint redemption, migracja i canonical OpenAPI nadal nie są zmienione.
+
+Ten checkpoint jest wyłącznie formalnym closeoutem refinementu i amendmentu; nie zawiera implementacji ani runtime evidence redemption.

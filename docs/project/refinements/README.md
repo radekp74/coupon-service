@@ -21,9 +21,9 @@ Dokument ze stanem `DRAFT` nie zezwala na implementację.
 - [EMP-003 — tworzenie kuponu](EMP-003.md) — `ACCEPTED`
 - [EMP-003 — podsumowanie](EMP-003-summary.md)
 - [EMP-003 — review checklist](EMP-003-review-checklist.md) — `PASS`
-- [EMP-004 — transakcyjne wykorzystanie kuponu](EMP-004.md) — `DRAFT`
+- [EMP-004 — transakcyjne wykorzystanie kuponu](EMP-004.md) — `ACCEPTED`
 - [EMP-004 — podsumowanie](EMP-004-summary.md)
-- [EMP-004 — review checklist](EMP-004-review-checklist.md) — `NOT_STARTED`
+- [EMP-004 — review checklist](EMP-004-review-checklist.md) — `PASS`
 - [EMP-006 — Client IP i provider-neutral GeoIP](EMP-006.md) — `ACCEPTED`
 - [EMP-006 — podsumowanie](EMP-006-summary.md)
 - [EMP-006 — review checklist](EMP-006-review-checklist.md) — `PASS`
@@ -33,4 +33,4 @@ Dokument ze stanem `DRAFT` nie zezwala na implementację.
 
 ## Pokrycie zadań
 
-`EMP-001` zamraża kontrakt całego MVP. `EMP-003` uszczegóławia tworzenie kuponu, `EMP-007` tester-facing OpenAPI i zasady dokumentacji kodu, a zaakceptowany `EMP-006` definiuje granicę zaufania Client IP oraz provider-neutral GeoIP. `EMP-004` pozostaje zablokowane do ukończenia implementacji EMP-006. Zasady amendmentu opisuje [proces refinementu](../refinement-process.md).
+`EMP-001` zamraża kontrakt całego MVP i zawiera amendment UserId dla EMP-004. `EMP-003` uszczegóławia tworzenie kuponu, `EMP-007` tester-facing OpenAPI i zasady dokumentacji kodu, a zweryfikowany `EMP-006` definiuje granicę zaufania Client IP oraz provider-neutral GeoIP. Zaakceptowany EMP-004 opisuje atomowy redemption i włącza kryteria EMP-005; implementacja pozostaje osobnym, jeszcze nierozpoczętym checkpointem. Zasady amendmentu opisuje [proces refinementu](../refinement-process.md).

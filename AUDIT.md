@@ -104,3 +104,8 @@ Pierwszy review EMP-006 zakończył się `REJECT` dla pięciu luk: wielokrotnych
 ## Evidence closeoutu EMP-006
 
 EMP-006 zamknięto po pełnym `make verify` (53 unit i 10 integration tests; 47 nowych testów EMP-006), DocLint bez błędów, WireMock bez publicznej sieci i Docker runtime. Testy potwierdziły fail-closed dla wielokrotnych field-lines, direct-mode spoofing, trusted chain, bracketed IPv6 z portem, policy special-purpose, redirect z dokładnie jednym requestem oraz granice body 16 384/16 385. Runtime Compose potwierdził health `UP`, Swagger UI i canonical OpenAPI bez redemption na dynamicznym porcie loopback; cleanup usunął wyłącznie stos smoke, a istniejący `coupon-service-app-1` na 18080 pozostał healthy.
+
+
+## Refinement EMP-004
+
+Po zweryfikowaniu EMP-006 przygotowano własny draft transakcyjnego redemption. Dokument rozdziela snapshot/GeoIP od krótkiej transakcji, wymaga osobnego proxied bean, zamraża `SELECT ... FOR UPDATE`, kolejność błędów, atomowy insert/increment, rollback i exact-count concurrency. Pierwszy review dał rekomendację `REJECT`, ponieważ `userId` był niespójny z EMP-001, a granica kontroler/orchestrator wymagała doprecyzowania. 2026-08-06 właściciel zaakceptował amendment EMP-001 dla opaque, case-sensitive `userId` `^[!-~]{1,128}$`, konsolidację EMP-005, retry 409, precedence i model transakcyjny. Refinement jest `ACCEPTED`; endpoint, migracja i canonical OpenAPI nadal nie istnieją.

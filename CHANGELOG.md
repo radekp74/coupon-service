@@ -6,6 +6,11 @@ Wszystkie istotne zmiany projektu są rejestrowane w tym pliku. Format jest insp
 
 ### Added
 
+- zaakceptowany refinement EMP-004 dla transakcyjnego redemption: kontrakt HTTP, snapshot/GeoIP poza transakcją, row lock, atomowy insert/increment, rollback, retry semantics i exact-count concurrency;
+- formalny amendment EMP-001: opaque, case-sensitive `userId` `^[!-~]{1,128}$`, bez trimowania i normalizacji, do zgodnego enforcement w Bean Validation, PostgreSQL i OpenAPI podczas implementacji;
+- EMP-005 jest `MERGED_INTO_EMP-004`; user-once jest obowiązkowym invariantem wspólnej transakcji i evidence;
+- `make emp004-refinement-check` pilnujący kompletności draftu i zakazu przedwczesnej implementacji/OpenAPI;
+
 - formalnie zaakceptowany refinement EMP-006 wraz z security amendmentem i pięcioma decyzjami właściciela;
 - ukończone i zweryfikowane EMP-006: strict Client IP, trusted CIDR proxy, IANA special-purpose policy, ipwho.is adapter, local/test stub i WireMock evidence bez publicznej sieci;
 - `make verify` używa dynamicznego portu loopback i unikalnego projektu Compose, więc nie zatrzymuje ani nie koliduje z lokalnymi stosami;
@@ -40,7 +45,7 @@ Wszystkie istotne zmiany projektu są rejestrowane w tym pliku. Format jest insp
 ### Changed
 
 - backlog wskazuje teraz własny refinement EMP-006; refinement jest `ACCEPTED`, a implementacja jest dozwolona wyłącznie w osobnym checkpointcie;
-- `EMP-004` jest zablokowane do ukończenia prerequisites GeoIP/API, a EMP-006 jest `READY` bez rozpoczętej implementacji;
+- po zweryfikowaniu prerequisites EMP-006/007, `EMP-004` przeszło z historycznego `BLOCKED` do własnego draftu `REFINEMENT`;
 - OpenAPI is now a mandatory part of Definition of Done for every public endpoint;
 - zoptymalizowano `Dockerfile`: usunięto kosztowne `dependency:go-offline`, a build Maven korzysta z trwałego cache BuildKit `/root/.m2`;
 - usunięto zewnętrzną dyrektywę Dockerfile frontend, aby build nie zależał od pobierania `docker/dockerfile:1.7`;
@@ -56,14 +61,16 @@ Wszystkie istotne zmiany projektu są rejestrowane w tym pliku. Format jest insp
 
 ### Planned
 
-- endpoint wykorzystania kuponu;
-- integracja GeoIP;
-- pozostała matryca testów redemption, GeoIP i limit concurrency;
+- endpoint wykorzystania kuponu po akceptacji;
+- exact-count matryca testów redemption i limit concurrency;
 - CI.
 
 ## [0.0.1-foundation] — 2026-08-06
 
 ### Added
+
+- draft refinement EMP-004 dla transakcyjnego redemption: kontrakt HTTP, snapshot/GeoIP poza transakcją, row lock, atomowy insert/increment, rollback, retry semantics i exact-count concurrency;
+- `make emp004-refinement-check` pilnujący kompletności draftu i zakazu przedwczesnej implementacji/OpenAPI;
 
 - lekkie governance dokumentacji i jednoznaczne źródła prawdy;
 - backlog z priorytetami, statusami i mapowaniem do refinementu;
