@@ -68,3 +68,7 @@ Wniosek procesowy: wykorzystanie Dockera przez testy nie zastępuje kontraktu ko
 ## Korekta czasu budowy obrazu
 
 Pierwszy rzeczywisty build na Docker Desktop wykazał, że oddzielny krok `dependency:go-offline` jest nieproporcjonalnie kosztowny dla tego repozytorium. Rozwiązuje on szerszy zbiór artefaktów niż potrzebuje pojedynczy build obrazu. Zastąpiono go jednym `mvn package` wykorzystującym trwały cache BuildKit dla lokalnego repozytorium Maven. Statyczna bramka wymaga teraz cache mount i zabrania regresji do `dependency:go-offline`.
+
+## Zastosowanie wzorca w EMP-003
+
+Mimo że `EMP-001` zamrażał kontrakt MVP, przed pierwszym endpointem biznesowym utworzono osobny refinement `EMP-003`. Dokument rozstrzyga granicę transakcji, canonicalizację, mapowanie SQLSTATE i deterministyczny test wyścigu. Kandydat pozostaje `IN_PROGRESS` do czasu pełnego lokalnego gate; sama obecność testu nie jest traktowana jako dowód jego przejścia.

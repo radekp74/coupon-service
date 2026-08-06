@@ -70,4 +70,4 @@ Surowy adres IP nie jest utrwalany. Rejestr użycia przechowuje wyłącznie rozp
 
 ## Stan wdrożenia
 
-Schemat V1 jest zaimplementowany. Jego uruchomienie na czystym PostgreSQL 18 oraz wybrane constrainty pokrywa `DatabaseMigrationIT`. Runtime evidence pozostaje oczekujące do wykonania lokalnego `make verify`.
+Schemat V1 i jego runtime evidence z EMP-002 są zweryfikowane. Kandydat EMP-003 wykorzystuje istniejące kolumny bez nowej migracji; `CreateCouponApiIT` sprawdza zapis prezentacyjnego i canonical code oraz exact-count concurrent create. Pełny evidence tego testu pozostaje oczekujący do lokalnego `make verify`.

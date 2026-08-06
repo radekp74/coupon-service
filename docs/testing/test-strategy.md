@@ -2,7 +2,7 @@
 
 ## Stan realizacji
 
-Na checkpoint `0.0.4-emp-002-candidate-docker-fix` zaimplementowano pierwszy test integracyjny `DatabaseMigrationIT`, który uruchamia Spring context, PostgreSQL 18.4 oraz Flyway V1 i sprawdza wybrane constrainty. Pełna strategia API, GeoIP i concurrency pozostaje zakresem kolejnych zadań. Test nie jest oznaczony jako zweryfikowany, dopóki lokalne `make verify` nie dostarczy runtime evidence. Ta sama bramka waliduje konfigurację Compose, buduje obraz, uruchamia aplikację i PostgreSQL, sprawdza `/actuator/health` oraz sprząta stos testowy.
+EMP-002 ma lokalny pełny runtime evidence. Kandydat EMP-003 dodaje unit tests dla `CouponCode`, `CountryCode` i use case oraz HTTP integration suite `CreateCouponApiIT` na PostgreSQL 18.4. Suite obejmuje happy path, walidację, case-insensitive conflict, brak wycieku technicznego oraz trzy rundy concurrent create z 24 próbami, barrier i exact counts. Pełny status verified zostanie nadany dopiero po lokalnym `make verify`.
 
 ## Cel
 

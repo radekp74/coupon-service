@@ -16,8 +16,11 @@ Każdy plik Markdown w `docs/` musi być wymieniony poniżej. Indeks jest sprawd
 - [Lessons learned](project/lessons-learned.md)
 - [Proces refinementu](project/refinement-process.md)
 - [Review checklist EMP-001](project/refinements/EMP-001-review-checklist.md)
+- [Review checklist EMP-003](project/refinements/EMP-003-review-checklist.md)
 - [Podsumowanie refinementu EMP-001](project/refinements/EMP-001-summary.md)
+- [Podsumowanie refinementu EMP-003](project/refinements/EMP-003-summary.md)
 - [Refinement EMP-001 — kontrakt rozwiązania serwisu kuponowego](project/refinements/EMP-001.md)
+- [Refinement EMP-003 — tworzenie kuponu i unikalność case-insensitive](project/refinements/EMP-003.md)
 - [Rejestr refinementów](project/refinements/README.md)
 - [Historia checkpointów](project/release-history.md)
 - [Rejestr ryzyk](project/risk-register.md)
@@ -30,6 +33,7 @@ Każdy plik Markdown w `docs/` musi być wymieniony poniżej. Indeks jest sprawd
 ## API
 
 - [Kontrakt REST API](api/api-contract.md)
+- [OpenAPI — create coupon](api/openapi.yaml)
 
 ## Testy
 

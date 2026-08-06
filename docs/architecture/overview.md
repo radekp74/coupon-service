@@ -134,4 +134,4 @@ request
 
 ## Stan implementacji
 
-W EMP-002 istnieje entry point Spring Boot, konfiguracja runtime, migracja V1, test bootstrapu bazy, wieloetapowy Dockerfile oraz lokalny stos Docker Compose z health checkami. Warstwy domenowe, przypadki użycia oraz adaptery HTTP i GeoIP pozostają planem zaakceptowanym w EMP-001, a nie kodem istniejącym w tym checkpointcie.
+EMP-002 jest zweryfikowany. Kandydat EMP-003 implementuje domenę potrzebną do tworzenia kuponu, `CreateCouponUseCase`, port repozytorium, adapter PostgreSQL i adapter HTTP. Przepływ redemption oraz adapter GeoIP nadal pozostają planem, nie kodem istniejącym. Status create zostanie podniesiony do verified dopiero po lokalnym pełnym gate.

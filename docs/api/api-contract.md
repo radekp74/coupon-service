@@ -1,5 +1,9 @@
 # Kontrakt REST API
 
+## Stan implementacji
+
+`POST /api/v1/coupons` jest zaimplementowany w kandydacie EMP-003 i oczekuje na lokalny pełny gate. Jego machine-readable schema znajduje się w [openapi.yaml](openapi.yaml). Endpoint wykorzystania kuponu pozostaje niezaimplementowany.
+
 ## Zasady wspólne
 
 - base path: `/api/v1`;

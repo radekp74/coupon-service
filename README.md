@@ -4,37 +4,34 @@ REST-owy serwis do tworzenia i bezpiecznego wykorzystywania kuponów rabatowych.
 
 ## Aktualny stan
 
-- **Checkpoint:** `0.0.4-emp-002-candidate-docker-fix`
+- **Checkpoint:** `0.0.6-emp-003-candidate`
 - **Data stanu:** `2026-08-06`
 - **Termin oddania:** `2026-08-10`, koniec dnia
-- **Governance dokumentacji:** `DONE_AND_VERIFIED`
-- **Refinement rozwiązania:** `ACCEPTED`
-- **Kod aplikacji:** `BOOTSTRAP_IMPLEMENTED`
-- **Aktywne zadanie:** `EMP-002 — bootstrap aplikacji`
+- **Governance i bootstrap:** `DONE_AND_VERIFIED`
+- **Refinement EMP-003:** `ACCEPTED`
+- **Aktywne zadanie:** `EMP-003 — tworzenie kuponu`
+- **Kod:** `IMPLEMENTED_PENDING_LOCAL_GATE`
 - **Weryfikacja runtime:** `PENDING_LOCAL_DOCKER_GATE`
-- **Implementacja dozwolona:** `YES`, w granicach zaakceptowanego refinementu `EMP-001`
 
-Checkpoint zawiera już kompilowalny kontrakt źródłowy aplikacji, migrację V1 oraz integracyjny test migracji na PostgreSQL 18 przez Testcontainers. `EMP-002` pozostaje jednak `IN_PROGRESS`, dopóki pełne `make verify` nie przejdzie na lokalnym macOS z działającym Docker Desktop. Dokumentacja nie przedstawia niewykonanej bramki runtime jako sukcesu.
+Kandydat zawiera pierwszy endpoint biznesowy, testy jednostkowe, integracyjne i concurrent create. Nie jest jeszcze oznaczony jako `DONE_AND_VERIFIED`: pełny `make verify` musi przejść na lokalnym Docker Desktop.
 
-## Zaimplementowane w EMP-002
+## Zaimplementowany kandydat EMP-003
 
-- Java 21 i Spring Boot 3.5.16;
-- Maven 3.9.16 uruchamiany przez repozytoryjny `./mvnw`;
-- weryfikacja SHA-512 pobieranej dystrybucji Maven;
-- Spring Web MVC, Validation, JDBC/`JdbcClient` i Actuator;
-- PostgreSQL driver oraz Flyway z modułem PostgreSQL;
-- migracja `V1__create_coupon_tables.sql`;
-- constrainty chroniące limit, canonical code i jedno użycie przez użytkownika;
-- Testcontainers 2.0.5 z PostgreSQL `18.4-alpine`;
-- integracyjny test startu Spring context, migracji i wybranych constraintów;
-- statyczny checker kontraktu `EMP-002`;
-- wieloetapowy `Dockerfile` budujący aplikację i uruchamiający ją jako użytkownik bez uprawnień root;
-- `docker-compose.yml` uruchamiający aplikację i PostgreSQL 18.4 z health checkami i trwałym wolumenem;
-- `.dockerignore` ograniczający build context wyłącznie do plików potrzebnych do kompilacji;
-- targety `make compose-config`, `docker-build`, `docker-up`, `docker-down`, `docker-logs` i `docker-smoke`;
-- pełna bramka `make verify`, wymagająca Java 21, Docker daemon, Maven `clean verify` oraz zdrowego stosu Docker Compose.
+- `POST /api/v1/coupons`;
+- trim i case-insensitive canonicalizacja kodu przez `Locale.ROOT`;
+- walidacja kraju ISO 3166-1 alpha-2;
+- `currentUses = 0` przy utworzeniu;
+- pojedynczy parametryzowany `INSERT` przez Spring `JdbcClient`;
+- unikalność gwarantowana przez PostgreSQL `UNIQUE(normalized_code)`;
+- brak podatnego na race condition `existsByCode`;
+- 400 `INVALID_REQUEST`, 409 `COUPON_CODE_CONFLICT`, 500 `INTERNAL_ERROR` jako Problem Details;
+- wstrzykiwane `Clock` i generator UUID;
+- unit tests domeny/use case;
+- HTTP integration tests na PostgreSQL 18.4 przez Testcontainers;
+- test 24 równoległych wariantów case z dokładnie jednym sukcesem;
+- machine-readable `docs/api/openapi.yaml` dla operacji create.
 
-Endpointy biznesowe, GeoIP i właściwa logika wykorzystania kuponu nie są jeszcze zaimplementowane.
+Endpoint wykorzystania kuponu, GeoIP i pełne OpenAPI pozostają w kolejnych zadaniach.
 
 ## Zamrożony kierunek techniczny
 
@@ -66,7 +63,7 @@ make verify
 Bramka wykonuje kolejno:
 
 1. governance dokumentacji;
-2. statyczny kontrakt bootstrapu;
+2. statyczne kontrakty bootstrapu i EMP-003;
 3. kontrolę składni skryptów i Makefile;
 4. kontrolę Java 21;
 5. kontrolę skonfigurowanego klienta i daemona Docker;
@@ -83,6 +80,7 @@ Lżejsze bramki bez Dockera i pobierania zależności:
 ```bash
 make docs-check
 make bootstrap-check
+make emp003-check
 ```
 
 ## Docker na macOS
@@ -181,13 +179,14 @@ Najlepsza kolejność czytania:
 
 1. [Aktualny status](docs/project/current-status.md)
 2. [Podsumowanie refinementu EMP-001](docs/project/refinements/EMP-001-summary.md)
-3. [Pełny refinement EMP-001](docs/project/refinements/EMP-001.md)
-4. [Backlog](docs/project/backlog.md)
-5. [Kontrakt API](docs/api/api-contract.md)
-6. [Architektura](docs/architecture/overview.md)
-7. [Strategia testów](docs/testing/test-strategy.md)
-8. [Rejestr ryzyk](docs/project/risk-register.md)
-9. [Pełny indeks dokumentacji](docs/DOCUMENTATION_INDEX.md)
+3. [Refinement EMP-003](docs/project/refinements/EMP-003.md)
+4. [Pełny refinement EMP-001](docs/project/refinements/EMP-001.md)
+5. [Backlog](docs/project/backlog.md)
+6. [Kontrakt API](docs/api/api-contract.md)
+7. [Architektura](docs/architecture/overview.md)
+8. [Strategia testów](docs/testing/test-strategy.md)
+9. [Rejestr ryzyk](docs/project/risk-register.md)
+10. [Pełny indeks dokumentacji](docs/DOCUMENTATION_INDEX.md)
 
 ## Konwencje językowe
 
@@ -195,6 +194,12 @@ Najlepsza kolejność czytania:
 - kod, testy, nazwy klas, metod, pakietów i komunikaty techniczne: język angielski;
 - klienci API będą integrować się przez stabilne `error.code`, nie przez tekst `detail`.
 
-## Status implementacji biznesowej
+## Przykład utworzenia kuponu
 
-Nie zaimplementowano jeszcze endpointów tworzenia i wykorzystania kuponu, resolvera adresu klienta ani adaptera GeoIP. Ich istnienie zostanie zadeklarowane dopiero po przejściu właściwych kryteriów Definition of Done.
+Po `make docker-up APP_PORT=18080`:
+
+```bash
+curl -i   -H 'Content-Type: application/json'   -d '{"code":"WIOSNA","maxUses":100,"countryCode":"PL"}'   http://localhost:18080/api/v1/coupons
+```
+
+Oczekiwany status: `201 Created`. Ponowienie z kodem `wiosna` powinno zwrócić `409 COUPON_CODE_CONFLICT` po przejściu lokalnego gate EMP-003.

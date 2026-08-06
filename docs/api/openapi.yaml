@@ -1,0 +1,111 @@
+openapi: 3.1.0
+info:
+  title: Coupon Service API
+  version: 0.0.6-emp-003-candidate
+  description: Recruitment assignment API. The EMP-003 checkpoint documents coupon creation only.
+paths:
+  /api/v1/coupons:
+    post:
+      operationId: createCoupon
+      summary: Create a coupon
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCouponRequest'
+      responses:
+        '201':
+          description: Coupon created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CouponResponse'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '409':
+          $ref: '#/components/responses/CouponCodeConflict'
+        '500':
+          $ref: '#/components/responses/InternalError'
+components:
+  schemas:
+    CreateCouponRequest:
+      type: object
+      required: [code, maxUses, countryCode]
+      properties:
+        code:
+          type: string
+          minLength: 3
+          maxLength: 64
+          pattern: '^[A-Za-z0-9_-]+$'
+          examples: [WIOSNA]
+        maxUses:
+          type: integer
+          minimum: 1
+          maximum: 1000000
+          examples: [100]
+        countryCode:
+          type: string
+          minLength: 2
+          maxLength: 2
+          pattern: '^[A-Za-z]{2}$'
+          examples: [PL]
+    CouponResponse:
+      type: object
+      required: [id, code, createdAt, maxUses, currentUses, countryCode]
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        maxUses:
+          type: integer
+        currentUses:
+          type: integer
+          const: 0
+        countryCode:
+          type: string
+          pattern: '^[A-Z]{2}$'
+    ProblemDetail:
+      type: object
+      additionalProperties: true
+      required: [type, title, status, detail, instance, code]
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri-reference
+        code:
+          type: string
+          enum: [INVALID_REQUEST, COUPON_CODE_CONFLICT, INTERNAL_ERROR]
+  responses:
+    InvalidRequest:
+      description: Invalid JSON or field value
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+    CouponCodeConflict:
+      description: Canonical coupon code already exists
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+    InternalError:
+      description: Unexpected server failure
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'

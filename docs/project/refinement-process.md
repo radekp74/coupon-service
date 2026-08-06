@@ -6,7 +6,7 @@ Refinement zamienia treść zadania w testowalny kontrakt realizacyjny. Nie jest
 
 ## Przepływ
 
-1. Zadanie otrzymuje stabilne ID i status `REFINEMENT`.
+1. Każde zadanie implementacyjne otrzymuje własny dokument refinementu, stabilne ID i status `REFINEMENT`; umbrella refinement nie zastępuje refinementu zadania.
 2. Powstaje dokument zawierający cel, zakres, poza zakresem, dane, API, błędy, współbieżność, bezpieczeństwo, failure modes i testy.
 3. Każde ryzyko wysokie lub krytyczne ma mitigację albo blokuje akceptację.
 4. Otwarta decyzja jest rozstrzygana albo jawnie oznaczona jako blocker.

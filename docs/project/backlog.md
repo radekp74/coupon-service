@@ -7,8 +7,8 @@ Ten plik jest jedynym źródłem prawdy dla identyfikatorów, priorytetów i sta
 | EMP-000 | — | P0 | DONE_AND_VERIFIED | EMP-001 | Ustanowić lekkie governance dokumentacji | `make docs-check`, `make verify` |
 | EMP-001 | — | P0 | DONE_AND_VERIFIED | EMP-001 | Zamrozić kompletny kontrakt rozwiązania kuponowego | accepted refinement + review checklist |
 | EMP-002 | EMP-001 | P0 | DONE_AND_VERIFIED | EMP-001 | Bootstrap Java/Spring Boot/PostgreSQL/Flyway/Maven | `make verify`, runtime Compose i eksport źródeł |
-| EMP-003 | EMP-001 | P0 | READY | EMP-001 | Tworzenie kuponu i case-insensitive uniqueness | API + concurrent duplicate tests |
-| EMP-004 | EMP-001 | P0 | PLANNED | EMP-001 | Transakcyjne wykorzystanie kuponu | integration + rollback tests |
+| EMP-003 | EMP-001 | P0 | DONE_AND_VERIFIED | EMP-003 | Tworzenie kuponu i case-insensitive uniqueness | `make verify`, runtime HTTP i exact-count concurrency test |
+| EMP-004 | EMP-001 | P0 | REFINEMENT | EMP-001 | Transakcyjne wykorzystanie kuponu | accepted EMP-004 refinement przed implementacją |
 | EMP-005 | EMP-001 | P1 | PLANNED | EMP-001 | Jedno użycie kuponu przez użytkownika | unique constraint + concurrency test |
 | EMP-006 | EMP-001 | P0 | PLANNED | EMP-001 | Client IP i provider-neutral GeoIP | WireMock + timeout/failure tests |
 | EMP-007 | EMP-001 | P0 | PLANNED | EMP-001 | Stabilny error contract i OpenAPI | schema + negative API tests |
@@ -20,6 +20,7 @@ Ten plik jest jedynym źródłem prawdy dla identyfikatorów, priorytetów i sta
 ## Reguły przejścia
 
 - `EMP-002` jest `DONE_AND_VERIFIED`: pełny gate Maven/Testcontainers i Docker Compose przeszedł lokalnie 2026-08-06.
-- `EMP-003` jest `READY`; kolejne zadania pozostają w kolejności backlogu i bez zmiany kontraktu.
+- `EMP-003` jest `DONE_AND_VERIFIED`: lokalne testy jednostkowe, Testcontainers, runtime HTTP i pełny gate przeszły 2026-08-06.
+- `EMP-004` jest `REFINEMENT`; przed implementacją wymaga własnego zaakceptowanego refinementu `EMP-004`.
 - Zmiana contract boundary wymaga amendmentu `EMP-001`.
 - `DONE_AND_VERIFIED` wymaga dowodów wskazanych w ostatniej kolumnie.

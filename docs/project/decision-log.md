@@ -26,3 +26,6 @@
 | D-022 | 2026-08-06 | ACCEPTED | Maven 3.9.16 jest przypięty wraz z SHA-512 dystrybucji | build nie zależy od globalnego Maven, a pierwszy download podlega kontroli integralności |
 | D-023 | 2026-08-06 | ACCEPTED | Testcontainers 2.0.5 używa modułu i pakietu `org.testcontainers.postgresql` | kod odpowiada aktualnej strukturze 2.x, a nie niekompatybilnym przykładom 1.x |
 | D-024 | 2026-08-06 | ACCEPTED | EMP-002 zawiera wieloetapowy Dockerfile i Docker Compose | Testcontainers weryfikuje integrację testową, lecz nie zastępuje powtarzalnego artefaktu uruchomienia całej aplikacji; obraz działa bez roota, a Compose zapewnia PostgreSQL i health gate |
+| D-025 | 2026-08-06 | ACCEPTED | Create wykonuje pojedynczy `INSERT` bez preflight `existsByCode` | constraint PostgreSQL pozostaje jedynym autorytetem także przy wielu instancjach |
+| D-026 | 2026-08-06 | ACCEPTED | Kod prezentacyjny jest zachowywany po trimie, a unikalność używa osobnego canonical code | czytelna odpowiedź API bez zależności spójności od collation |
+| D-027 | 2026-08-06 | ACCEPTED | Każde kolejne zadanie implementacyjne otrzymuje własny refinement | EMP-001 pozostaje umbrella contract, ale nie zastępuje szczegółowego kontraktu tasku |

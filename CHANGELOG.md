@@ -6,6 +6,13 @@ Wszystkie istotne zmiany projektu są rejestrowane w tym pliku. Format jest insp
 
 ### Added
 
+- `POST /api/v1/coupons` z request/response contract;
+- value objects `CouponCode` i `CountryCode` oraz model `Coupon`;
+- create use case, port repozytorium i adapter PostgreSQL `JdbcClient`;
+- mapowanie unique violation `23505` na 409 `COUPON_CODE_CONFLICT`;
+- Problem Details dla invalid request, conflict i internal error;
+- unit tests oraz `CreateCouponApiIT` z concurrent create exact-count evidence;
+- zaakceptowany refinement, review checklist i statyczny checker EMP-003;
 - bootstrap Java 21 / Spring Boot 3.5.16 i główna klasa aplikacji;
 - przypięty Maven 3.9.16 z repozytoryjnym launcherem oraz walidacją SHA-512 dystrybucji;
 - zależności Spring Web, Validation, JDBC, Actuator, Flyway i PostgreSQL;
@@ -34,13 +41,14 @@ Wszystkie istotne zmiany projektu są rejestrowane w tym pliku. Format jest insp
 - `make verify` nie pomija już Maven, gdy istnieje kod aplikacji, lecz wymaga pełnego clean build i Testcontainers;
 - source export wykonuje także statyczną walidację bootstrapu;
 - `make package` i `make export-source` korzystają ze wspólnego, rozszerzonego filtra artefaktów i sekretów.
+- naprawiono Spring proxy dla adaptera `JdbcCouponRepository` i transakcyjnego `CreateCouponService`, usuwając niezgodne modyfikatory `final`.
+- `EMP-003` przeszedł pełny lokalny gate, w tym exact-count concurrent create i runtime HTTP Compose.
 
 ### Planned
 
-- endpoint tworzenia kuponu;
 - endpoint wykorzystania kuponu;
 - integracja GeoIP;
-- testy jednostkowe, integracyjne i współbieżności;
+- pozostała matryca testów redemption, GeoIP i limit concurrency;
 - OpenAPI i CI.
 
 ## [0.0.1-foundation] — 2026-08-06

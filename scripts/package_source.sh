@@ -6,6 +6,7 @@ cd "$ROOT"
 
 python3 scripts/check_documentation.py
 python3 scripts/check_bootstrap.py
+python3 scripts/check_emp003.py
 python3 scripts/generate_checksums.py
 
 OUTPUT_DIR="${SOURCE_EXPORT_DIR:-$ROOT/dist}"

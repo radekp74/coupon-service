@@ -35,6 +35,9 @@ REQUIRED_FILES = [
     ROOT / "docs" / "project" / "refinements" / "EMP-001.md",
     ROOT / "docs" / "project" / "refinements" / "EMP-001-summary.md",
     ROOT / "docs" / "project" / "refinements" / "EMP-001-review-checklist.md",
+    ROOT / "docs" / "project" / "refinements" / "EMP-003.md",
+    ROOT / "docs" / "project" / "refinements" / "EMP-003-summary.md",
+    ROOT / "docs" / "project" / "refinements" / "EMP-003-review-checklist.md",
     ROOT / "docs" / "architecture" / "overview.md",
     ROOT / "docs" / "architecture" / "data-model.md",
     ROOT / "docs" / "api" / "api-contract.md",
@@ -184,7 +187,7 @@ def validate_current_status(tasks: Dict[str, Dict[str, str]], errors: List[str])
     active = match.group(1)
     if active not in tasks:
         errors.append(f"Current status wskazuje nieistniejące zadanie: {active}")
-    elif tasks[active]["Status"] not in {"READY", "IN_PROGRESS", "BLOCKED"}:
+    elif tasks[active]["Status"] not in {"REFINEMENT", "READY", "IN_PROGRESS", "BLOCKED"}:
         errors.append(
             f"Active task {active} ma niedozwolony status {tasks[active]['Status']}"
         )

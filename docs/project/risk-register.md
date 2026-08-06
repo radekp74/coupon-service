@@ -8,7 +8,7 @@
 | R-004 | HIGH | OPEN | GeoIP timeout, limit lub awaria | 500 ms connect, 1 s response, brak retry, 503 | EMP-006 |
 | R-005 | HIGH | OPEN | spoofing `X-Forwarded-For` | trusted proxy config, remote address default | EMP-006 |
 | R-006 | HIGH | OPEN | H2 ukrywa różnice PostgreSQL | wyłącznie Testcontainers PostgreSQL | EMP-008 |
-| R-007 | HIGH | OPEN | case-insensitive duplikat w race condition | canonical field + unique constraint | EMP-003 |
+| R-007 | HIGH | MITIGATED | case-insensitive duplikat w race condition | canonical field + unique constraint + exact-count concurrency test | EMP-003: 3 × 24 prób, każdorazowo 1 sukces, 23 konflikty, 1 rekord |
 | R-008 | MEDIUM | MITIGATED | governance większe niż samo zadanie | jeden refinement MVP i ograniczony zestaw dokumentów | docs-check PASS |
 | R-009 | MEDIUM | OPEN | timeout klienta po commit prowadzi do retry | naturalny unique user conflict i stabilny error code | EMP-005/007 |
 | R-010 | MEDIUM | OPEN | licznik i redemption records się rozjadą | jedna transakcja + invariant integration test | EMP-004/008 |

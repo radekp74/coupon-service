@@ -162,3 +162,68 @@ make export-source: PASS
 
 - `EMP-002`: `DONE_AND_VERIFIED`;
 - `EMP-003`: `READY`.
+
+
+## 2026-08-06 — `0.0.6-emp-003-candidate`
+
+### Zakres
+
+- zaakceptowany refinement i review EMP-003;
+- value objects kodu i kraju;
+- create use case z wstrzykiwanym UUID i czasem;
+- pojedynczy parametryzowany insert przez `JdbcClient`;
+- `POST /api/v1/coupons`;
+- Problem Details dla 400, 409 i 500;
+- unit, HTTP/PostgreSQL i concurrent create tests;
+- statyczny checker EMP-003 i synchronizacja dokumentacji.
+
+### Evidence dostępny w kandydacie
+
+```text
+make docs-check: PASS
+make emp003-check: PASS
+source/static syntax checks: PASS
+```
+
+### Evidence wymagany lokalnie
+
+```text
+make verify: PENDING
+Testcontainers HTTP/concurrency suite: PENDING
+Docker runtime smoke: PENDING
+make export-source: PENDING
+```
+
+### Decyzja
+
+- `EMP-003`: `IN_PROGRESS`;
+- status nie zostanie podniesiony przed pełnym lokalnym gate.
+
+## 2026-08-06 — `0.0.7-emp-003-verified`
+
+### Zakres
+
+- `POST /api/v1/coupons` z canonicalizacją kodu i walidacją kraju;
+- atomowe wykrywanie case-insensitive duplicate przez constraint PostgreSQL;
+- Problem Details dla 400 i 409;
+- deterministyczny test współbieżny bez `Thread.sleep`.
+
+### Evidence
+
+```text
+make docs-check: PASS
+make bootstrap-check: PASS
+make emp003-check: PASS
+make verify: PASS
+make verify time: 76.52 s (Maven clean verify: 36.206 s)
+unit tests: 6/6 PASS
+DatabaseMigrationIT: 4/4 PASS
+CreateCouponApiIT: 4/4 PASS
+concurrent create: 3 × (1 created, 23 conflicts, 1 record) PASS
+Docker Compose HTTP: health UP, create 201, duplicate 409, invalid 400 PASS
+```
+
+### Decyzja
+
+- `EMP-003`: `DONE_AND_VERIFIED`;
+- `EMP-004`: `REFINEMENT`; implementacja wymaga własnego accepted refinementu.
