@@ -71,4 +71,4 @@ Pierwszy rzeczywisty build na Docker Desktop wykazał, że oddzielny krok `depen
 
 ## Zastosowanie wzorca w EMP-003
 
-Mimo że `EMP-001` zamrażał kontrakt MVP, przed pierwszym endpointem biznesowym utworzono osobny refinement `EMP-003`. Dokument rozstrzyga granicę transakcji, canonicalizację, mapowanie SQLSTATE i deterministyczny test wyścigu. Kandydat pozostaje `IN_PROGRESS` do czasu pełnego lokalnego gate; sama obecność testu nie jest traktowana jako dowód jego przejścia.
+Mimo że `EMP-001` zamrażał kontrakt MVP, przed pierwszym endpointem biznesowym utworzono osobny refinement `EMP-003`. Dokument rozstrzyga granicę transakcji, canonicalizację, mapowanie SQLSTATE i deterministyczny test wyścigu. Sama obecność testu nie jest traktowana jako dowód jego przejścia. EMP-003 został zamknięty jako `DONE_AND_VERIFIED` dopiero po pełnym lokalnym `make verify`, runtime HTTP i exact-count concurrency test.

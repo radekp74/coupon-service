@@ -4,18 +4,19 @@ REST-owy serwis do tworzenia i bezpiecznego wykorzystywania kuponów rabatowych.
 
 ## Aktualny stan
 
-- **Checkpoint:** `0.0.6-emp-003-candidate`
+- **Checkpoint:** `0.0.7-emp-003-verified`
 - **Data stanu:** `2026-08-06`
 - **Termin oddania:** `2026-08-10`, koniec dnia
 - **Governance i bootstrap:** `DONE_AND_VERIFIED`
-- **Refinement EMP-003:** `ACCEPTED`
-- **Aktywne zadanie:** `EMP-003 — tworzenie kuponu`
-- **Kod:** `IMPLEMENTED_PENDING_LOCAL_GATE`
-- **Weryfikacja runtime:** `PENDING_LOCAL_DOCKER_GATE`
+- **EMP-003:** `DONE_AND_VERIFIED`
+- **Aktywne zadanie:** `EMP-004 — refinement`
+- **Implementation allowed:** `NO` dla EMP-004 do czasu accepted refinement
+- **Kod:** `CREATE_COUPON_DONE_AND_VERIFIED`
+- **Weryfikacja runtime:** `PASS`
 
-Kandydat zawiera pierwszy endpoint biznesowy, testy jednostkowe, integracyjne i concurrent create. Nie jest jeszcze oznaczony jako `DONE_AND_VERIFIED`: pełny `make verify` musi przejść na lokalnym Docker Desktop.
+EMP-003 dostarcza pierwszy endpoint biznesowy wraz z testami jednostkowymi, integracyjnymi i concurrent create. Został zweryfikowany pełnym lokalnym `make verify`, runtime HTTP oraz exact-count concurrency test. Implementacja EMP-004 pozostaje niedozwolona do czasu zaakceptowania własnego refinementu.
 
-## Zaimplementowany kandydat EMP-003
+## Zweryfikowany zakres EMP-003
 
 - `POST /api/v1/coupons`;
 - trim i case-insensitive canonicalizacja kodu przez `Locale.ROOT`;
@@ -202,4 +203,4 @@ Po `make docker-up APP_PORT=18080`:
 curl -i   -H 'Content-Type: application/json'   -d '{"code":"WIOSNA","maxUses":100,"countryCode":"PL"}'   http://localhost:18080/api/v1/coupons
 ```
 
-Oczekiwany status: `201 Created`. Ponowienie z kodem `wiosna` powinno zwrócić `409 COUPON_CODE_CONFLICT` po przejściu lokalnego gate EMP-003.
+Zweryfikowane zachowanie: pierwszy request zwraca `201 Created`, a ponowienie z kodem `wiosna` zwraca `409 COUPON_CODE_CONFLICT`.
