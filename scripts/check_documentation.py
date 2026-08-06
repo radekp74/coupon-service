@@ -38,6 +38,9 @@ REQUIRED_FILES = [
     ROOT / "docs" / "project" / "refinements" / "EMP-003.md",
     ROOT / "docs" / "project" / "refinements" / "EMP-003-summary.md",
     ROOT / "docs" / "project" / "refinements" / "EMP-003-review-checklist.md",
+    ROOT / "docs" / "project" / "refinements" / "EMP-006.md",
+    ROOT / "docs" / "project" / "refinements" / "EMP-006-summary.md",
+    ROOT / "docs" / "project" / "refinements" / "EMP-006-review-checklist.md",
     ROOT / "docs" / "project" / "refinements" / "EMP-007.md",
     ROOT / "docs" / "project" / "refinements" / "EMP-007-summary.md",
     ROOT / "docs" / "project" / "refinements" / "EMP-007-review-checklist.md",
@@ -188,6 +191,9 @@ def validate_current_status(tasks: Dict[str, Dict[str, str]], errors: List[str])
         errors.append("Current status nie zawiera Active task")
         return
     active = match.group(1)
+    task_id_match = re.match(r"(EMP-\d+)(?:\s+—\s+.+)?$", active)
+    if task_id_match:
+        active = task_id_match.group(1)
     if active not in tasks:
         errors.append(f"Current status wskazuje nieistniejące zadanie: {active}")
     elif tasks[active]["Status"] not in {"REFINEMENT", "READY", "IN_PROGRESS", "BLOCKED"}:

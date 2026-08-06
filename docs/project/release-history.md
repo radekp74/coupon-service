@@ -293,3 +293,62 @@ cleanup: usunięty wyłącznie własny stos Compose i wolumen
 - `EMP-007`: `DONE_AND_VERIFIED`;
 - `EMP-006`: `REFINEMENT`, implementacja niedozwolona do accepted własnego refinementu;
 - `EMP-004`: `BLOCKED`.
+
+
+## 2026-08-06 — `0.0.10-emp-006-refinement-candidate`
+
+### Zakres
+
+- własny draft refinementu EMP-006;
+- direct i trusted-proxy Client IP contract;
+- strict IPv4/IPv6 parsing bez DNS;
+- right-to-left trusted chain, limity nagłówków i fail-closed;
+- provider-neutral GeoIP z demo adapterem HTTPS, timeoutami i bez retry;
+- local/test stub guard;
+- minimalizacja raw IP;
+- test matrix, acceptance criteria i checker refinementu.
+
+### Evidence dostępny w kandydacie
+
+```text
+make docs-check: PASS
+make emp006-refinement-check: PASS
+existing static gates: PASS
+```
+
+### Decyzja
+
+- `EMP-006`: `REFINEMENT`;
+- refinement: `DRAFT_READY_FOR_OWNER_REVIEW`;
+- implementation: `NOT_ALLOWED`;
+- pięć decyzji blokujących wymaga akceptacji właściciela przed przejściem do `READY`.
+
+### Security amendment po review
+
+Pierwszy review refinementu: `REJECT`. Zidentyfikowano pięć luk bezpieczeństwa: wielokrotne field-lines, redirecty dostawcy, brak liczbowego limitu body, niejednoznaczną składnię IPv6/portów oraz niedostateczny boundary proxy contract. Amendment wprowadza fail-closed dla wielu field-lines, wyłączone redirecty, limit 16 384 bajtów, ścisły podzbiór składni oraz obowiązki infrastruktury. Refinement nadal jest `DRAFT`; ponowny review i decyzja właściciela oczekują.
+
+## 2026-08-06 — `0.0.11-emp-006-refinement-accepted`
+
+### Formalna decyzja właściciela
+
+Pierwszy review `0.0.10` zachowuje wynik `REJECT` dla pięciu luk bezpieczeństwa. Security amendment został następnie formalnie zaakceptowany przez Radosława Piątka, wraz z decyzjami: `ipwho.is` jako wymienny adapter demonstracyjny, wspólne `503 GEOLOCATION_UNAVAILABLE`, brak cache/retry/fallbacku, fail-closed dla błędnego `Forwarded` bez fallbacku do XFF oraz stub `PL` wyłącznie dla profili `local` i `test`.
+
+### Evidence
+
+```text
+make docs-check: PASS
+make bootstrap-check: PASS
+make emp003-check: PASS
+make emp006-refinement-check: PASS
+make emp007-check: PASS
+git diff --check: PASS
+```
+
+### Stan
+
+- `EMP-006`: `READY`;
+- refinement: `ACCEPTED`;
+- implementation: `NOT_STARTED`;
+- `EMP-004`: `BLOCKED`.
+
+Ten checkpoint jest wyłącznie formalnym closeoutem refinementu; nie zawiera implementacji Client IP, GeoIP ani redemption.

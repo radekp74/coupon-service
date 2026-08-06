@@ -36,12 +36,14 @@ Dla lokalnego uruchomienia istnieje osobny adapter `stub`, aktywowany wyłączni
 - response timeout: 1 s;
 - brak automatycznego retry w ścieżce requestu;
 - timeout, HTTP 429/5xx, błędny JSON lub `success=false` mapują się na `503 GEOLOCATION_UNAVAILABLE`;
+- redirecty 300–399 są odrzucane bez śledzenia `Location`, a body odpowiedzi ma limit 16 KiB;
 - awaria dostawcy nigdy nie jest mapowana na `COUNTRY_NOT_ALLOWED`.
 
 ### Zaufanie do proxy
 
 - domyślnie źródłem jest remote address połączenia;
 - `Forwarded` i `X-Forwarded-For` są honorowane wyłącznie, gdy aplikacja działa za jawnie skonfigurowanym zaufanym proxy;
+- wielokrotne fizyczne field-lines są odrzucane, a boundary proxy usuwa klientskie nagłówki i generuje jeden kanoniczny;
 - klient publiczny nie może sam wymusić kraju nagłówkiem;
 - konfiguracja zaufanego proxy jest częścią wdrożenia, nie logiki domenowej.
 

@@ -185,8 +185,15 @@ def validate_project_state(errors: List[str]) -> None:
         if token not in readme:
             errors.append(f"README missing EMP-007 state token: {token}")
 
-    if verified and "| EMP-006 | EMP-001 | P0 | REFINEMENT | EMP-001 |" not in backlog:
-        errors.append("verified EMP-007 requires EMP-006 refinement state")
+    if verified:
+        valid_emp006_states = [
+            "| EMP-006 | EMP-001 | P0 | REFINEMENT | EMP-006 |",
+            "| EMP-006 | EMP-001 | P0 | READY | EMP-006 |",
+            "| EMP-006 | EMP-001 | P0 | IN_PROGRESS | EMP-006 |",
+            "| EMP-006 | EMP-001 | P0 | DONE_AND_VERIFIED | EMP-006 |",
+        ]
+        if not any(state in backlog for state in valid_emp006_states):
+            errors.append("verified EMP-007 requires EMP-006 to reference its own refinement")
 
     # Do not require a fixed active task or a future checkpoint: both must evolve.
     for token in []:

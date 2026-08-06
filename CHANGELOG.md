@@ -6,6 +6,10 @@ Wszystkie istotne zmiany projektu są rejestrowane w tym pliku. Format jest insp
 
 ### Added
 
+- formalnie zaakceptowany refinement EMP-006 wraz z security amendmentem i pięcioma decyzjami właściciela; EMP-006 jest `READY`, a implementacja pozostaje `NOT_STARTED`;
+- security amendment draftu EMP-006: fail-closed field-lines, redirecty bez `Location`, body limit 16 KiB, IPv6/porty i boundary proxy contract;
+- draft refinement EMP-006 z precyzyjnym kontraktem Client IP, trusted proxy chain, provider-neutral GeoIP, prywatnością, failure policy i matrycą testów;
+- `make emp006-refinement-check` chroniący zakaz implementacji przed akceptacją oraz kompletność decyzji EMP-006;
 - zakończone i zweryfikowane EMP-007: canonical OpenAPI, Swagger UI, runtime `/openapi.yaml`, Maven DocLint, `make emp007-check` i znaczący Javadoc publicznych kontraktów EMP-003;
 - `POST /api/v1/coupons` z request/response contract;
 - value objects `CouponCode` i `CountryCode` oraz model `Coupon`;
@@ -33,7 +37,8 @@ Wszystkie istotne zmiany projektu są rejestrowane w tym pliku. Format jest insp
 
 ### Changed
 
-- `EMP-004` jest zablokowane do ukończenia prerequisites GeoIP/API, a EMP-006 jest w stanie `REFINEMENT` bez zgody na implementację;
+- backlog wskazuje teraz własny refinement EMP-006; refinement jest `ACCEPTED`, a implementacja jest dozwolona wyłącznie w osobnym checkpointcie;
+- `EMP-004` jest zablokowane do ukończenia prerequisites GeoIP/API, a EMP-006 jest `READY` bez rozpoczętej implementacji;
 - OpenAPI is now a mandatory part of Definition of Done for every public endpoint;
 - zoptymalizowano `Dockerfile`: usunięto kosztowne `dependency:go-offline`, a build Maven korzysta z trwałego cache BuildKit `/root/.m2`;
 - usunięto zewnętrzną dyrektywę Dockerfile frontend, aby build nie zależał od pobierania `docker/dockerfile:1.7`;

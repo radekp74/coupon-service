@@ -5,20 +5,21 @@ REST-owy serwis do tworzenia i bezpiecznego wykorzystywania kuponów rabatowych.
 
 ## Aktualny stan
 
-- **Checkpoint:** `0.0.9-emp-007-verified`
+- **Checkpoint:** `0.0.11-emp-006-refinement-accepted`
 - **Data stanu:** `2026-08-06`
 - **Termin oddania:** `2026-08-10`, koniec dnia
 - **EMP-000–EMP-003:** `DONE_AND_VERIFIED`
 - **EMP-007:** `DONE_AND_VERIFIED`
-- **Aktywne zadanie:** `EMP-006 — refinement`
-- **Implementation allowed:** `NO` dla EMP-006 do czasu accepted refinementu
+- **Aktywne zadanie:** `EMP-006 — implementation`
+- **Refinement EMP-006:** `ACCEPTED`
+- **Implementation allowed:** `YES`; implementacja EMP-006 ma status `NOT_STARTED`
 - **EMP-004:** `BLOCKED` do ukończenia EMP-006/007
 - **Kod biznesowy:** `CREATE_COUPON_DONE_AND_VERIFIED`
 - **OpenAPI/Swagger UI:** `DONE_AND_VERIFIED`
 - **Javadoc/DocLint policy:** `ACTIVE_AND_VERIFIED`
 - **Weryfikacja runtime EMP-007:** `PASS`
 
-EMP-007 dostarczył tester-facing dokumentację istniejącego endpointu create coupon. Canonical `docs/api/openapi.yaml` jest pakowany do aplikacji i wyświetlany przez Swagger UI. Lokalny Maven/DocLint, HTTP integration i Docker runtime smoke przeszły.
+EMP-007 dostarczył tester-facing dokumentację istniejącego endpointu create coupon. Refinement EMP-006 został formalnie zaakceptowany i zamraża granicę zaufania dla Client IP, zewnętrznego GeoIP oraz minimalizacji danych. Nie zawiera implementacji: Client IP, GeoIP i redemption nadal nie są zaimplementowane.
 
 
 ## Zweryfikowany zakres EMP-003
@@ -87,6 +88,7 @@ Lżejsze bramki bez Dockera i pobierania zależności:
 make docs-check
 make bootstrap-check
 make emp003-check
+make emp006-refinement-check
 make emp007-check
 ```
 
@@ -204,13 +206,14 @@ Najlepsza kolejność czytania:
 
 1. [Aktualny status](docs/project/current-status.md)
 2. [Podsumowanie refinementu EMP-001](docs/project/refinements/EMP-001-summary.md)
-3. [Refinement EMP-007](docs/project/refinements/EMP-007.md)
-4. [Refinement EMP-003](docs/project/refinements/EMP-003.md)
-5. [Pełny refinement EMP-001](docs/project/refinements/EMP-001.md)
-5. [Backlog](docs/project/backlog.md)
-6. [Kontrakt API](docs/api/api-contract.md)
-7. [Architektura](docs/architecture/overview.md)
-8. [Strategia testów](docs/testing/test-strategy.md)
+3. [Zaakceptowany refinement EMP-006](docs/project/refinements/EMP-006.md)
+4. [Refinement EMP-007](docs/project/refinements/EMP-007.md)
+5. [Refinement EMP-003](docs/project/refinements/EMP-003.md)
+6. [Pełny refinement EMP-001](docs/project/refinements/EMP-001.md)
+7. [Backlog](docs/project/backlog.md)
+8. [Kontrakt API](docs/api/api-contract.md)
+9. [Architektura](docs/architecture/overview.md)
+10. [Strategia testów](docs/testing/test-strategy.md)
 9. [Rejestr ryzyk](docs/project/risk-register.md)
 10. [Pełny indeks dokumentacji](docs/DOCUMENTATION_INDEX.md)
 

@@ -10,7 +10,7 @@
 | bieżąca liczba użyć | transakcyjny `current_uses` | EMP-004 | invariant test |
 | kraj kuponu | `country_code` ISO alpha-2 | EMP-003 | validation test |
 | kto pierwszy, ten lepszy | `SELECT FOR UPDATE` | EMP-004/009 | 100 request concurrency test |
-| tylko użytkownicy z kraju | GeoIP port i adapter | EMP-006 | WireMock API tests |
+| tylko użytkownicy z kraju | trusted Client IP + provider-neutral GeoIP; porównanie dopiero w EMP-004 | EMP-006/004 | parser/proxy/WireMock tests + API test |
 | informacja o wyczerpaniu | 409 `COUPON_EXHAUSTED` | EMP-007 | API test |
 | informacja o braku kodu | 404 `COUPON_NOT_FOUND` | EMP-007 | API test |
 | informacja o złym kraju | 403 `COUNTRY_NOT_ALLOWED` | EMP-006/007 | API test |
@@ -43,3 +43,13 @@ Dodatki nie zmieniają domeny zadania i wspierają oceniane cechy: jakość, arc
 - runtime machine-readable spec: `/openapi.yaml`;
 - interaktywny Swagger UI: `/swagger-ui`;
 - każdy kolejny publiczny endpoint aktualizuje spec i testy w tym samym checkpointcie.
+
+
+## Traceability EMP-006
+
+- spoofing forwarded headers → direct default, CIDR trust i boundary proxy contract;
+- brak DNS → ścisły parser literalnego IPv4/IPv6;
+- awaria darmowego providera → timeout, brak retry i 503 `GEOLOCATION_UNAVAILABLE`;
+- prywatne adresy → public provider nie jest wywoływany; local/test korzysta ze stubu;
+- minimalizacja danych → raw IP tylko w pamięci, bez storage, hash i logowania;
+- tester-facing API → EMP-006 nie publikuje przedwcześnie redemption w canonical OpenAPI.

@@ -84,3 +84,19 @@ Nie wprowadzono wymogu komentarza dla każdej zmiennej. Publiczne kontrakty otrz
 ## Evidence closeoutu EMP-007
 
 EMP-007 zamknięto dopiero po lokalnym `make verify`: Maven `clean verify` przeszedł z `OpenApiDocumentationIT` i DocLint bez błędów, a JAR zawiera `BOOT-INF/classes/static/openapi.yaml`. Runtime Docker potwierdził `UP` na `/actuator/health`, canonical YAML na `/openapi.yaml`, działające `/swagger-ui` oraz `swagger-config` z `url=/openapi.yaml`. Przykładowy create zwrócił 201, a case-insensitive duplicate 409 `COUPON_CODE_CONFLICT`; własny stos został następnie usunięty.
+
+## Refinement EMP-006
+
+EMP-006 pozostaje wyłącznie checkpointem dokumentacyjnym. Draft rozdziela trzy odpowiedzialności: wiarygodne ustalenie Client IP, mapowanie publicznego IP na kraj oraz przyszłą decyzję domenową podczas redemption. Dzięki temu zewnętrzny call nie znajdzie się pod blokadą bazy, a infrastrukturalny 503 nie zostanie pomylony z biznesowym 403.
+
+Review objęło także granicę zaufania proxy. Direct mode ignoruje nagłówki klienta. Trusted mode wymaga CIDR, analizuje łańcuch od prawej i nie fallbackuje z błędnego `Forwarded` do XFF. Ścisły parser nie może wykonywać DNS. Publiczny adapter nie otrzymuje adresów specjalnego przeznaczenia, a raw IP pozostaje memory-only.
+
+Darmowy provider jest opisany jako adapter demonstracyjny, nie produkcyjne SLA. Pierwszy review pozostawił refinement w stanie `DRAFT` i odrzucił go z pięcioma lukami bezpieczeństwa.
+
+## Security amendment EMP-006
+
+Pierwszy review EMP-006 zakończył się `REJECT` dla pięciu luk: wielokrotnych field-lines, redirectów dostawcy, limitu body, IPv6/portów i boundary proxy. Dokumentacyjny amendment doprecyzował fail-closed, 16 KiB bounded read, brak śledzenia `Location`, bezpieczny podzbiór składni i obowiązek deploymentu.
+
+## Formalna akceptacja refinementu EMP-006
+
+2026-08-06 Radosław Piątek zaakceptował amendment i pięć decyzji właściciela: demonstracyjny adapter `ipwho.is`, wspólny 503 `GEOLOCATION_UNAVAILABLE`, brak cache/retry/fallbacku, fail-closed dla błędnego `Forwarded` oraz stub `PL` wyłącznie w profilach `local` i `test`. Refinement ma status `ACCEPTED`, EMP-006 jest `READY`, a implementacja pozostaje `NOT_STARTED`. Nie jest to dowód istnienia Client IP, GeoIP ani redemption w runtime.

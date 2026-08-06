@@ -68,3 +68,14 @@ make verify
 ```
 
 Po bootstrapie aplikacji `make verify` obejmuje Maven, testy, migracje, DocLint, OpenAPI runtime smoke i statyczne bramki jakości.
+
+## 9. Client IP i GeoIP
+
+- bezpieczny default nie ufa `Forwarded` ani `X-Forwarded-For`;
+- nagłówki proxy są analizowane tylko przy zaufanym immediate peer i jawnych CIDR;
+- parser adresu nie wykonuje DNS i przyjmuje wyłącznie literalny IPv4/IPv6;
+- publiczny provider nie otrzymuje adresów prywatnych ani specjalnego przeznaczenia;
+- timeout lub błąd providera nie może zostać zinterpretowany jako `COUNTRY_NOT_ALLOWED`;
+- testy GeoIP nie wykonują requestów do publicznego Internetu;
+- local/test stub nie jest publicznym mechanizmem wymuszania kraju;
+- zmiana trust algorithm, providera, timeoutów, storage IP lub failure mapping wymaga amendmentu refinementu.

@@ -139,3 +139,20 @@ Finalnie `make verify` uruchamia tę komendę wraz z governance dokumentacji ora
 | GeoIP failure | tak | nie | tak | nie |
 | rollback | nie | tak | pośrednio | tak |
 | error contract | tak | nie | tak | nie |
+
+
+## EMP-006 — Client IP i GeoIP
+
+Testy implementacji EMP-006 nie mogą wykonywać requestów do publicznego Internetu. Parser, CIDR i trusted chain są testowane jednostkowo. Adapter HTTP używa lokalnego WireMock lub równoważnego stubu dla sukcesu, timeoutów, 429, 5xx, `success=false`, błędnego JSON i limitu body. Konfiguracja Spring potwierdza startup failure dla pustej trust listy, HTTP base URL oraz stubu poza `local`/`test`.
+
+Wymagane asercje bezpieczeństwa:
+
+- spoofed header od niezaufanego peer nie zmienia IP;
+- `Forwarded` ma pierwszeństwo i nie fallbackuje po błędzie;
+- parser nie wykonuje DNS;
+- adresy specjalnego przeznaczenia nie docierają do provider stubu;
+- failure wykonuje dokładnie jedno wywołanie, bez retry;
+- exception i log contract nie zawierają raw IP;
+- canonical OpenAPI nadal nie zawiera redemption przed EMP-004.
+- wielokrotne physical `Forwarded`/XFF, conflict obu nagłówków i trusted boundary proxy są fail-closed zgodnie z kontraktem;
+- redirect 300–399 nie wykonuje drugiego requestu, a limit 16 KiB obejmuje Content-Length i streaming;

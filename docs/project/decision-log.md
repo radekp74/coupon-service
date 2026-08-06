@@ -32,3 +32,13 @@
 | D-028 | 2026-08-06 | ACCEPTED | `docs/api/openapi.yaml` jest canonical spec i jest serwowane przez Swagger UI | tester widzi dokładnie wersjonowany kontrakt; nie powstają dwa niezależne źródła prawdy |
 | D-029 | 2026-08-06 | ACCEPTED | Znaczący Javadoc jest wymagany dla publicznych kontraktów, nie dla każdej zmiennej | dokumentujemy semantykę i ryzyka bez zalewania kodu komentarzami |
 | D-030 | 2026-08-06 | ACCEPTED | EMP-007 i EMP-006 poprzedzają implementację EMP-004 | publiczny redemption nie może istnieć bez wiarygodnego kraju i tester-facing kontraktu; kolejność odpowiada EMP-001 |
+| D-031 | 2026-08-06 | ACCEPTED | Client IP używa trybu `direct` jako bezpiecznego defaultu | nagłówki klienta nie mogą zmienić kraju bez jawnej granicy zaufania |
+| D-032 | 2026-08-06 | ACCEPTED | Trusted proxy chain jest analizowany od prawej do lewej | pierwszy niezaufany hop ogranicza spoofing i wspiera wiele proxy |
+| D-033 | 2026-08-06 | ACCEPTED | `Forwarded` ma pierwszeństwo, a błędna wartość nie fallbackuje do XFF | unika header confusion i zachowuje fail-closed |
+| D-034 | 2026-08-06 | ACCEPTED | Domyślny adapter demo używa `https://ipwho.is` z minimalnym `fields` | brak klucza ułatwia review, a port zachowuje wymienność |
+| D-035 | 2026-08-06 | ACCEPTED | GeoIP ma 500 ms connect, 1 s response i brak retry | request nie może długo blokować przyszłej transakcji redemption |
+| D-036 | 2026-08-06 | ACCEPTED | Client IP i provider failures używają jednego publicznego 503 `GEOLOCATION_UNAVAILABLE` | klient nie potrzebuje szczegółów infrastruktury, a 403 pozostaje decyzją biznesową |
+| D-037 | 2026-08-06 | ACCEPTED | Raw IP jest memory-only i nie powstaje jego hash | minimalizacja danych bez niepotrzebnego quasi-identyfikatora |
+| D-038 | 2026-08-06 | ACCEPTED | Local/test używa profilowego stubu `PL`, bez bypass header | deterministyczne demo dla prywatnego IP kontenera bez osłabiania API |
+| D-039 | 2026-08-06 | ACCEPTED | Brak cache, retry i multi-provider fallback w EMP-006 | ograniczony zakres zadania; rozszerzenia wymagają pomiarów i osobnej decyzji |
+| D-040 | 2026-08-06 | ACCEPTED | Wielokrotne field-lines failują, redirecty są wyłączone, a body ma limit 16 KiB | usuwa header confusion, request do Location i nieograniczony odczyt odpowiedzi |

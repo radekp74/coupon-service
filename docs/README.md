@@ -8,6 +8,7 @@ Dokumentacja jest częścią rozwiązania i podlega tym samym bramkom jakości c
 - [Aktualny status](project/current-status.md)
 - [Backlog](project/backlog.md)
 - [Refinement EMP-001](project/refinements/EMP-001.md)
+- [Zaakceptowany refinement EMP-006](project/refinements/EMP-006.md)
 - [Architektura](architecture/overview.md)
 - [Kontrakt API](api/api-contract.md)
 - [Strategia testów](testing/test-strategy.md)
@@ -23,4 +24,4 @@ Dokumentacja jest częścią rozwiązania i podlega tym samym bramkom jakości c
 
 ## Aktualny checkpoint
 
-EMP-007 udostępnia canonical OpenAPI testerom przez `/openapi.yaml` i Swagger UI pod `/swagger-ui` oraz wprowadza proporcjonalną politykę Javadoc.
+EMP-007 udostępnia canonical OpenAPI testerom przez `/openapi.yaml` i Swagger UI pod `/swagger-ui`. Zaakceptowany refinement EMP-006 definiuje bezpieczne rozpoznawanie Client IP, zaufane proxy, provider-neutral GeoIP i prywatność; implementacja EMP-006 może rozpocząć się w osobnym checkpointcie i ma obecnie status `NOT_STARTED`.
