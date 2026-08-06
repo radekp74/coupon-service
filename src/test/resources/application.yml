@@ -1,0 +1,10 @@
+spring:
+  main:
+    banner-mode: "off"
+  flyway:
+    clean-disabled: true
+
+logging:
+  level:
+    root: WARN
+    org.flywaydb.core: INFO

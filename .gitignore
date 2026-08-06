@@ -1,0 +1,30 @@
+# Java / Maven
+target/
+.mvn/timing.properties
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# Runtime and secrets
+.env
+.env.*
+!.env.example
+secrets/
+*.pem
+*.key
+
+# OS
+.DS_Store
+
+# Generated artifacts
+build/
+dist/
+*.zip
+
+# Logs
+*.log
