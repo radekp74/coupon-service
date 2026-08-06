@@ -40,4 +40,4 @@
 
 ## Wynik
 
-`PASS`. Refinement jest zaakceptowany; implementacja może rozpocząć się wyłącznie w osobnym checkpointcie.
+`PASS`. Refinement jest zaakceptowany. Po audycie EMP-008/EMP-009 uzupełniono brakujące evidence: UserId/orchestrator unit, HTTP 403/503, same-user 1/19, last-slot 1/1, per-row lock, rollback INSERT/UPDATE oraz inny constraint. Implementacja i remediation są zweryfikowane pełnym lokalnym gate.

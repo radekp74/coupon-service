@@ -64,7 +64,7 @@ def validate_openapi(errors: List[str]) -> None:
     redemption = "/api/v1/coupons/{code}/redemptions" in read(openapi)
     status_text = read(ROOT / "docs/project/current-status.md")
     implementation_started = any(
-        f"Implementation EMP-004:** `{state}`" in status_text for state in {"IN_PROGRESS", "DONE_AND_VERIFIED"}
+        f"Implementation EMP-004:** `{state}`" in status_text for state in {"IMPLEMENTED", "IN_PROGRESS", "DONE_AND_VERIFIED"}
     )
     if redemption and not implementation_started:
         errors.append("OpenAPI must not describe redemption before EMP-004 implementation starts")

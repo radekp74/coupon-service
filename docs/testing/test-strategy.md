@@ -2,7 +2,7 @@
 
 ## Stan realizacji
 
-EMP-002, EMP-003, EMP-006 i EMP-007 są `DONE_AND_VERIFIED`. EMP-006 dodaje testy Client IP, trusted proxy, GeoIP i profilowego stubu bez publicznej sieci. Redemption i jego concurrency evidence pozostają w kolejnym zadaniu.
+EMP-002, EMP-003, EMP-004, EMP-006 i EMP-007 są `DONE_AND_VERIFIED`. EMP-004 ma PostgreSQL evidence 100/10 w trzech rundach, same-user 1/19, last-slot 1/1, per-row locking oraz rollbacków; EMP-009 pozostaje osobnym checkpointem formalnego mapowania tego evidence.
 
 ## Cel
 
@@ -41,7 +41,7 @@ H2 jest zabronione jako substytut integracyjnej bazy.
 - canonical `/openapi.yaml` jest dostępne z artefaktu;
 - Swagger UI jest dostępny i wskazuje canonical spec;
 - Petstore jest wyłączony;
-- spec nie zawiera niezaimplementowanego redemption;
+- spec opisuje wyłącznie zaimplementowane create i redemption;
 - JAR zawiera `static/openapi.yaml`.
 
 ### HTTP/API tests
@@ -155,14 +155,14 @@ Wymagane asercje bezpieczeństwa:
 - adresy specjalnego przeznaczenia nie docierają do provider stubu;
 - failure wykonuje dokładnie jedno wywołanie, bez retry;
 - exception i log contract nie zawierają raw IP;
-- canonical OpenAPI nadal nie zawiera redemption przed EMP-004.
+- canonical OpenAPI zawiera redemption, ponieważ EMP-004 jest zaimplementowane i zweryfikowane.
 - wielokrotne physical `Forwarded`/XFF, conflict obu nagłówków i trusted boundary proxy są fail-closed zgodnie z kontraktem;
 - redirect 300–399 nie wykonuje drugiego requestu, a limit 16 KiB obejmuje Content-Length i streaming;
 
 
-## EMP-004 — zaakceptowany refinement transakcyjnego redemption
+## EMP-004 — zweryfikowane redemption
 
-Refinement wymaga snapshot lookup przed GeoIP, osobnego proxied transaction bean, `READ COMMITTED`, `SELECT ... FOR UPDATE`, named unique constraint mapping oraz conditional increment. OpenAPI nie może zostać rozszerzone przed implementacją.
+Refinement wymaga snapshot lookup przed GeoIP, osobnego proxied transaction bean, `READ COMMITTED`, `SELECT ... FOR UPDATE`, named unique constraint mapping oraz conditional increment. Canonical OpenAPI i Swagger UI są rozszerzone razem z endpointem.
 
 `UserId` będzie testowany jako opaque i case-sensitive `^[!-~]{1,128}$`, bez trimowania i normalizacji. Testy integracyjne muszą potwierdzić zgodność Bean Validation, PostgreSQL `CHECK` i OpenAPI; ta migracja nie należy do dokumentacyjnego checkpointu.
 

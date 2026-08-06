@@ -165,7 +165,7 @@ def validate_security_contract(errors: List[str]) -> None:
     openapi = read(ROOT / "docs" / "api" / "openapi.yaml")
     current_status = read(ROOT / "docs" / "project" / "current-status.md")
     if "/api/v1/coupons/{code}/redemptions" in openapi and not any(
-            f"Implementation EMP-004:** `{state}`" in current_status for state in {"IN_PROGRESS", "DONE_AND_VERIFIED"}):
+            f"Implementation EMP-004:** `{state}`" in current_status for state in {"IMPLEMENTED", "IN_PROGRESS", "DONE_AND_VERIFIED"}):
         errors.append("OpenAPI may describe redemption only after EMP-004 implementation starts")
 
     migration = read(ROOT / "src" / "main" / "resources" / "db" / "migration" / "V1__create_coupon_tables.sql")

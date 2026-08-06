@@ -69,3 +69,12 @@ Status:
 - **Dowód:** `make verify` nie mógł opublikować 18080, podczas gdy ręczny runtime na 18081 przeszedł bez zmiany istniejącego kontenera.
 - **Zmiana procesu lub kodu:** smoke Compose korzysta z portu przydzielanego dynamicznie na `127.0.0.1`, odczytuje go przez `docker compose port` i sprząta wyłącznie projekt o nazwie unikalnej dla uruchomienia.
 - **Status:** `CONFIRMED`
+
+## LL-006 — closeout wymaga mapowania każdego obowiązkowego evidence
+
+- **Data:** 2026-08-07
+- **Powiązane zadanie:** EMP-004
+- **Obserwacja:** poprzedni closeout redemption nastąpił przed zebraniem wszystkich testów wymaganych przez zaakceptowany refinement.
+- **Dowód:** audyt EMP-008/EMP-009 wskazał brak same-user 1/19, last-slot 1/1, per-row lock, rollbacków i HTTP 403/503; remediation dodało je, a pełny Maven verify przeszedł.
+- **Zmiana procesu lub kodu:** checker EMP-004 wymaga teraz testowych artefaktów tych scenariuszy, a release evidence odwołuje się do rzeczywiście uruchomionych testów.
+- **Status:** `CONFIRMED`

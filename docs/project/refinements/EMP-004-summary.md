@@ -41,4 +41,4 @@ max one redemption for (coupon_id, user_id)
 4. Przyjąć precedence not found → GeoIP unavailable → wrong country → already redeemed → exhausted.
 5. Użyć READ COMMITTED + row lock, bez retry i custom lock timeout.
 
-Refinement jest zamrożony. EMP-004 ma status `READY`, a implementacja pozostaje `NOT_STARTED` do osobnego checkpointu.
+Refinement pozostaje zamrożony i zaakceptowany. Implementacja EMP-004 oraz remediation verification evidence są `DONE_AND_VERIFIED`; audyt EMP-008/EMP-009 wykrył wcześniej brak części testów, który następnie uzupełniono bez zmiany kontraktu.

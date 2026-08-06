@@ -2,8 +2,8 @@
 
 | ID | Poziom | Status | Ryzyko | Mitigacja | Docelowy evidence |
 |---|---|---|---|---|---|
-| R-001 | CRITICAL | OPEN | przekroczenie `max_uses` przy równoległości | row lock + DB checks + test 100/10 | EMP-009 |
-| R-002 | HIGH | OPEN | wielokrotne użycie przez tego samego użytkownika | unique constraint + kolejność walidacji | EMP-004/009; EMP-005 jest scalone z EMP-004 |
+| R-001 | CRITICAL | MITIGATED | przekroczenie `max_uses` przy równoległości | row lock + DB checks + test 100/10 | EMP-004: 3 × exact 10/90, counter=records=10 |
+| R-002 | HIGH | MITIGATED | wielokrotne użycie przez tego samego użytkownika | unique constraint + kolejność walidacji | EMP-004: exact 1 success / 19 already redeemed, counter=records=1 |
 | R-003 | MEDIUM | OPEN | hot coupon powoduje kontencję | krótka transakcja, brak calli sieciowych pod lockiem | timing test / review |
 | R-004 | HIGH | MITIGATED | GeoIP timeout, limit lub awaria | provider port, HTTPS, 500 ms connect, 1 s response, brak retry, 503 | EMP-006 WireMock: timeout/status/success=false/body limit |
 | R-005 | HIGH | MITIGATED | spoofing `Forwarded` / `X-Forwarded-For` | direct default, CIDR trust, right-to-left chain, malformed header fail-closed | EMP-006 resolver: direct spoofing, field-lines, precedence i trusted chain |
@@ -11,10 +11,10 @@
 | R-007 | HIGH | MITIGATED | case-insensitive duplikat w race condition | canonical field + unique constraint + exact-count concurrency test | EMP-003: 3 × 24 prób, każdorazowo 1 sukces, 23 konflikty, 1 rekord |
 | R-008 | MEDIUM | MITIGATED | governance większe niż samo zadanie | jeden refinement MVP i ograniczony zestaw dokumentów | docs-check PASS |
 | R-009 | MEDIUM | OPEN | timeout klienta po commit prowadzi do retry | naturalny unique user conflict i stabilny error code | EMP-004/007; EMP-005 jest scalone z EMP-004 |
-| R-010 | MEDIUM | OPEN | licznik i redemption records się rozjadą | jedna transakcja + invariant integration test | EMP-004/008 |
+| R-010 | MEDIUM | MITIGATED | licznik i redemption records się rozjadą | jedna transakcja + invariant integration test | EMP-004: insert/update rollback i invariant po każdej ścieżce fault |
 | R-011 | HIGH | MITIGATED | utrwalanie lub logowanie IP zwiększa ryzyko prywatności | memory-only raw IP, brak hash/storage, redaction i provider data minimization | EMP-006 source/privacy review + testy wyjątków bez IP |
 | R-012 | MEDIUM | OPEN | darmowy provider ma limit i brak SLA | port, external HTTPS config, jawny limit, brak deklaracji production readiness | EMP-006/011 |
-| R-013 | MEDIUM | OPEN | flaky concurrency test | barrier start, bounded executor, exact assertions, brak sleep-based sync | EMP-009 |
+| R-013 | MEDIUM | MITIGATED | flaky concurrency test | barrier start, bounded executor, exact assertions, brak sleep-based sync | EMP-004: 3 × 100/10, same-user i last-slot na PostgreSQL Testcontainers |
 | R-014 | MEDIUM | OPEN | nadmierne użycie AI bez zrozumienia | małe checkpointy, ADR-y, review każdej decyzji | final technical review |
 | R-015 | HIGH | MITIGATED | lokalny GeoIP stub zostaje przypadkowo aktywowany w produkcji | bean/profile guard + startup failure poza `local`/`test` + configuration test | EMP-006 profile startup tests |
 | R-016 | HIGH | MITIGATED | OpenAPI i runtime API rozchodzą się | jeden canonical YAML pakowany do artefaktu + checker + HTTP test | EMP-007 |

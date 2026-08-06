@@ -27,6 +27,8 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.postgresql.PostgreSQLContainer;
@@ -44,6 +46,7 @@ class CouponRedemptionApiIT {
     }
     @Autowired TestRestTemplate rest;
     @Autowired JdbcClient jdbc;
+    @Autowired PlatformTransactionManager transactionManager;
     @BeforeEach void clear() { jdbc.sql("TRUNCATE TABLE coupon_redemptions, coupons").update(); }
 
     @Test void redeemsRetriesAndExhaustsWithoutLeakingTechnicalDetails() {
@@ -90,6 +93,65 @@ class CouponRedemptionApiIT {
                 assertThat(jdbc.sql("SELECT COUNT(*) FROM coupon_redemptions r JOIN coupons c ON c.id=r.coupon_id WHERE c.normalized_code=:code").param("code", code).query(Long.class).single()).isEqualTo(10L);
             } finally { start.countDown(); executor.shutdownNow(); assertThat(executor.awaitTermination(15, TimeUnit.SECONDS)).isTrue(); }
         }
+    }
+
+    @Test void sameUserConcurrentRetriesProduceExactlyOneSuccessAndNineteenConflicts() throws Exception {
+        create("SAMEUSER", 20);
+        List<String> users = new ArrayList<>(); for (int index = 0; index < 20; index++) users.add("same-user");
+        List<ResponseEntity<Map>> responses = concurrentResponses("SAMEUSER", users);
+        assertThat(responses.stream().filter(response -> response.getStatusCode() == HttpStatus.CREATED).count()).isEqualTo(1);
+        assertThat(responses.stream().filter(response -> response.getStatusCode() == HttpStatus.CONFLICT).count()).isEqualTo(19);
+        assertThat(responses.stream().filter(response -> response.getStatusCode() == HttpStatus.CONFLICT)
+                .map(ResponseEntity::getBody).map(body -> body.get("code"))).containsOnly("COUPON_ALREADY_REDEEMED");
+        assertThat(jdbc.sql("SELECT current_uses FROM coupons WHERE normalized_code='SAMEUSER'").query(Integer.class).single()).isEqualTo(1);
+        assertThat(jdbc.sql("SELECT COUNT(*) FROM coupon_redemptions").query(Long.class).single()).isEqualTo(1L);
+    }
+
+    @Test void twoDifferentUsersCompeteForTheLastSlotWithExactOutcomes() throws Exception {
+        create("LASTSLOT", 2);
+        assertThat(redeem("LASTSLOT", "seed", Map.class).getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        List<ResponseEntity<Map>> responses = concurrentResponses("LASTSLOT", List.of("user-A", "user-B"));
+        assertThat(responses.stream().map(ResponseEntity::getStatusCode)).containsExactlyInAnyOrder(HttpStatus.CREATED, HttpStatus.CONFLICT);
+        assertThat(responses.stream().filter(response -> response.getStatusCode() == HttpStatus.CONFLICT)
+                .map(ResponseEntity::getBody).map(body -> body.get("code"))).containsOnly("COUPON_EXHAUSTED");
+        assertThat(jdbc.sql("SELECT current_uses FROM coupons WHERE normalized_code='LASTSLOT'").query(Integer.class).single()).isEqualTo(2);
+        assertThat(jdbc.sql("SELECT COUNT(*) FROM coupon_redemptions").query(Long.class).single()).isEqualTo(2L);
+    }
+
+    @Test void rowLockOnOneCouponDoesNotGloballySerializeAnotherCoupon() throws Exception {
+        create("LOCKA", 2); create("LOCKB", 2);
+        CountDownLatch locked = new CountDownLatch(1); CountDownLatch release = new CountDownLatch(1);
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        try {
+            Future<Void> holder = executor.submit(() -> {
+                new TransactionTemplate(transactionManager).executeWithoutResult(status -> {
+                    jdbc.sql("SELECT id FROM coupons WHERE normalized_code='LOCKA' FOR UPDATE").query(java.util.UUID.class).single();
+                    locked.countDown();
+                    try { if (!release.await(15, TimeUnit.SECONDS)) throw new IllegalStateException("release timeout"); }
+                    catch (InterruptedException exception) { Thread.currentThread().interrupt(); throw new IllegalStateException(exception); }
+                });
+                return null;
+            });
+            assertThat(locked.await(15, TimeUnit.SECONDS)).isTrue();
+            Future<ResponseEntity<Map>> independentRedemption = executor.submit(() -> redeem("LOCKB", "lock-free-user", Map.class));
+            assertThat(independentRedemption.get(15, TimeUnit.SECONDS).getStatusCode()).isEqualTo(HttpStatus.CREATED);
+            release.countDown(); holder.get(15, TimeUnit.SECONDS);
+            assertThat(jdbc.sql("SELECT current_uses FROM coupons WHERE normalized_code='LOCKB'").query(Integer.class).single()).isEqualTo(1);
+        } finally { release.countDown(); executor.shutdownNow(); assertThat(executor.awaitTermination(15, TimeUnit.SECONDS)).isTrue(); }
+    }
+
+    private List<HttpStatusCode> concurrent(String code, List<String> users) throws Exception {
+        ExecutorService executor=Executors.newFixedThreadPool(users.size()); CountDownLatch ready=new CountDownLatch(users.size()); CountDownLatch start=new CountDownLatch(1); List<Future<HttpStatusCode>> futures=new ArrayList<>();
+        try { for(String user:users) futures.add(executor.submit(() -> { ready.countDown(); if(!start.await(15,TimeUnit.SECONDS)) throw new IllegalStateException("barrier timeout"); return redeem(code,user,Map.class).getStatusCode(); }));
+            assertThat(ready.await(15,TimeUnit.SECONDS)).isTrue(); start.countDown(); List<HttpStatusCode> statuses=new ArrayList<>(); for(Future<HttpStatusCode> future:futures) statuses.add(future.get(60,TimeUnit.SECONDS)); return statuses;
+        } finally { start.countDown(); executor.shutdownNow(); assertThat(executor.awaitTermination(15,TimeUnit.SECONDS)).isTrue(); }
+    }
+
+    private List<ResponseEntity<Map>> concurrentResponses(String code, List<String> users) throws Exception {
+        ExecutorService executor=Executors.newFixedThreadPool(users.size()); CountDownLatch ready=new CountDownLatch(users.size()); CountDownLatch start=new CountDownLatch(1); List<Future<ResponseEntity<Map>>> futures=new ArrayList<>();
+        try { for(String user:users) futures.add(executor.submit(() -> { ready.countDown(); if(!start.await(15,TimeUnit.SECONDS)) throw new IllegalStateException("barrier timeout"); return redeem(code,user,Map.class); }));
+            assertThat(ready.await(15,TimeUnit.SECONDS)).isTrue(); start.countDown(); List<ResponseEntity<Map>> responses=new ArrayList<>(); for(Future<ResponseEntity<Map>> future:futures) responses.add(future.get(60,TimeUnit.SECONDS)); return responses;
+        } finally { start.countDown(); executor.shutdownNow(); assertThat(executor.awaitTermination(15,TimeUnit.SECONDS)).isTrue(); }
     }
 
     private void create(String code, int uses) { rest.postForEntity("/api/v1/coupons", Map.of("code", code, "maxUses", uses, "countryCode", "PL"), Map.class); }

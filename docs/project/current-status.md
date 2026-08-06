@@ -5,7 +5,7 @@
 - **Faza:** `TRANSACTIONAL_REDEMPTION_DONE_AND_VERIFIED`
 - **Active task:** `awaiting next refinement`
 - **EMP-004 refinement:** `ACCEPTED`
-- **Implementation EMP-004:** `DONE_AND_VERIFIED`
+- **Implementation EMP-004:** `DONE_AND_VERIFIED`; verification remediation `COMPLETED`
 - **Implementation allowed:** `YES` dla `EMP-004` na podstawie accepted własnego refinementu
 - **EMP-005:** `MERGED_INTO_EMP-004`; implementation i evidence ownerem jest EMP-004
 - **EMP-006:** `DONE_AND_VERIFIED`
@@ -13,25 +13,27 @@
 - **Implementation EMP-006:** `DONE_AND_VERIFIED`
 - **Implementation allowed EMP-006:** `YES`
 - **EMP-007:** `DONE_AND_VERIFIED`
-- **Kod aplikacji:** create coupon, Client IP/GeoIP i transactional redemption są zweryfikowane
-- **OpenAPI/Swagger UI:** `DONE_AND_VERIFIED` dla aktualnie zaimplementowanego API; canonical spec nadal nie zawiera redemption
+- **Kod aplikacji:** create coupon, Client IP/GeoIP i transactional redemption są zaimplementowane oraz lokalnie zweryfikowane
+- **OpenAPI/Swagger UI:** canonical `/openapi.yaml` zawiera `createCoupon` i `redeemCoupon`; Swagger UI używa tej specyfikacji
 - **Javadoc/DocLint policy:** `ACTIVE_AND_VERIFIED`
-- **Runtime verification:** `LOCAL_EMP006_GATE_PASS`
+- **Runtime verification:** `LOCAL_EMP004_REMEDIATION_GATE_PASS`
 - **Historyczne evidence bootstrapu:** `BOOTSTRAP_DONE_AND_VERIFIED`, `LOCAL_DOCKER_GATE_PASS`
 - **Historyczne evidence EMP-003:** `CREATE_COUPON_DONE_AND_VERIFIED`, `LOCAL_EMP003_GATE_PASS`
 - **Historyczne evidence EMP-007:** `OPENAPI_DOCUMENTATION_DONE_AND_VERIFIED`, `LOCAL_EMP007_GATE_PASS`
 
 ## Ukończone i zweryfikowane
 
-- `EMP-000`, `EMP-001`, `EMP-002`, `EMP-003`, `EMP-006` i `EMP-007` mają status `DONE_AND_VERIFIED`;
+- `EMP-000`, `EMP-001`, `EMP-002`, `EMP-003`, `EMP-004`, `EMP-006` i `EMP-007` mają status `DONE_AND_VERIFIED`;
 - `POST /api/v1/coupons` działa z case-insensitive uniqueness;
 - Client IP, trusted proxy, public-IP policy, adapter GeoIP i local/test stub przeszły pełny gate;
 - Swagger UI pokazuje canonical OpenAPI wyłącznie dla endpointów istniejących w runtime;
 - Docker smoke używa dynamicznego portu loopback i sprząta wyłącznie własny stos.
 
-## EMP-004 — ukończone i zweryfikowane
+## EMP-004 — verification remediation completed
 
-Implementacja potwierdziła:
+Audyt EMP-008/EMP-009 uczciwie wykrył, że wcześniejszy closeout nie zawierał całego evidence wymaganego przez accepted refinement. Kontrakt nie zmienił się. Remediation dodało testy value object i orchestratora, HTTP 403/503, exact 1/19 same-user, exact 1/1 last-slot, dowód blokady per-row, rollbacki PostgreSQL i kontrolę innego constraintu; pełny lokalny gate przeszedł.
+
+Implementacja już dostarczyła:
 
 - `POST /api/v1/coupons/{code}/redemptions`;
 - snapshot lookup przed GeoIP;
@@ -40,7 +42,7 @@ Implementacja potwierdziła:
 - PostgreSQL `READ COMMITTED` i `SELECT ... FOR UPDATE`;
 - precedence `country → already redeemed → exhausted` pod lockiem;
 - atomowy insert redemption i conditional increment;
-- rollback, named unique constraint i exact-count concurrency;
+- rollback, named unique constraint i complete exact-count concurrency evidence;
 - OpenAPI, Swagger UI i Javadoc jako obowiązkowy element implementacji.
 
 ## Zaakceptowane decyzje właściciela
@@ -53,8 +55,8 @@ Implementacja potwierdziła:
 
 ## Następny krok
 
-EMP-008 — dalsze hardening testów i pokrycia.
+EMP-009 — refinement i formalne mapowanie istniejącego evidence współbieżności; EMP-009 nie jest jeszcze zamknięte.
 
 ## Blokery
 
-Brak blockerów refinementu. Dowody implementacyjne i runtime są nadal wymagane przed `DONE_AND_VERIFIED`.
+Brak blockerów. EMP-008 pozostaje `PLANNED`, a EMP-009 pozostaje `PLANNED` do odrębnego refinementu.

@@ -6,6 +6,9 @@ Wszystkie istotne zmiany projektu są rejestrowane w tym pliku. Format jest insp
 
 ### Added
 
+- remediation EMP-004 po audycie EMP-008/EMP-009: bezpośrednie testy `UserId` i orchestratora, HTTP 403/503, exact same-user 1/19, last-slot 1/1, dowód braku globalnego JVM locka oraz PostgreSQL rollback/constraint evidence;
+- checker EMP-004 wymaga teraz rzeczywistych testów remediation, a checkery późniejszych checkpointów rozpoznają jawny stan `IMPLEMENTED` podczas wznowionej weryfikacji;
+
 - zaakceptowany refinement EMP-004 dla transakcyjnego redemption: kontrakt HTTP, snapshot/GeoIP poza transakcją, row lock, atomowy insert/increment, rollback, retry semantics i exact-count concurrency;
 - formalny amendment EMP-001: opaque, case-sensitive `userId` `^[!-~]{1,128}$`, bez trimowania i normalizacji, do zgodnego enforcement w Bean Validation, PostgreSQL i OpenAPI podczas implementacji;
 - EMP-005 jest `MERGED_INTO_EMP-004`; user-once jest obowiązkowym invariantem wspólnej transakcji i evidence;
@@ -61,8 +64,8 @@ Wszystkie istotne zmiany projektu są rejestrowane w tym pliku. Format jest insp
 
 ### Planned
 
-- endpoint wykorzystania kuponu po akceptacji;
-- exact-count matryca testów redemption i limit concurrency;
+- formalny refinement i mapowanie evidence EMP-009;
+- JaCoCo i scope EMP-008;
 - CI.
 
 ## [0.0.1-foundation] — 2026-08-06

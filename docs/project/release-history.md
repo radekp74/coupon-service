@@ -451,3 +451,28 @@ Ten checkpoint jest wyłącznie formalnym closeoutem refinementu i amendmentu; n
 ## 2026-08-07 — `0.0.16-emp-004-verified`
 
 `EMP-004` zamknięto po pełnym `make verify` (85.13 s), Maven/Testcontainers, DocLint bez błędów i dynamicznym Docker smoke na `127.0.0.1:55003`. Testy migracji potwierdziły constraint visible ASCII, a trzy rundy 100 requestów/limit 10 dały dokładnie 10 `201`, 90 exhausted oraz zgodność counter z records. Runtime HTTP potwierdził 201, retry 409 already redeemed, exhausted 409, missing 404 i invalid userId 400. `EMP-005` pozostaje `DONE` z disposition `MERGED_INTO_EMP-004`.
+
+## 2026-08-07 — `0.0.17-emp-004-verification-remediation`
+
+### Korekta evidence
+
+Audyt EMP-008/EMP-009 wykazał, że checkpoint `0.0.16` przedwcześnie oznaczył EMP-004 jako zweryfikowane: refinement wymagał jeszcze dowodów same-user, last-slot, per-row locking, rollbacków, innego constraintu, unitów i HTTP 403/503. Kontrakt biznesowy nie został zmieniony; status został czasowo wznowiony wyłącznie dla remediation evidence.
+
+### Evidence
+
+```text
+Maven clean verify: PASS (60 unit, 22 integration; 63.84 s)
+UserId unit: ASCII boundaries, punctuation, whitespace/control/Unicode, no trim/no normalization: PASS
+RedeemCouponService unit: ordered snapshot → Client IP → GeoIP → transaction and early failures: PASS
+HTTP: COUNTRY_NOT_ALLOWED 403 and GEOLOCATION_UNAVAILABLE 503 without sensitive details: PASS
+PostgreSQL concurrency: 3 × 100/10 exact 10/90; same-user exact 1/19; last-slot exact 1/1: PASS
+Per-row lock: locked coupon-A did not block coupon-B redemption: PASS
+PostgreSQL faults: insert rollback, update-after-insert rollback and non-user unique constraint → INTERNAL_ERROR: PASS
+DocLint: 0 errors (42 pre-existing Maven Javadoc warnings)
+```
+
+### Decyzja
+
+- `EMP-004`: `DONE_AND_VERIFIED`; implementation `DONE_AND_VERIFIED`; verification remediation `COMPLETED`;
+- `EMP-005`: `DONE`, `MERGED_INTO_EMP-004`, evidence owner EMP-004;
+- `EMP-008` i `EMP-009`: `PLANNED`; EMP-009 wymaga osobnego refinementu/mapowania przed ewentualnym closeoutem.

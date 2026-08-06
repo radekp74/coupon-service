@@ -10,7 +10,11 @@ REQUIRED = {
     "src/main/java/pl/radoslawpiatek/couponservice/coupon/application/TransactionalCouponRedemptionService.java": ["@Transactional", "Isolation.READ_COMMITTED", "findForUpdate", "incrementIfCapacity"],
     "src/main/java/pl/radoslawpiatek/couponservice/coupon/adapters/persistence/JdbcCouponRedemptionRepository.java": ["FOR UPDATE", "uq_coupon_redemptions_coupon_user", "current_uses < max_uses", "RETURNING current_uses"],
     "src/main/java/pl/radoslawpiatek/couponservice/coupon/adapters/web/RedeemCouponRequest.java": ["^[!-~]{1,128}$"],
-    "src/test/java/pl/radoslawpiatek/couponservice/coupon/adapters/web/CouponRedemptionApiIT.java": ["COUPON_ALREADY_REDEEMED", "COUPON_EXHAUSTED"],
+    "src/test/java/pl/radoslawpiatek/couponservice/coupon/domain/UserIdTest.java": ["auth0|123", "tenant/user+external", "customer@example.com", "urn:customer:123", "customer-A", "customer-a"],
+    "src/test/java/pl/radoslawpiatek/couponservice/coupon/application/RedeemCouponServiceTest.java": ["InOrder", "notFoundStopsBeforeClientIpGeoIpAndTransaction", "geoIpFailureStopsBeforeTransaction", "wrongCountryStopsBeforeTransaction"],
+    "src/test/java/pl/radoslawpiatek/couponservice/coupon/adapters/web/CouponRedemptionApiIT.java": ["COUPON_ALREADY_REDEEMED", "COUPON_EXHAUSTED", "sameUserConcurrentRetriesProduceExactlyOneSuccessAndNineteenConflicts", "twoDifferentUsersCompeteForTheLastSlotWithExactOutcomes", "rowLockOnOneCouponDoesNotGloballySerializeAnotherCoupon", "CountDownLatch", "FOR UPDATE", "shutdownNow"],
+    "src/test/java/pl/radoslawpiatek/couponservice/coupon/adapters/web/CouponRedemptionErrorApiIT.java": ["COUNTRY_NOT_ALLOWED", "GEOLOCATION_UNAVAILABLE", "MockBean", "assertInvariant"],
+    "src/test/java/pl/radoslawpiatek/couponservice/coupon/adapters/web/CouponRedemptionRollbackIT.java": ["fail_redemption_insert_test", "fail_coupon_update_test", "uq_test_redemption_country", "INTERNAL_ERROR", "dropTestObjects"],
     "docs/api/openapi.yaml": ["operationId: redeemCoupon", "COUPON_ALREADY_REDEEMED", "^[!-~]{1,128}$"],
 }
 errors=[]
@@ -21,6 +25,8 @@ for name,tokens in REQUIRED.items():
     for token in tokens:
         if token not in text: errors.append(f"{name} missing {token}")
 if list(ROOT.rglob("CODEX_PROMPT.md")): errors.append("forbidden CODEX_PROMPT.md")
+for path in (ROOT / "src/test/java").rglob("*.java"):
+    if "Thread.sleep" in path.read_text(): errors.append(f"forbidden Thread.sleep in {path.relative_to(ROOT)}")
 if errors:
     print("\n".join("ERROR: "+e for e in errors), file=sys.stderr); sys.exit(1)
 print("SUCCESS: EMP-004 transactional redemption implementation contract valid")

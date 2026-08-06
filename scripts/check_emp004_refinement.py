@@ -146,7 +146,7 @@ def validate_project_state(errors: List[str]) -> None:
                 errors.append(f"current status missing accepted EMP-004 token: {token}")
         if not any(
             f"Implementation EMP-004:** `{status}`" in current
-            for status in {"NOT_STARTED", "IN_PROGRESS", "DONE_AND_VERIFIED"}
+            for status in {"NOT_STARTED", "IMPLEMENTED", "IN_PROGRESS", "DONE_AND_VERIFIED"}
         ):
             errors.append("accepted EMP-004 must expose a supported implementation state")
         if "| EMP-005 | EMP-004 | P1 | DONE | EMP-004 |" not in backlog or "MERGED_INTO_EMP-004" not in backlog:

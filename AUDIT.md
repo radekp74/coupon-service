@@ -105,6 +105,12 @@ Pierwszy review EMP-006 zakończył się `REJECT` dla pięciu luk: wielokrotnych
 
 EMP-006 zamknięto po pełnym `make verify` (53 unit i 10 integration tests; 47 nowych testów EMP-006), DocLint bez błędów, WireMock bez publicznej sieci i Docker runtime. Testy potwierdziły fail-closed dla wielokrotnych field-lines, direct-mode spoofing, trusted chain, bracketed IPv6 z portem, policy special-purpose, redirect z dokładnie jednym requestem oraz granice body 16 384/16 385. Runtime Compose potwierdził health `UP`, Swagger UI i canonical OpenAPI bez redemption na dynamicznym porcie loopback; cleanup usunął wyłącznie stos smoke, a istniejący `coupon-service-app-1` na 18080 pozostał healthy.
 
+## Remediation evidence EMP-004
+
+Audyt zakresu EMP-008/EMP-009 wykrył rzeczywistą lukę: historyczny closeout EMP-004 zawierał podstawowy runtime i 100/10, lecz nie komplet dowodów wymaganych przez jego accepted refinement. Status weryfikacji został wznowiony bez zmiany kontraktu. Remediation dodało rzeczywiste testy `UserId`, orchestratora, HTTP 403 `COUNTRY_NOT_ALLOWED` i 503 `GEOLOCATION_UNAVAILABLE`, same-user 1/19, last-slot 1/1, niezależność blokad coupon-A/coupon-B oraz testowe rollbacki PostgreSQL dla INSERT, UPDATE po INSERT i innego constraintu.
+
+Pełne lokalne `./mvnw -B -ntp clean verify` przeszło: 60 testów unit i 22 integracyjne. DocLint miał 0 błędów (42 istniejące ostrzeżenia Javadoc). Dopiero to evidence pozwala ponownie ustawić EMP-004 jako `DONE_AND_VERIFIED`; EMP-009 pozostaje planowanym, odrębnym review formalnego mapowania evidence współbieżności.
+
 
 ## Refinement EMP-004
 
