@@ -5,23 +5,23 @@ REST-owy serwis do tworzenia i bezpiecznego wykorzystywania kuponów rabatowych.
 
 ## Aktualny stan
 
-- **Checkpoint:** `0.0.15-emp-004-refinement-accepted`
+- **Checkpoint:** `0.0.16-emp-004-verified`
 - **Data stanu:** `2026-08-06`
 - **Termin oddania:** `2026-08-10`, koniec dnia
 - **EMP-000–EMP-003:** `DONE_AND_VERIFIED`
 - **EMP-007:** `DONE_AND_VERIFIED`
 - **EMP-006:** `DONE_AND_VERIFIED`
-- **Aktywne zadanie:** `EMP-004 — implementation`
+- **Aktywne zadanie:** oczekuje na refinement EMP-008
 - **Refinement EMP-006:** `ACCEPTED`
 - **Implementation EMP-006:** `DONE_AND_VERIFIED`
-- **EMP-004:** `READY`; refinement `ACCEPTED`, implementation `NOT_STARTED`, implementation allowed `YES`
+- **EMP-004:** `DONE_AND_VERIFIED`; refinement i implementation `DONE_AND_VERIFIED`
 - **EMP-005:** `MERGED_INTO_EMP-004`; user-once pozostaje obowiązkowym invariantem i evidence EMP-004
 - **Kod biznesowy:** `CREATE_COUPON_DONE_AND_VERIFIED`
 - **OpenAPI/Swagger UI:** `DONE_AND_VERIFIED`
 - **Javadoc/DocLint policy:** `ACTIVE_AND_VERIFIED`
 - **Weryfikacja runtime EMP-007:** `PASS`
 
-EMP-007 dostarcza tester-facing dokumentację istniejącego endpointu create coupon. EMP-006 dostarcza bezpieczne ustalanie Client IP, trusted proxy i wymienny GeoIP bez nowego publicznego endpointu. Zaakceptowany refinement EMP-004 zamraża transakcyjny redemption, lecz endpoint nadal nie jest zaimplementowany i nie występuje w canonical OpenAPI.
+EMP-004 dostarcza transakcyjny endpoint redemption z server-side Client IP/GeoIP, row lockiem PostgreSQL i exact-count concurrency. Swagger UI oraz canonical OpenAPI opisują oba istniejące endpointy.
 
 
 ## Zweryfikowany zakres EMP-003

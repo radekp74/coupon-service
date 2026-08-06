@@ -8,7 +8,7 @@ Ten plik jest jedynym źródłem prawdy dla identyfikatorów, priorytetów i sta
 | EMP-001 | — | P0 | DONE_AND_VERIFIED | EMP-001 | Zamrozić kompletny kontrakt rozwiązania kuponowego | accepted refinement + review checklist |
 | EMP-002 | EMP-001 | P0 | DONE_AND_VERIFIED | EMP-001 | Bootstrap Java/Spring Boot/PostgreSQL/Flyway/Maven | `make verify`, runtime Compose i eksport źródeł |
 | EMP-003 | EMP-001 | P0 | DONE_AND_VERIFIED | EMP-003 | Tworzenie kuponu i case-insensitive uniqueness | `make verify`, runtime HTTP i exact-count concurrency test |
-| EMP-004 | EMP-001 | P0 | READY | EMP-004 | Transakcyjne wykorzystanie kuponu | accepted EMP-004 refinement + transaction/concurrency evidence |
+| EMP-004 | EMP-001 | P0 | DONE_AND_VERIFIED | EMP-004 | Transakcyjne wykorzystanie kuponu | full `make verify`, runtime HTTP i exact-count concurrency evidence |
 | EMP-005 | EMP-004 | P1 | DONE | EMP-004 | Jedno użycie kuponu przez użytkownika — `MERGED_INTO_EMP-004` | implementation i evidence należą do EMP-004 |
 | EMP-006 | EMP-001 | P0 | DONE_AND_VERIFIED | EMP-006 | Client IP i provider-neutral GeoIP | accepted EMP-006 refinement + implementation evidence + `make emp006-check` |
 | EMP-007 | EMP-001 | P0 | DONE_AND_VERIFIED | EMP-007 | Stabilny error contract, OpenAPI, Swagger UI i Javadoc | UI/YAML HTTP test + DocLint + `make verify` |

@@ -2,10 +2,10 @@
 
 - **Data:** 2026-08-06
 - **Termin:** 2026-08-10, koniec dnia
-- **Faza:** `TRANSACTIONAL_REDEMPTION_READY`
-- **Active task:** `EMP-004 — implementation`
+- **Faza:** `TRANSACTIONAL_REDEMPTION_DONE_AND_VERIFIED`
+- **Active task:** `awaiting next refinement`
 - **EMP-004 refinement:** `ACCEPTED`
-- **Implementation EMP-004:** `NOT_STARTED`
+- **Implementation EMP-004:** `DONE_AND_VERIFIED`
 - **Implementation allowed:** `YES` dla `EMP-004` na podstawie accepted własnego refinementu
 - **EMP-005:** `MERGED_INTO_EMP-004`; implementation i evidence ownerem jest EMP-004
 - **EMP-006:** `DONE_AND_VERIFIED`
@@ -13,7 +13,7 @@
 - **Implementation EMP-006:** `DONE_AND_VERIFIED`
 - **Implementation allowed EMP-006:** `YES`
 - **EMP-007:** `DONE_AND_VERIFIED`
-- **Kod aplikacji:** create coupon i Client IP/GeoIP są zweryfikowane; redemption nie istnieje
+- **Kod aplikacji:** create coupon, Client IP/GeoIP i transactional redemption są zweryfikowane
 - **OpenAPI/Swagger UI:** `DONE_AND_VERIFIED` dla aktualnie zaimplementowanego API; canonical spec nadal nie zawiera redemption
 - **Javadoc/DocLint policy:** `ACTIVE_AND_VERIFIED`
 - **Runtime verification:** `LOCAL_EMP006_GATE_PASS`
@@ -29,9 +29,9 @@
 - Swagger UI pokazuje canonical OpenAPI wyłącznie dla endpointów istniejących w runtime;
 - Docker smoke używa dynamicznego portu loopback i sprząta wyłącznie własny stos.
 
-## EMP-004 — refinement zaakceptowany
+## EMP-004 — ukończone i zweryfikowane
 
-Zaakceptowany refinement zamraża:
+Implementacja potwierdziła:
 
 - `POST /api/v1/coupons/{code}/redemptions`;
 - snapshot lookup przed GeoIP;
@@ -53,7 +53,7 @@ Zaakceptowany refinement zamraża:
 
 ## Następny krok
 
-Rozpocząć implementację EMP-004 w osobnym checkpointcie. Endpoint redemption nadal nie istnieje.
+EMP-008 — dalsze hardening testów i pokrycia.
 
 ## Blokery
 

@@ -83,8 +83,10 @@ def main() -> int:
         if token not in pom:
             errors.append(f"pom.xml missing EMP-006 dependency token: {token}")
     openapi = read(ROOT / "docs/api/openapi.yaml")
-    if "/api/v1/coupons/{code}/redemptions" in openapi:
-        errors.append("EMP-006 must not add the redemption endpoint to OpenAPI")
+    current_status = read(ROOT / "docs/project/current-status.md")
+    if "/api/v1/coupons/{code}/redemptions" in openapi and not any(
+            f"Implementation EMP-004:** `{state}`" in current_status for state in {"IN_PROGRESS", "DONE_AND_VERIFIED"}):
+        errors.append("EMP-006 must not add redemption before EMP-004 implementation starts")
     if list(ROOT.rglob("CODEX_PROMPT.md")):
         errors.append("repository contains forbidden CODEX_PROMPT.md")
     for path in JAVA.rglob("*.java"):

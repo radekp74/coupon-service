@@ -61,8 +61,13 @@ def validate_openapi(errors: List[str]) -> None:
         ],
         errors,
     )
-    if "/api/v1/coupons/{code}/redemptions" in read(openapi):
-        errors.append("OpenAPI must not describe redemption before the endpoint exists")
+    redemption = "/api/v1/coupons/{code}/redemptions" in read(openapi)
+    status_text = read(ROOT / "docs/project/current-status.md")
+    implementation_started = any(
+        f"Implementation EMP-004:** `{state}`" in status_text for state in {"IN_PROGRESS", "DONE_AND_VERIFIED"}
+    )
+    if redemption and not implementation_started:
+        errors.append("OpenAPI must not describe redemption before EMP-004 implementation starts")
 
 
 def validate_runtime_wiring(errors: List[str]) -> None:
@@ -144,7 +149,7 @@ def validate_tests(errors: List[str]) -> None:
             'getForEntity("/swagger-ui/index.html"',
             '"/v3/api-docs/swagger-config"',
             'containsEntry("url", "/openapi.yaml")',
-            'doesNotContain("/api/v1/coupons/{code}/redemptions")',
+            'contains("operationId: redeemCoupon")',
         ],
         errors,
     )

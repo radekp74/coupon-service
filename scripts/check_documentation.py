@@ -194,6 +194,10 @@ def validate_current_status(tasks: Dict[str, Dict[str, str]], errors: List[str])
         errors.append("Current status nie zawiera Active task")
         return
     active = match.group(1)
+    if active == "awaiting next refinement":
+        if not re.search(r"\*\*Data:\*\* \d{4}-\d{2}-\d{2}", text):
+            errors.append("Current status nie ma daty ISO")
+        return
     task_id_match = re.match(r"(EMP-\d+)(?:\s+—\s+.+)?$", active)
     if task_id_match:
         active = task_id_match.group(1)

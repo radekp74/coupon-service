@@ -8,6 +8,7 @@ python3 scripts/check_documentation.py
 python3 scripts/check_bootstrap.py
 python3 scripts/check_emp003.py
 python3 scripts/check_emp004_refinement.py
+python3 scripts/check_emp004.py
 python3 scripts/check_emp006_refinement.py
 python3 scripts/check_emp007.py
 python3 scripts/generate_checksums.py

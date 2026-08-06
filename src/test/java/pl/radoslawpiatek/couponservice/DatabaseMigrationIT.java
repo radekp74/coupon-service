@@ -57,7 +57,7 @@ class DatabaseMigrationIT {
             .query(Long.class)
             .single();
 
-        assertThat(migrationCount).isEqualTo(1L);
+        assertThat(migrationCount).isEqualTo(2L);
     }
 
     @Test
@@ -87,6 +87,26 @@ class DatabaseMigrationIT {
             .param("id", couponId)
             .update())
             .isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    @Test
+    void databaseEnforcesTheVisibleAsciiUserIdAmendment() {
+        UUID couponId = UUID.randomUUID();
+        insertCoupon(couponId, "USER-ID", "USER-ID");
+        insertRedemption(couponId, "!");
+        insertRedemption(couponId, "a".repeat(128));
+        for (String invalid : new String[]{"a".repeat(129), "has space", "\t", "\n", "zażółć"}) {
+            assertThatThrownBy(() -> insertRedemption(couponId, invalid))
+                    .isInstanceOf(DataIntegrityViolationException.class);
+        }
+    }
+
+    private void insertRedemption(UUID couponId, String userId) {
+        jdbcClient.sql("""
+                INSERT INTO coupon_redemptions (id, coupon_id, user_id, resolved_country_code)
+                VALUES (:id, :couponId, :userId, 'PL')
+                """)
+                .param("id", UUID.randomUUID()).param("couponId", couponId).param("userId", userId).update();
     }
 
     private void insertCoupon(UUID id, String code, String normalizedCode) {

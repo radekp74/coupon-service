@@ -48,7 +48,10 @@ class OpenApiDocumentationIT {
                 .contains("openapi: 3.1.0")
                 .contains("operationId: createCoupon")
                 .contains("COUPON_CODE_CONFLICT")
-                .doesNotContain("/api/v1/coupons/{code}/redemptions");
+                .contains("/api/v1/coupons/{code}/redemptions")
+                .contains("operationId: redeemCoupon")
+                .contains("COUPON_ALREADY_REDEEMED")
+                .contains("^[!-~]{1,128}$");
     }
 
     @Test

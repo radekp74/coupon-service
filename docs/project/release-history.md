@@ -447,3 +447,7 @@ Zaakceptowane decyzje:
 - endpoint redemption, migracja i canonical OpenAPI nadal nie są zmienione.
 
 Ten checkpoint jest wyłącznie formalnym closeoutem refinementu i amendmentu; nie zawiera implementacji ani runtime evidence redemption.
+
+## 2026-08-07 — `0.0.16-emp-004-verified`
+
+`EMP-004` zamknięto po pełnym `make verify` (85.13 s), Maven/Testcontainers, DocLint bez błędów i dynamicznym Docker smoke na `127.0.0.1:55003`. Testy migracji potwierdziły constraint visible ASCII, a trzy rundy 100 requestów/limit 10 dały dokładnie 10 `201`, 90 exhausted oraz zgodność counter z records. Runtime HTTP potwierdził 201, retry 409 already redeemed, exhausted 409, missing 404 i invalid userId 400. `EMP-005` pozostaje `DONE` z disposition `MERGED_INTO_EMP-004`.

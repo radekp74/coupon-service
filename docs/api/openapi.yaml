@@ -1,10 +1,10 @@
 openapi: 3.1.0
 info:
   title: Coupon Service API
-  version: 0.0.9-emp-007-verified
+  version: 0.0.16-emp-004-verified
   description: |
     Public REST contract for the Empik backend recruitment assignment.
-    This checkpoint documents only endpoints that are already implemented.
+    This checkpoint documents the implemented coupon creation and transactional redemption endpoints.
     The same versioned file is served at /openapi.yaml and rendered by Swagger UI.
 servers:
   - url: http://localhost:8080
@@ -56,8 +56,75 @@ paths:
           $ref: '#/components/responses/CouponCodeConflict'
         '500':
           $ref: '#/components/responses/InternalError'
+  /api/v1/coupons/{code}/redemptions:
+    post:
+      tags: [Coupons]
+      operationId: redeemCoupon
+      summary: Redeem a coupon transactionally
+      description: The server resolves Client IP and country from request context; neither is accepted or returned by this API.
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 3
+            maxLength: 64
+            pattern: '^[A-Za-z0-9_-]+$'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RedeemCouponRequest'
+            examples:
+              customer:
+                value: {userId: customer-123}
+      responses:
+        '201':
+          description: Coupon redeemed
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/CouponRedemptionResponse'}
+              examples:
+                redeemed:
+                  value: {redemptionId: c5f51cd5-c77e-4a5b-a6b7-b5085358a4b1, couponCode: WIOSNA, userId: customer-123, redeemedAt: '2026-08-07T00:00:00Z', remainingUses: 99}
+        '400': {$ref: '#/components/responses/InvalidRequest'}
+        '403': {$ref: '#/components/responses/CountryNotAllowed'}
+        '404': {$ref: '#/components/responses/CouponNotFound'}
+        '409':
+          description: Already redeemed or exhausted
+          content:
+            application/problem+json:
+              schema: {$ref: '#/components/schemas/ProblemDetail'}
+              examples:
+                alreadyRedeemed: {value: {type: urn:problem:coupon-already-redeemed, title: Coupon already redeemed, status: 409, detail: The coupon has already been redeemed by this user., instance: /api/v1/coupons/WIOSNA/redemptions, code: COUPON_ALREADY_REDEEMED}}
+                exhausted: {value: {type: urn:problem:coupon-exhausted, title: Coupon usage limit reached, status: 409, detail: The coupon usage limit has been reached., instance: /api/v1/coupons/WIOSNA/redemptions, code: COUPON_EXHAUSTED}}
+        '503': {$ref: '#/components/responses/GeolocationUnavailable'}
+        '500': {$ref: '#/components/responses/InternalError'}
 components:
   schemas:
+    RedeemCouponRequest:
+      type: object
+      additionalProperties: false
+      required: [userId]
+      properties:
+        userId:
+          type: string
+          minLength: 1
+          maxLength: 128
+          pattern: '^[!-~]{1,128}$'
+          description: Opaque case-sensitive visible ASCII identifier. It is never trimmed or normalized.
+    CouponRedemptionResponse:
+      type: object
+      additionalProperties: false
+      required: [redemptionId, couponCode, userId, redeemedAt, remainingUses]
+      properties:
+        redemptionId: {type: string, format: uuid}
+        couponCode: {type: string}
+        userId: {type: string, pattern: '^[!-~]{1,128}$'}
+        redeemedAt: {type: string, format: date-time}
+        remainingUses: {type: integer, minimum: 0}
     CreateCouponRequest:
       type: object
       additionalProperties: false
@@ -131,7 +198,7 @@ components:
           format: uri-reference
         code:
           type: string
-          enum: [INVALID_REQUEST, COUPON_CODE_CONFLICT, INTERNAL_ERROR]
+          enum: [INVALID_REQUEST, COUPON_CODE_CONFLICT, COUPON_NOT_FOUND, COUNTRY_NOT_ALLOWED, COUPON_ALREADY_REDEEMED, COUPON_EXHAUSTED, GEOLOCATION_UNAVAILABLE, INTERNAL_ERROR]
   responses:
     InvalidRequest:
       description: Invalid JSON or field value
@@ -163,6 +230,27 @@ components:
                 detail: A coupon with this code already exists.
                 instance: /api/v1/coupons
                 code: COUPON_CODE_CONFLICT
+    CouponNotFound:
+      description: Coupon does not exist
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/ProblemDetail'}
+          examples:
+            missing: {value: {type: urn:problem:coupon-not-found, title: Coupon not found, status: 404, detail: The coupon was not found., instance: /api/v1/coupons/MISSING/redemptions, code: COUPON_NOT_FOUND}}
+    CountryNotAllowed:
+      description: Resolved country is not allowed; country and IP are never disclosed
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/ProblemDetail'}
+          examples:
+            denied: {value: {type: urn:problem:country-not-allowed, title: Country not allowed, status: 403, detail: The coupon is not available in this country., instance: /api/v1/coupons/WIOSNA/redemptions, code: COUNTRY_NOT_ALLOWED}}
+    GeolocationUnavailable:
+      description: Server-side Client IP or GeoIP infrastructure is unavailable
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/ProblemDetail'}
+          examples:
+            unavailable: {value: {type: urn:problem:geolocation-unavailable, title: Geolocation unavailable, status: 503, detail: The request could not be located., instance: /api/v1/coupons/WIOSNA/redemptions, code: GEOLOCATION_UNAVAILABLE}}
     InternalError:
       description: Unexpected server failure
       content:

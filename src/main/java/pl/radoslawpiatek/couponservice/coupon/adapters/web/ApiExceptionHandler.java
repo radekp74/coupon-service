@@ -14,6 +14,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pl.radoslawpiatek.couponservice.coupon.domain.CouponCodeConflictException;
 import pl.radoslawpiatek.couponservice.coupon.domain.InvalidCouponValueException;
+import pl.radoslawpiatek.couponservice.coupon.domain.CouponNotFoundException;
+import pl.radoslawpiatek.couponservice.coupon.domain.CountryNotAllowedException;
+import pl.radoslawpiatek.couponservice.coupon.domain.CouponAlreadyRedeemedException;
+import pl.radoslawpiatek.couponservice.coupon.domain.CouponExhaustedException;
+import pl.radoslawpiatek.couponservice.geolocation.domain.ClientIpResolutionException;
+import pl.radoslawpiatek.couponservice.geolocation.domain.GeolocationUnavailableException;
 
 /**
  * Maps known application failures to the stable Problem Details contract.
@@ -55,6 +61,36 @@ public final class ApiExceptionHandler {
                 "COUPON_CODE_CONFLICT",
                 request
         );
+    }
+
+    @ExceptionHandler(CouponNotFoundException.class)
+    ResponseEntity<ProblemDetail> couponNotFound(HttpServletRequest request) {
+        return problem(HttpStatus.NOT_FOUND, "urn:problem:coupon-not-found", "Coupon not found",
+                "The coupon was not found.", "COUPON_NOT_FOUND", request);
+    }
+
+    @ExceptionHandler({ClientIpResolutionException.class, GeolocationUnavailableException.class})
+    ResponseEntity<ProblemDetail> geolocationUnavailable(HttpServletRequest request) {
+        return problem(HttpStatus.SERVICE_UNAVAILABLE, "urn:problem:geolocation-unavailable", "Geolocation unavailable",
+                "The request could not be located.", "GEOLOCATION_UNAVAILABLE", request);
+    }
+
+    @ExceptionHandler(CountryNotAllowedException.class)
+    ResponseEntity<ProblemDetail> countryNotAllowed(HttpServletRequest request) {
+        return problem(HttpStatus.FORBIDDEN, "urn:problem:country-not-allowed", "Country not allowed",
+                "The coupon is not available in this country.", "COUNTRY_NOT_ALLOWED", request);
+    }
+
+    @ExceptionHandler(CouponAlreadyRedeemedException.class)
+    ResponseEntity<ProblemDetail> alreadyRedeemed(HttpServletRequest request) {
+        return problem(HttpStatus.CONFLICT, "urn:problem:coupon-already-redeemed", "Coupon already redeemed",
+                "The coupon has already been redeemed by this user.", "COUPON_ALREADY_REDEEMED", request);
+    }
+
+    @ExceptionHandler(CouponExhaustedException.class)
+    ResponseEntity<ProblemDetail> exhausted(HttpServletRequest request) {
+        return problem(HttpStatus.CONFLICT, "urn:problem:coupon-exhausted", "Coupon usage limit reached",
+                "The coupon usage limit has been reached.", "COUPON_EXHAUSTED", request);
     }
 
     @ExceptionHandler(Exception.class)

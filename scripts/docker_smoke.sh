@@ -39,8 +39,8 @@ printf '%s' "$openapi_payload" | grep -Fq 'operationId: createCoupon' || {
   echo "ERROR: canonical OpenAPI is not available from the runtime artifact" >&2
   exit 1
 }
-if printf '%s' "$openapi_payload" | grep -Fq '/api/v1/coupons/{code}/redemptions'; then
-  echo "ERROR: OpenAPI describes redemption before the endpoint exists" >&2
+if ! printf '%s' "$openapi_payload" | grep -Fq 'operationId: redeemCoupon'; then
+  echo "ERROR: canonical OpenAPI does not describe the implemented redemption endpoint" >&2
   exit 1
 fi
 
