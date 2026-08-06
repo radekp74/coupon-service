@@ -100,3 +100,7 @@ Pierwszy review EMP-006 zakończył się `REJECT` dla pięciu luk: wielokrotnych
 ## Formalna akceptacja refinementu EMP-006
 
 2026-08-06 Radosław Piątek zaakceptował amendment i pięć decyzji właściciela: demonstracyjny adapter `ipwho.is`, wspólny 503 `GEOLOCATION_UNAVAILABLE`, brak cache/retry/fallbacku, fail-closed dla błędnego `Forwarded` oraz stub `PL` wyłącznie w profilach `local` i `test`. Refinement ma status `ACCEPTED`, EMP-006 jest `READY`, a implementacja pozostaje `NOT_STARTED`. Nie jest to dowód istnienia Client IP, GeoIP ani redemption w runtime.
+
+## Evidence closeoutu EMP-006
+
+EMP-006 zamknięto po pełnym `make verify` (53 unit i 10 integration tests; 47 nowych testów EMP-006), DocLint bez błędów, WireMock bez publicznej sieci i Docker runtime. Testy potwierdziły fail-closed dla wielokrotnych field-lines, direct-mode spoofing, trusted chain, bracketed IPv6 z portem, policy special-purpose, redirect z dokładnie jednym requestem oraz granice body 16 384/16 385. Runtime Compose potwierdził health `UP`, Swagger UI i canonical OpenAPI bez redemption na dynamicznym porcie loopback; cleanup usunął wyłącznie stos smoke, a istniejący `coupon-service-app-1` na 18080 pozostał healthy.

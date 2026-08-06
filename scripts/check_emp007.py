@@ -155,8 +155,14 @@ def validate_project_state(errors: List[str]) -> None:
     status = read(ROOT / "docs" / "project" / "current-status.md")
     readme = read(ROOT / "README.md")
 
-    if "| EMP-004 | EMP-001 | P0 | BLOCKED | EMP-001 |" not in backlog:
-        errors.append("backlog must keep EMP-004 blocked")
+    if not any(
+        state in backlog
+        for state in [
+            "| EMP-004 | EMP-001 | P0 | BLOCKED | EMP-001 |",
+            "| EMP-004 | EMP-001 | P0 | REFINEMENT | EMP-004 |",
+        ]
+    ):
+        errors.append("backlog must keep EMP-004 blocked or in its own refinement")
 
     verified = "| EMP-007 | EMP-001 | P0 | DONE_AND_VERIFIED | EMP-007 |" in backlog
     candidate = "| EMP-007 | EMP-001 | P0 | IN_PROGRESS | EMP-007 |" in backlog

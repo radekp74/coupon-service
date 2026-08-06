@@ -21,6 +21,9 @@ Dokument ze stanem `DRAFT` nie zezwala na implementację.
 - [EMP-003 — tworzenie kuponu](EMP-003.md) — `ACCEPTED`
 - [EMP-003 — podsumowanie](EMP-003-summary.md)
 - [EMP-003 — review checklist](EMP-003-review-checklist.md) — `PASS`
+- [EMP-004 — transakcyjne wykorzystanie kuponu](EMP-004.md) — `DRAFT`
+- [EMP-004 — podsumowanie](EMP-004-summary.md)
+- [EMP-004 — review checklist](EMP-004-review-checklist.md) — `NOT_STARTED`
 - [EMP-006 — Client IP i provider-neutral GeoIP](EMP-006.md) — `ACCEPTED`
 - [EMP-006 — podsumowanie](EMP-006-summary.md)
 - [EMP-006 — review checklist](EMP-006-review-checklist.md) — `PASS`

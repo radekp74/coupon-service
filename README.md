@@ -5,21 +5,22 @@ REST-owy serwis do tworzenia i bezpiecznego wykorzystywania kuponów rabatowych.
 
 ## Aktualny stan
 
-- **Checkpoint:** `0.0.11-emp-006-refinement-accepted`
+- **Checkpoint:** `0.0.13-emp-006-verified`
 - **Data stanu:** `2026-08-06`
 - **Termin oddania:** `2026-08-10`, koniec dnia
 - **EMP-000–EMP-003:** `DONE_AND_VERIFIED`
 - **EMP-007:** `DONE_AND_VERIFIED`
-- **Aktywne zadanie:** `EMP-006 — implementation`
+- **EMP-006:** `DONE_AND_VERIFIED`
+- **Aktywne zadanie:** `EMP-004 — refinement`
 - **Refinement EMP-006:** `ACCEPTED`
-- **Implementation allowed:** `YES`; implementacja EMP-006 ma status `NOT_STARTED`
-- **EMP-004:** `BLOCKED` do ukończenia EMP-006/007
+- **Implementation EMP-006:** `DONE_AND_VERIFIED`
+- **EMP-004:** `REFINEMENT`; implementation allowed `NO` do accepted własnego refinementu
 - **Kod biznesowy:** `CREATE_COUPON_DONE_AND_VERIFIED`
 - **OpenAPI/Swagger UI:** `DONE_AND_VERIFIED`
 - **Javadoc/DocLint policy:** `ACTIVE_AND_VERIFIED`
 - **Weryfikacja runtime EMP-007:** `PASS`
 
-EMP-007 dostarczył tester-facing dokumentację istniejącego endpointu create coupon. Refinement EMP-006 został formalnie zaakceptowany i zamraża granicę zaufania dla Client IP, zewnętrznego GeoIP oraz minimalizacji danych. Nie zawiera implementacji: Client IP, GeoIP i redemption nadal nie są zaimplementowane.
+EMP-007 dostarcza tester-facing dokumentację istniejącego endpointu create coupon. EMP-006 dostarcza bezpieczne ustalanie Client IP, trusted proxy i wymienny GeoIP bez nowego publicznego endpointu. Redemption nadal nie jest zaimplementowane.
 
 
 ## Zweryfikowany zakres EMP-003
@@ -71,7 +72,7 @@ Bramka wykonuje kolejno:
 
 1. governance dokumentacji;
 2. statyczne kontrakty bootstrapu i EMP-003;
-3. kontrolę składni skryptów i Makefile;
+3. statyczne kontrakty accepted refinementu i implementacji EMP-006 oraz kontrolę składni skryptów i Makefile;
 4. kontrolę Java 21;
 5. kontrolę skonfigurowanego klienta i daemona Docker;
 6. `./mvnw -B -ntp clean verify`;
@@ -79,7 +80,7 @@ Bramka wykonuje kolejno:
 8. kontrolę powstania wykonywalnego artefaktu Spring Boot;
 9. walidację `docker-compose.yml`;
 10. zbudowanie obrazu aplikacji;
-11. uruchomienie aplikacji i PostgreSQL oraz potwierdzenie `UP` na `/actuator/health`;
+11. uruchomienie aplikacji i PostgreSQL na dynamicznym porcie loopback oraz potwierdzenie `/actuator/health`, `/swagger-ui` i `/openapi.yaml`;
 12. bezpieczne usunięcie stosu i wolumenu testowego.
 
 Lżejsze bramki bez Dockera i pobierania zależności:
@@ -89,6 +90,7 @@ make docs-check
 make bootstrap-check
 make emp003-check
 make emp006-refinement-check
+make emp006-check
 make emp007-check
 ```
 

@@ -42,3 +42,4 @@
 | D-038 | 2026-08-06 | ACCEPTED | Local/test używa profilowego stubu `PL`, bez bypass header | deterministyczne demo dla prywatnego IP kontenera bez osłabiania API |
 | D-039 | 2026-08-06 | ACCEPTED | Brak cache, retry i multi-provider fallback w EMP-006 | ograniczony zakres zadania; rozszerzenia wymagają pomiarów i osobnej decyzji |
 | D-040 | 2026-08-06 | ACCEPTED | Wielokrotne field-lines failują, redirecty są wyłączone, a body ma limit 16 KiB | usuwa header confusion, request do Location i nieograniczony odczyt odpowiedzi |
+| D-041 | 2026-08-06 | ACCEPTED | Automatyczny Docker smoke używa dynamicznego portu loopback i unikalnego projektu Compose | lokalna bramka nie rezerwuje portu hosta i cleanup nie dotyka obcych stosów |

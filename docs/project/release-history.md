@@ -352,3 +352,49 @@ git diff --check: PASS
 - `EMP-004`: `BLOCKED`.
 
 Ten checkpoint jest wyłącznie formalnym closeoutem refinementu; nie zawiera implementacji Client IP, GeoIP ani redemption.
+
+## 2026-08-06 — EMP-006 implementation started
+
+Zaakceptowany refinement jest realizowany w jednym checkpointcie implementacyjnym. `EMP-006` ma status `IN_PROGRESS`; Client IP, GeoIP i redemption nie są jeszcze deklarowane jako dostarczone. `EMP-004` pozostaje `BLOCKED`.
+
+## 2026-08-06 — `0.0.12-emp-006-implementation-candidate`
+
+### Evidence
+
+```text
+./mvnw -B -ntp clean verify: PASS (53 unit tests, 10 integration tests)
+EMP-006 parser/policy/configuration/WireMock tests: 47 PASS
+WireMock: redirect exactly one request, Content-Length 16385, streaming 16385 and exact 16384: PASS
+DocLint: PASS without errors
+Docker: build PASS; isolated Compose health UP, Swagger UI and /openapi.yaml PASS
+```
+
+Nie wykonano publicznego requestu do ipwho.is w testach. Port 18080 był zajęty przez istniejący kontener coupon-service, więc własny, wcześniej nieudany stos usunięto i runtime potwierdzono na izolowanym porcie 18081. Pełny `make verify` nie przeszedł jeszcze na tym checkpointcie, dlatego następny krok to dynamiczne przydzielanie portu dla własnego smoke.
+
+### Decyzja
+
+- `EMP-006`: `IN_PROGRESS`;
+- `EMP-004`: `BLOCKED`;
+- OpenAPI nadal nie opisuje redemption.
+
+## 2026-08-06 — `0.0.13-emp-006-verified`
+
+### Evidence
+
+```text
+make verify: PASS (86.83 s)
+Maven: 53 unit tests + 10 integration tests PASS
+EMP-006 parser/policy/configuration/WireMock tests: 47 PASS
+DocLint: PASS without errors (15 existing technical warnings)
+WireMock: redirect exactly one request, Content-Length 16385, streaming 16385 and exact 16384: PASS
+Docker smoke: dynamic 127.0.0.1:55001, health UP, /swagger-ui and /openapi.yaml PASS
+```
+
+Port 18080 pozostał zajęty przez istniejący, healthy `coupon-service-app-1`. Smoke użył własnego projektu `coupon-service-verify-75419`, automatycznie przydzielonego portu loopback i trapem usunął wyłącznie własne kontenery, sieć oraz wolumen. Zewnętrzny kontener nie został zatrzymany ani zrestartowany. Testy nie wykonały publicznego requestu do ipwho.is.
+
+### Decyzja
+
+- `EMP-006`: `DONE_AND_VERIFIED`;
+- refinement: `ACCEPTED`, implementation: `DONE_AND_VERIFIED`;
+- `EMP-004`: `REFINEMENT`, implementation allowed `NO` do accepted własnego refinementu;
+- canonical OpenAPI nadal nie opisuje redemption.

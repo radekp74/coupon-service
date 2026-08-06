@@ -60,3 +60,12 @@ Status:
 - **Dowód:** log entrypointu wskazał, że PostgreSQL 18 wymaga pojedynczego mountu `/var/lib/postgresql`; po zmianie oba healthchecki Compose przeszły, a Flyway zastosował V1.
 - **Zmiana procesu lub kodu:** `docker-compose.yml` montuje nazwany wolumen `coupon-postgres-data` w `/var/lib/postgresql`.
 - **Status:** `CONFIRMED`
+
+## LL-005 — smoke nie może rezerwować stałego portu hosta
+
+- **Data:** 2026-08-06
+- **Powiązane zadanie:** EMP-006
+- **Obserwacja:** stały port hosta w automatycznej bramce kolidował z działającym lokalnym stosem `coupon-service`; nie jest to błąd aplikacji ani powód do zatrzymywania obcego kontenera.
+- **Dowód:** `make verify` nie mógł opublikować 18080, podczas gdy ręczny runtime na 18081 przeszedł bez zmiany istniejącego kontenera.
+- **Zmiana procesu lub kodu:** smoke Compose korzysta z portu przydzielanego dynamicznie na `127.0.0.1`, odczytuje go przez `docker compose port` i sprząta wyłącznie projekt o nazwie unikalnej dla uruchomienia.
+- **Status:** `CONFIRMED`

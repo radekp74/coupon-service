@@ -6,7 +6,9 @@ Wszystkie istotne zmiany projektu są rejestrowane w tym pliku. Format jest insp
 
 ### Added
 
-- formalnie zaakceptowany refinement EMP-006 wraz z security amendmentem i pięcioma decyzjami właściciela; EMP-006 jest `READY`, a implementacja pozostaje `NOT_STARTED`;
+- formalnie zaakceptowany refinement EMP-006 wraz z security amendmentem i pięcioma decyzjami właściciela;
+- ukończone i zweryfikowane EMP-006: strict Client IP, trusted CIDR proxy, IANA special-purpose policy, ipwho.is adapter, local/test stub i WireMock evidence bez publicznej sieci;
+- `make verify` używa dynamicznego portu loopback i unikalnego projektu Compose, więc nie zatrzymuje ani nie koliduje z lokalnymi stosami;
 - security amendment draftu EMP-006: fail-closed field-lines, redirecty bez `Location`, body limit 16 KiB, IPv6/porty i boundary proxy contract;
 - draft refinement EMP-006 z precyzyjnym kontraktem Client IP, trusted proxy chain, provider-neutral GeoIP, prywatnością, failure policy i matrycą testów;
 - `make emp006-refinement-check` chroniący zakaz implementacji przed akceptacją oraz kompletność decyzji EMP-006;

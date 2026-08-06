@@ -4,7 +4,7 @@ SOURCE_EXPORT_DIR ?= $(HOME)/Downloads
 APP_PORT ?= 8080
 COMPOSE_PROJECT_NAME ?= coupon-service
 
-.PHONY: help docs-check bootstrap-check emp003-check emp006-refinement-check emp007-check java-check docker-check compose-config docker-build docker-up docker-down docker-logs docker-smoke maven-verify verify checksums package export-source clean
+.PHONY: help docs-check bootstrap-check emp003-check emp006-refinement-check emp006-check emp007-check java-check docker-check compose-config docker-build docker-up docker-down docker-logs docker-smoke maven-verify verify checksums package export-source clean
 
 help:
 	@printf '%s\n' \
@@ -12,6 +12,7 @@ help:
 		'make bootstrap-check - validate the EMP-002 source contract without network access' \
 		'make emp003-check   - validate the EMP-003 create-coupon source contract' \
 		'make emp006-refinement-check - validate the EMP-006 refinement contract' \
+		'make emp006-check   - validate the EMP-006 implementation contract' \
 		'make emp007-check   - validate OpenAPI, Swagger UI and Javadoc contracts' \
 		'make java-check      - require Java 21' \
 		'make docker-check    - verify the configured Docker CLI and daemon' \
@@ -39,6 +40,9 @@ emp003-check:
 
 emp006-refinement-check:
 	python3 scripts/check_emp006_refinement.py
+
+emp006-check:
+	python3 scripts/check_emp006.py
 
 emp007-check:
 	python3 scripts/check_emp007.py

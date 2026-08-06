@@ -139,11 +139,15 @@ def validate_project_state(errors: List[str]) -> None:
             errors.append("accepted EMP-006 must be READY or in a later allowed state")
         for token in [
             "EMP-006 refinement:** `ACCEPTED`",
-            "Implementation allowed:** `YES`",
-            "Implementation EMP-006:** `NOT_STARTED`",
+            "Implementation allowed EMP-006:** `YES`",
         ]:
             if token not in current:
                 errors.append(f"current status missing accepted EMP-006 token: {token}")
+        if not any(
+            f"Implementation EMP-006:** `{status}`" in current
+            for status in {"NOT_STARTED", "IN_PROGRESS", "DONE_AND_VERIFIED"}
+        ):
+            errors.append("current status lacks an allowed EMP-006 implementation state")
 
 
 def validate_security_contract(errors: List[str]) -> None:

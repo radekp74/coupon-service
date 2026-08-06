@@ -5,8 +5,8 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
 DOCKER="${DOCKER:-/Applications/Docker.app/Contents/Resources/bin/docker}"
-APP_PORT="${APP_PORT:-18080}"
-COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME:-coupon-service-verify}"
+APP_PORT="${APP_PORT:-0}"
+COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME:-coupon-service-verify-$$}"
 
 cleanup() {
   "$DOCKER" compose \
@@ -16,14 +16,17 @@ cleanup() {
 }
 trap cleanup EXIT
 
-cleanup
-
 APP_PORT="$APP_PORT" "$DOCKER" compose \
   -p "$COMPOSE_PROJECT_NAME" \
   -f docker-compose.yml \
   up -d --build --wait --wait-timeout 180
 
-base_url="http://localhost:${APP_PORT}"
+port_mapping="$($DOCKER compose -p "$COMPOSE_PROJECT_NAME" -f docker-compose.yml port app 8080)"
+smoke_port="${port_mapping##*:}"
+case "$smoke_port" in
+  ''|*[!0-9]*) echo "ERROR: could not parse smoke port: $port_mapping" >&2; exit 1 ;;
+esac
+base_url="http://127.0.0.1:${smoke_port}"
 health_url="${base_url}/actuator/health"
 health_payload="$(curl --fail --silent --show-error "$health_url")"
 printf '%s' "$health_payload" | grep -Fq '"status":"UP"' || {

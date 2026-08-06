@@ -33,6 +33,20 @@ info:
     name: ${spring.application.name}
     description: Empik backend recruitment coupon service
 
+coupon:
+  client-ip:
+    mode: direct
+    trusted-proxies: []
+    max-forwarded-hops: 20
+    max-header-length: 4096
+  geolocation:
+    provider: ipwhois
+    base-uri: https://ipwho.is
+    connect-timeout: 500ms
+    response-timeout: 1s
+    maximum-response-body-bytes: 16384
+    stub-country: PL
+
 springdoc:
   swagger-ui:
     path: /swagger-ui

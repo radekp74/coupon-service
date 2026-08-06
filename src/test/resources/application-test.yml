@@ -1,0 +1,8 @@
+coupon:
+  geolocation:
+    provider: stub
+    base-uri: https://ipwho.is
+    connect-timeout: 500ms
+    response-timeout: 1s
+    maximum-response-body-bytes: 16384
+    stub-country: PL

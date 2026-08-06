@@ -134,4 +134,4 @@ request
 
 ## Stan implementacji
 
-EMP-002 jest zweryfikowany. Kandydat EMP-003 implementuje domenę potrzebną do tworzenia kuponu, `CreateCouponUseCase`, port repozytorium, adapter PostgreSQL i adapter HTTP. Przepływ redemption oraz adapter GeoIP nadal pozostają planem, nie kodem istniejącym. Status create zostanie podniesiony do verified dopiero po lokalnym pełnym gate.
+EMP-002, EMP-003, EMP-006 i EMP-007 są zweryfikowane. Kod zawiera `CreateCouponUseCase`, adapter PostgreSQL i HTTP oraz niezależne porty/adapters Client IP i GeoIP. Przepływ redemption nadal pozostaje planem: nie istnieje endpoint, migracja ani ścieżka OpenAPI dla wykorzystania kuponu.

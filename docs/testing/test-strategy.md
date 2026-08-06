@@ -2,7 +2,7 @@
 
 ## Stan realizacji
 
-EMP-002 i EMP-003 są `DONE_AND_VERIFIED`. Kandydat EMP-007 dodaje test runtime canonical OpenAPI i Swagger UI oraz DocLint publicznych kontraktów. Redemption, GeoIP i ich concurrency evidence pozostają w kolejnych zadaniach.
+EMP-002, EMP-003, EMP-006 i EMP-007 są `DONE_AND_VERIFIED`. EMP-006 dodaje testy Client IP, trusted proxy, GeoIP i profilowego stubu bez publicznej sieci. Redemption i jego concurrency evidence pozostają w kolejnym zadaniu.
 
 ## Cel
 
@@ -126,6 +126,8 @@ WireMock:
 ```
 
 Finalnie `make verify` uruchamia tę komendę wraz z governance dokumentacji oraz kontenerowym smoke testem kompletnego stosu.
+
+Smoke publikuje aplikację wyłącznie na dynamicznym porcie `127.0.0.1`, odczytanym przez `docker compose port`; unikalna nazwa projektu i trap sprzątają wyłącznie własny stos.
 
 ## Matryca
 

@@ -198,7 +198,7 @@ def validate_container_contract(errors: List[str]) -> None:
         "postgres:18.4-alpine",
         "condition: service_healthy",
         "DATABASE_URL: jdbc:postgresql://postgres:5432/coupon_service",
-        '${APP_PORT:-8080}:8080',
+        '127.0.0.1:${APP_PORT:-8080}:8080',
         "coupon-postgres-data",
     ):
         if token not in compose:
@@ -218,9 +218,29 @@ def validate_container_contract(errors: List[str]) -> None:
             errors.append(f"Makefile missing Docker contract token: {token}")
 
     smoke = read(ROOT / "scripts" / "docker_smoke.sh")
-    for token in ("--wait-timeout 180", "/actuator/health", "down --volumes --remove-orphans"):
+    for token in (
+        'APP_PORT="${APP_PORT:-0}"',
+        'COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME:-coupon-service-verify-$$}"',
+        "--wait-timeout 180",
+        "compose -p \"$COMPOSE_PROJECT_NAME\" -f docker-compose.yml port app 8080",
+        'base_url="http://127.0.0.1:${smoke_port}"',
+        "/actuator/health",
+        "down --volumes --remove-orphans",
+        "trap cleanup EXIT",
+    ):
         if token not in smoke:
             errors.append(f"docker_smoke.sh missing token: {token}")
+    if "18080" in smoke:
+        errors.append("docker_smoke.sh must not reserve a fixed host port")
+    if "docker stop" in smoke or "docker rm" in smoke:
+        errors.append("docker_smoke.sh must clean up only through its own Compose project")
+
+    verify = read(ROOT / "verify.sh")
+    for token in ('APP_PORT=0', 'COMPOSE_PROJECT_NAME="coupon-service-verify-$$"'):
+        if token not in verify:
+            errors.append(f"verify.sh missing isolated Docker smoke token: {token}")
+    if "APP_PORT=18080" in verify:
+        errors.append("verify.sh must not reserve host port 18080")
 
 
 def validate_runtime_configuration(errors: List[str]) -> None:
