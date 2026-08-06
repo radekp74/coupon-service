@@ -8,3 +8,12 @@ logging:
   level:
     root: WARN
     org.flywaydb.core: INFO
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui
+    url: /openapi.yaml
+    disable-swagger-default-url: true
+    try-it-out-enabled: true
+    display-operation-id: true
+    operations-sorter: method

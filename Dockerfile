@@ -11,6 +11,7 @@ COPY mvnw pom.xml ./
 RUN chmod +x mvnw
 
 COPY src src
+COPY docs/api/openapi.yaml docs/api/openapi.yaml
 RUN --mount=type=cache,target=/root/.m2,sharing=locked \
     ./mvnw -B -ntp -DskipTests package
 

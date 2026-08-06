@@ -6,6 +6,7 @@ Wszystkie istotne zmiany projektu są rejestrowane w tym pliku. Format jest insp
 
 ### Added
 
+- zakończone i zweryfikowane EMP-007: canonical OpenAPI, Swagger UI, runtime `/openapi.yaml`, Maven DocLint, `make emp007-check` i znaczący Javadoc publicznych kontraktów EMP-003;
 - `POST /api/v1/coupons` z request/response contract;
 - value objects `CouponCode` i `CountryCode` oraz model `Coupon`;
 - create use case, port repozytorium i adapter PostgreSQL `JdbcClient`;
@@ -32,6 +33,8 @@ Wszystkie istotne zmiany projektu są rejestrowane w tym pliku. Format jest insp
 
 ### Changed
 
+- `EMP-004` jest zablokowane do ukończenia prerequisites GeoIP/API, a EMP-006 jest w stanie `REFINEMENT` bez zgody na implementację;
+- OpenAPI is now a mandatory part of Definition of Done for every public endpoint;
 - zoptymalizowano `Dockerfile`: usunięto kosztowne `dependency:go-offline`, a build Maven korzysta z trwałego cache BuildKit `/root/.m2`;
 - usunięto zewnętrzną dyrektywę Dockerfile frontend, aby build nie zależał od pobierania `docker/dockerfile:1.7`;
 - poprawiono punkt montowania wolumenu PostgreSQL 18 na `/var/lib/postgresql`;
@@ -49,7 +52,7 @@ Wszystkie istotne zmiany projektu są rejestrowane w tym pliku. Format jest insp
 - endpoint wykorzystania kuponu;
 - integracja GeoIP;
 - pozostała matryca testów redemption, GeoIP i limit concurrency;
-- OpenAPI i CI.
+- CI.
 
 ## [0.0.1-foundation] — 2026-08-06
 

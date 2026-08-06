@@ -66,3 +66,18 @@ Dodatkowo:
 - OpenAPI jest aktualne;
 - finalny source package przechodzi `make verify`;
 - current status nie zawiera planu przedstawionego jako wykonany.
+
+
+## Definition of Done — dokumentacja kodu i OpenAPI
+
+Dodatkowo dla każdej zmiany publicznego kontraktu:
+
+- `docs/api/openapi.yaml` opisuje endpoint, request, response, statusy, Problem Details i przykłady;
+- tester może otworzyć Swagger UI w środowisku lokalnym/testowym;
+- Swagger UI korzysta z canonical specyfikacji wersjonowanej w repozytorium;
+- canonical YAML jest obecny w artefakcie aplikacji;
+- test HTTP potwierdza dostępność UI i machine-readable spec;
+- publiczne use case'y, porty i istotne typy domenowe mają znaczący Javadoc;
+- DocLint przechodzi;
+- komentarze nie powtarzają oczywistego kodu;
+- zmiana API bez aktualizacji OpenAPI powoduje failure bramki.

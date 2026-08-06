@@ -4,13 +4,14 @@ SOURCE_EXPORT_DIR ?= $(HOME)/Downloads
 APP_PORT ?= 8080
 COMPOSE_PROJECT_NAME ?= coupon-service
 
-.PHONY: help docs-check bootstrap-check emp003-check java-check docker-check compose-config docker-build docker-up docker-down docker-logs docker-smoke maven-verify verify checksums package export-source clean
+.PHONY: help docs-check bootstrap-check emp003-check emp007-check java-check docker-check compose-config docker-build docker-up docker-down docker-logs docker-smoke maven-verify verify checksums package export-source clean
 
 help:
 	@printf '%s\n' \
 		'make docs-check      - validate documentation governance' \
 		'make bootstrap-check - validate the EMP-002 source contract without network access' \
 		'make emp003-check   - validate the EMP-003 create-coupon source contract' \
+		'make emp007-check   - validate OpenAPI, Swagger UI and Javadoc contracts' \
 		'make java-check      - require Java 21' \
 		'make docker-check    - verify the configured Docker CLI and daemon' \
 		'make compose-config  - validate docker-compose.yml' \
@@ -34,6 +35,9 @@ bootstrap-check:
 
 emp003-check:
 	python3 scripts/check_emp003.py
+
+emp007-check:
+	python3 scripts/check_emp007.py
 
 java-check:
 	@command -v java >/dev/null 2>&1 || { echo 'ERROR: Java is not available in PATH' >&2; exit 1; }
@@ -68,6 +72,8 @@ docker-up: compose-config
 	APP_PORT="$(APP_PORT)" "$(DOCKER)" compose -p "$(COMPOSE_PROJECT_NAME)" -f docker-compose.yml up -d --wait --wait-timeout 180
 	@printf 'Application: http://localhost:%s\n' '$(APP_PORT)'
 	@printf 'Health:      http://localhost:%s/actuator/health\n' '$(APP_PORT)'
+	@printf 'Swagger UI:  http://localhost:%s/swagger-ui\n' '$(APP_PORT)'
+	@printf 'OpenAPI:     http://localhost:%s/openapi.yaml\n' '$(APP_PORT)'
 
 docker-down: docker-check
 	APP_PORT="$(APP_PORT)" "$(DOCKER)" compose -p "$(COMPOSE_PROJECT_NAME)" -f docker-compose.yml down --volumes --remove-orphans

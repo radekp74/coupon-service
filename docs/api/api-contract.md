@@ -2,7 +2,7 @@
 
 ## Stan implementacji
 
-`POST /api/v1/coupons` jest zaimplementowany w kandydacie EMP-003 i oczekuje na lokalny pełny gate. Jego machine-readable schema znajduje się w [openapi.yaml](openapi.yaml). Endpoint wykorzystania kuponu pozostaje niezaimplementowany.
+`POST /api/v1/coupons` jest `DONE_AND_VERIFIED`. Jego canonical machine-readable schema znajduje się w [openapi.yaml](openapi.yaml) i jest udostępniana testerom jako `/openapi.yaml` oraz przez Swagger UI pod `/swagger-ui`. Endpoint wykorzystania kuponu pozostaje niezaimplementowany.
 
 ## Zasady wspólne
 

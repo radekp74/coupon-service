@@ -29,3 +29,6 @@
 | D-025 | 2026-08-06 | ACCEPTED | Create wykonuje pojedynczy `INSERT` bez preflight `existsByCode` | constraint PostgreSQL pozostaje jedynym autorytetem także przy wielu instancjach |
 | D-026 | 2026-08-06 | ACCEPTED | Kod prezentacyjny jest zachowywany po trimie, a unikalność używa osobnego canonical code | czytelna odpowiedź API bez zależności spójności od collation |
 | D-027 | 2026-08-06 | ACCEPTED | Każde kolejne zadanie implementacyjne otrzymuje własny refinement | EMP-001 pozostaje umbrella contract, ale nie zastępuje szczegółowego kontraktu tasku |
+| D-028 | 2026-08-06 | ACCEPTED | `docs/api/openapi.yaml` jest canonical spec i jest serwowane przez Swagger UI | tester widzi dokładnie wersjonowany kontrakt; nie powstają dwa niezależne źródła prawdy |
+| D-029 | 2026-08-06 | ACCEPTED | Znaczący Javadoc jest wymagany dla publicznych kontraktów, nie dla każdej zmiennej | dokumentujemy semantykę i ryzyka bez zalewania kodu komentarzami |
+| D-030 | 2026-08-06 | ACCEPTED | EMP-007 i EMP-006 poprzedzają implementację EMP-004 | publiczny redemption nie może istnieć bez wiarygodnego kraju i tester-facing kontraktu; kolejność odpowiada EMP-001 |

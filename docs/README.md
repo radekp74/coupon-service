@@ -20,3 +20,7 @@ Dokumentacja jest częścią rozwiązania i podlega tym samym bramkom jakości c
 - Linki lokalne muszą prowadzić do istniejących plików.
 - Zmiana stanu implementacji wymaga aktualizacji backlogu, current status, changelogu i release history.
 - Szczegóły procesu opisuje [governance dokumentacji](project/documentation-governance.md).
+
+## Aktualny checkpoint
+
+EMP-007 udostępnia canonical OpenAPI testerom przez `/openapi.yaml` i Swagger UI pod `/swagger-ui` oraz wprowadza proporcjonalną politykę Javadoc.

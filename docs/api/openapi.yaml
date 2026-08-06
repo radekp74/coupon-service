@@ -1,19 +1,39 @@
 openapi: 3.1.0
 info:
   title: Coupon Service API
-  version: 0.0.6-emp-003-candidate
-  description: Recruitment assignment API. The EMP-003 checkpoint documents coupon creation only.
+  version: 0.0.9-emp-007-verified
+  description: |
+    Public REST contract for the Empik backend recruitment assignment.
+    This checkpoint documents only endpoints that are already implemented.
+    The same versioned file is served at /openapi.yaml and rendered by Swagger UI.
+servers:
+  - url: http://localhost:8080
+    description: Local Docker Compose
+tags:
+  - name: Coupons
+    description: Coupon administration operations available in the recruitment assignment.
 paths:
   /api/v1/coupons:
     post:
+      tags: [Coupons]
       operationId: createCoupon
       summary: Create a coupon
+      description: |
+        Creates one coupon with a case-insensitive unique code.
+        The server generates the identifier and creation timestamp, and currentUses starts at zero.
       requestBody:
         required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateCouponRequest'
+            examples:
+              polishSpringCampaign:
+                summary: Polish coupon with one hundred uses
+                value:
+                  code: WIOSNA
+                  maxUses: 100
+                  countryCode: PL
       responses:
         '201':
           description: Coupon created
@@ -21,6 +41,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CouponResponse'
+              examples:
+                created:
+                  value:
+                    id: 149b508d-3797-466a-859f-5fb0770dcb0d
+                    code: WIOSNA
+                    createdAt: '2026-08-06T12:30:00Z'
+                    maxUses: 100
+                    currentUses: 0
+                    countryCode: PL
         '400':
           $ref: '#/components/responses/InvalidRequest'
         '409':
@@ -31,6 +60,7 @@ components:
   schemas:
     CreateCouponRequest:
       type: object
+      additionalProperties: false
       required: [code, maxUses, countryCode]
       properties:
         code:
@@ -38,38 +68,49 @@ components:
           minLength: 3
           maxLength: 64
           pattern: '^[A-Za-z0-9_-]+$'
+          description: Presentation form preserved after trimming; uniqueness is case-insensitive.
           examples: [WIOSNA]
         maxUses:
           type: integer
           minimum: 1
           maximum: 1000000
+          description: Maximum number of successful redemptions.
           examples: [100]
         countryCode:
           type: string
           minLength: 2
           maxLength: 2
           pattern: '^[A-Za-z]{2}$'
+          description: ISO 3166-1 alpha-2 country code, normalized to uppercase.
           examples: [PL]
     CouponResponse:
       type: object
+      additionalProperties: false
       required: [id, code, createdAt, maxUses, currentUses, countryCode]
       properties:
         id:
           type: string
           format: uuid
+          description: Server-generated coupon identifier.
         code:
           type: string
+          description: Trimmed presentation form supplied during creation.
         createdAt:
           type: string
           format: date-time
+          description: Server-generated creation time in UTC.
         maxUses:
           type: integer
+          minimum: 1
+          maximum: 1000000
         currentUses:
           type: integer
           const: 0
+          description: Newly created coupons always start with zero uses.
         countryCode:
           type: string
           pattern: '^[A-Z]{2}$'
+          description: Normalized ISO 3166-1 alpha-2 country code.
     ProblemDetail:
       type: object
       additionalProperties: true
@@ -84,6 +125,7 @@ components:
           type: integer
         detail:
           type: string
+          description: Human-readable text; clients integrate using status and code.
         instance:
           type: string
           format: uri-reference
@@ -97,15 +139,42 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/ProblemDetail'
+          examples:
+            validationFailed:
+              value:
+                type: urn:problem:invalid-request
+                title: Invalid request
+                status: 400
+                detail: Request validation failed.
+                instance: /api/v1/coupons
+                code: INVALID_REQUEST
     CouponCodeConflict:
       description: Canonical coupon code already exists
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/ProblemDetail'
+          examples:
+            duplicateCode:
+              value:
+                type: urn:problem:coupon-code-conflict
+                title: Coupon code conflict
+                status: 409
+                detail: A coupon with this code already exists.
+                instance: /api/v1/coupons
+                code: COUPON_CODE_CONFLICT
     InternalError:
       description: Unexpected server failure
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/ProblemDetail'
+          examples:
+            internalFailure:
+              value:
+                type: urn:problem:internal-error
+                title: Internal server error
+                status: 500
+                detail: The request could not be completed.
+                instance: /api/v1/coupons
+                code: INTERNAL_ERROR

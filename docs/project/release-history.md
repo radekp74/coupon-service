@@ -227,3 +227,69 @@ Docker Compose HTTP: health UP, create 201, duplicate 409, invalid 400 PASS
 
 - `EMP-003`: `DONE_AND_VERIFIED`;
 - `EMP-004`: `REFINEMENT`; implementacja wymaga własnego accepted refinementu.
+
+## 2026-08-06 — `0.0.8-emp-007-candidate`
+
+### Zakres
+
+- accepted refinement `EMP-007`;
+- canonical OpenAPI jako jedyne źródło prawdy;
+- Swagger UI dla testerów;
+- canonical YAML pakowany do artefaktu;
+- Springdoc 2.9.0 zgodny z Spring Boot 3.5.16;
+- znaczący Javadoc dla publicznych kontraktów;
+- Maven DocLint;
+- test HTTP UI/YAML;
+- checker `EMP-007`;
+- jawne zablokowanie EMP-004 do GeoIP/API prerequisites.
+
+### Evidence dostępny w kandydacie
+
+```text
+make docs-check: PASS
+make bootstrap-check: PASS
+make emp003-check: PASS
+make emp007-check: PASS
+source/static validation: PASS
+```
+
+### Evidence wymagany lokalnie
+
+```text
+./mvnw -B -ntp clean verify: PENDING
+OpenApiDocumentationIT: PENDING
+JAR static/openapi.yaml: PENDING
+Docker runtime /openapi.yaml and /swagger-ui: PENDING
+make verify: PENDING
+make export-source: PENDING
+```
+
+### Decyzja
+
+- `EMP-007`: `IN_PROGRESS`;
+- `EMP-004`: `BLOCKED`;
+- status `DONE_AND_VERIFIED` wymaga pełnego lokalnego gate.
+
+## 2026-08-06 — `0.0.9-emp-007-verified`
+
+### Evidence
+
+```text
+make docs-check: PASS
+make bootstrap-check: PASS
+make emp003-check: PASS
+make emp007-check: PASS
+make verify: PASS
+Maven clean verify: PASS (10 testów, w tym OpenApiDocumentationIT)
+DocLint: PASS bez błędów
+JAR: BOOT-INF/classes/static/openapi.yaml obecny
+runtime: health UP, /openapi.yaml, /swagger-ui i swagger-config url=/openapi.yaml: PASS
+HTTP: create 201, case-insensitive duplicate 409 COUPON_CODE_CONFLICT: PASS
+cleanup: usunięty wyłącznie własny stos Compose i wolumen
+```
+
+### Decyzja
+
+- `EMP-007`: `DONE_AND_VERIFIED`;
+- `EMP-006`: `REFINEMENT`, implementacja niedozwolona do accepted własnego refinementu;
+- `EMP-004`: `BLOCKED`.

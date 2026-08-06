@@ -8,6 +8,12 @@ import pl.radoslawpiatek.couponservice.coupon.domain.Coupon;
 import pl.radoslawpiatek.couponservice.coupon.domain.CouponCodeConflictException;
 import pl.radoslawpiatek.couponservice.coupon.ports.CouponRepository;
 
+/**
+ * PostgreSQL adapter that persists coupons with parameterized SQL.
+ *
+ * <p>SQLSTATE 23505 is translated to the domain conflict while every other
+ * integrity failure remains an unexpected persistence error.
+ */
 @Repository
 public class JdbcCouponRepository implements CouponRepository {
 
@@ -34,6 +40,11 @@ public class JdbcCouponRepository implements CouponRepository {
 
     private final JdbcClient jdbcClient;
 
+    /**
+     * Creates the adapter with the JDBC client used for the single write operation.
+     *
+     * @param jdbcClient parameterized SQL client backed by the application datasource
+     */
     public JdbcCouponRepository(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }

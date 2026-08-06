@@ -202,15 +202,17 @@ def validate_project_state(errors: List[str]) -> None:
                 errors.append(f"current status missing EMP-003 verified token: {token}")
         readme = read(ROOT / "README.md")
         audit = read(ROOT / "AUDIT.md")
-        for token in [
-            "0.0.7-emp-003-verified",
-            "EMP-003:** `DONE_AND_VERIFIED`",
-            "EMP-004 — refinement",
-            "Implementation allowed:** `NO`",
-            "Weryfikacja runtime:** `PASS`",
-        ]:
-            if token not in readme:
-                errors.append(f"README missing EMP-003 verified public-status token: {token}")
+        verified_readme_groups = [
+            ("EMP-003 verified status", ["EMP-003:** `DONE_AND_VERIFIED`", "EMP-000–EMP-003:** `DONE_AND_VERIFIED`"]),
+            ("create endpoint", ["POST /api/v1/coupons"]),
+            ("verified scope heading", ["Zweryfikowany zakres EMP-003"]),
+        ]
+        for label, alternatives in verified_readme_groups:
+            if not any(token in readme for token in alternatives):
+                errors.append(
+                    f"README missing EMP-003 verified public-status evidence ({label}): "
+                    + " or ".join(alternatives)
+                )
         if "EMP-003 został zamknięty jako `DONE_AND_VERIFIED` dopiero po pełnym lokalnym `make verify`, runtime HTTP i exact-count concurrency test." not in audit:
             errors.append("AUDIT missing EMP-003 verified evidence")
     else:

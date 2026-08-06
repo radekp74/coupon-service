@@ -34,7 +34,8 @@ Po akceptacji zmiana kontraktu wymaga:
 - kryteria akceptacji są mierzalne;
 - poza zakresem jest jawne;
 - provider ma port, timeout i failure policy;
-- publiczny endpoint ma statusy oraz schema błędów;
+- publiczny endpoint ma statusy, schema błędów, przykłady i wpis w canonical OpenAPI;
 - transakcja ma określoną granicę i zachowanie przy race condition;
 - testy obejmują happy path, negatywne przypadki i concurrency;
+- publiczne kontrakty Java mają zaplanowany Javadoc, a OpenAPI ma runtime access dla testerów;
 - dokument nie używa „TBD” w stanie `ACCEPTED`.

@@ -2,7 +2,7 @@
 
 ## Stan realizacji
 
-EMP-002 ma lokalny pełny runtime evidence. Kandydat EMP-003 dodaje unit tests dla `CouponCode`, `CountryCode` i use case oraz HTTP integration suite `CreateCouponApiIT` na PostgreSQL 18.4. Suite obejmuje happy path, walidację, case-insensitive conflict, brak wycieku technicznego oraz trzy rundy concurrent create z 24 próbami, barrier i exact counts. Pełny status verified zostanie nadany dopiero po lokalnym `make verify`.
+EMP-002 i EMP-003 są `DONE_AND_VERIFIED`. Kandydat EMP-007 dodaje test runtime canonical OpenAPI i Swagger UI oraz DocLint publicznych kontraktów. Redemption, GeoIP i ich concurrency evidence pozostają w kolejnych zadaniach.
 
 ## Cel
 
@@ -35,6 +35,14 @@ Na PostgreSQL 18 przez Testcontainers:
 - zgodność licznika z redemption records.
 
 H2 jest zabronione jako substytut integracyjnej bazy.
+
+### OpenAPI documentation tests
+
+- canonical `/openapi.yaml` jest dostępne z artefaktu;
+- Swagger UI jest dostępny i wskazuje canonical spec;
+- Petstore jest wyłączony;
+- spec nie zawiera niezaimplementowanego redemption;
+- JAR zawiera `static/openapi.yaml`.
 
 ### HTTP/API tests
 

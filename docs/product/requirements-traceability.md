@@ -35,3 +35,11 @@
 - bramka dokumentacyjna.
 
 Dodatki nie zmieniają domeny zadania i wspierają oceniane cechy: jakość, architekturę, testy i produkcyjną świadomość.
+
+
+## Wymaganie dodatkowe — dokumentacja dla testerów
+
+- canonical OpenAPI: `docs/api/openapi.yaml`;
+- runtime machine-readable spec: `/openapi.yaml`;
+- interaktywny Swagger UI: `/swagger-ui`;
+- każdy kolejny publiczny endpoint aktualizuje spec i testy w tym samym checkpointcie.

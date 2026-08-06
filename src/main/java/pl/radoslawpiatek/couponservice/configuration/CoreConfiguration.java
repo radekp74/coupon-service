@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import pl.radoslawpiatek.couponservice.coupon.ports.UuidGenerator;
 
+/** Provides deterministic application ports for time and identifier generation. */
 @Configuration
 public class CoreConfiguration {
 

@@ -72,3 +72,15 @@ Pierwszy rzeczywisty build na Docker Desktop wykazał, że oddzielny krok `depen
 ## Zastosowanie wzorca w EMP-003
 
 Mimo że `EMP-001` zamrażał kontrakt MVP, przed pierwszym endpointem biznesowym utworzono osobny refinement `EMP-003`. Dokument rozstrzyga granicę transakcji, canonicalizację, mapowanie SQLSTATE i deterministyczny test wyścigu. Sama obecność testu nie jest traktowana jako dowód jego przejścia. EMP-003 został zamknięty jako `DONE_AND_VERIFIED` dopiero po pełnym lokalnym `make verify`, runtime HTTP i exact-count concurrency test.
+
+## Korekta kolejności przed EMP-004
+
+Refinement wykazał, że publiczny endpoint wykorzystania kuponu zależy od wiarygodnego ustalenia kraju i kompletnego kontraktu dla testerów. Próba realizacji EMP-004 przed EMP-006/007 wymagałaby utrwalania fikcyjnego kraju, publicznego bypassu albo wystawienia niekompletnego API. Zgodnie z planem fal w EMP-001 aktywne staje się EMP-007, następnie EMP-006, a EMP-004 pozostaje czasowo `BLOCKED`.
+
+## Polityka komentarzy i OpenAPI
+
+Nie wprowadzono wymogu komentarza dla każdej zmiennej. Publiczne kontrakty otrzymują Javadoc opisujący semantykę, invariants, skutki uboczne i błędy. Canonical `docs/api/openapi.yaml` jest pakowany do aplikacji i wyświetlany testerom przez Swagger UI, dzięki czemu dokumentacja i runtime korzystają z jednego źródła prawdy.
+
+## Evidence closeoutu EMP-007
+
+EMP-007 zamknięto dopiero po lokalnym `make verify`: Maven `clean verify` przeszedł z `OpenApiDocumentationIT` i DocLint bez błędów, a JAR zawiera `BOOT-INF/classes/static/openapi.yaml`. Runtime Docker potwierdził `UP` na `/actuator/health`, canonical YAML na `/openapi.yaml`, działające `/swagger-ui` oraz `swagger-config` z `url=/openapi.yaml`. Przykładowy create zwrócił 201, a case-insensitive duplicate 409 `COUPON_CODE_CONFLICT`; własny stos został następnie usunięty.

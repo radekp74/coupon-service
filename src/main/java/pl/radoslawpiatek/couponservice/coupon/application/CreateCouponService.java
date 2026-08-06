@@ -12,6 +12,12 @@ import pl.radoslawpiatek.couponservice.coupon.domain.CountryCode;
 import pl.radoslawpiatek.couponservice.coupon.ports.CouponRepository;
 import pl.radoslawpiatek.couponservice.coupon.ports.UuidGenerator;
 
+/**
+ * Transactional implementation of coupon creation.
+ *
+ * <p>The service deliberately performs no preflight existence check. PostgreSQL
+ * remains the concurrency-safe authority for canonical code uniqueness.
+ */
 @Service
 public class CreateCouponService implements CreateCouponUseCase {
 
@@ -19,6 +25,13 @@ public class CreateCouponService implements CreateCouponUseCase {
     private final UuidGenerator uuidGenerator;
     private final Clock clock;
 
+    /**
+     * Creates the use-case implementation with infrastructure ports supplied by Spring.
+     *
+     * @param couponRepository persistence authority for uniqueness conflicts
+     * @param uuidGenerator source of identifiers for new coupons
+     * @param clock source of the persisted UTC creation time
+     */
     public CreateCouponService(
             CouponRepository couponRepository,
             UuidGenerator uuidGenerator,

@@ -15,6 +15,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pl.radoslawpiatek.couponservice.coupon.domain.CouponCodeConflictException;
 import pl.radoslawpiatek.couponservice.coupon.domain.InvalidCouponValueException;
 
+/**
+ * Maps known application failures to the stable Problem Details contract.
+ *
+ * <p>Technical causes are logged only for unexpected failures and are never
+ * returned in the response body.
+ */
 @RestControllerAdvice
 public final class ApiExceptionHandler {
 

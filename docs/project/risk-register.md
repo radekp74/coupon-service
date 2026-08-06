@@ -18,6 +18,9 @@
 | R-014 | MEDIUM | OPEN | nadmierne użycie AI bez zrozumienia | małe checkpointy, ADR-y, review każdej decyzji | final technical review |
 | R-015 | HIGH | OPEN | lokalny GeoIP stub zostaje przypadkowo aktywowany w produkcji | profile guard + startup failure poza `local`/`test` + configuration test | EMP-006/010 |
 
+| R-016 | HIGH | MITIGATED | OpenAPI i runtime API rozchodzą się | jeden canonical YAML pakowany do artefaktu + checker + HTTP test | EMP-007 |
+| R-017 | MEDIUM | OPEN | mechaniczne komentarze obniżają czytelność i szybko się dezaktualizują | Javadoc tylko dla kontraktów i nieoczywistych decyzji + DocLint + review | EMP-007/011 |
+
 ## Zasada statusu
 
 Ryzyko nie jest oznaczane `MITIGATED` tylko dlatego, że istnieje plan. Status zmienia się dopiero po pojawieniu się dowodu w kodzie, teście lub zweryfikowanym procesie.

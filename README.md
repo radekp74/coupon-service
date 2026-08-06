@@ -2,19 +2,24 @@
 
 REST-owy serwis do tworzenia i bezpiecznego wykorzystywania kuponów rabatowych.
 
+
 ## Aktualny stan
 
-- **Checkpoint:** `0.0.7-emp-003-verified`
+- **Checkpoint:** `0.0.9-emp-007-verified`
 - **Data stanu:** `2026-08-06`
 - **Termin oddania:** `2026-08-10`, koniec dnia
-- **Governance i bootstrap:** `DONE_AND_VERIFIED`
-- **EMP-003:** `DONE_AND_VERIFIED`
-- **Aktywne zadanie:** `EMP-004 — refinement`
-- **Implementation allowed:** `NO` dla EMP-004 do czasu accepted refinement
-- **Kod:** `CREATE_COUPON_DONE_AND_VERIFIED`
-- **Weryfikacja runtime:** `PASS`
+- **EMP-000–EMP-003:** `DONE_AND_VERIFIED`
+- **EMP-007:** `DONE_AND_VERIFIED`
+- **Aktywne zadanie:** `EMP-006 — refinement`
+- **Implementation allowed:** `NO` dla EMP-006 do czasu accepted refinementu
+- **EMP-004:** `BLOCKED` do ukończenia EMP-006/007
+- **Kod biznesowy:** `CREATE_COUPON_DONE_AND_VERIFIED`
+- **OpenAPI/Swagger UI:** `DONE_AND_VERIFIED`
+- **Javadoc/DocLint policy:** `ACTIVE_AND_VERIFIED`
+- **Weryfikacja runtime EMP-007:** `PASS`
 
-EMP-003 dostarcza pierwszy endpoint biznesowy wraz z testami jednostkowymi, integracyjnymi i concurrent create. Został zweryfikowany pełnym lokalnym `make verify`, runtime HTTP oraz exact-count concurrency test. Implementacja EMP-004 pozostaje niedozwolona do czasu zaakceptowania własnego refinementu.
+EMP-007 dostarczył tester-facing dokumentację istniejącego endpointu create coupon. Canonical `docs/api/openapi.yaml` jest pakowany do aplikacji i wyświetlany przez Swagger UI. Lokalny Maven/DocLint, HTTP integration i Docker runtime smoke przeszły.
+
 
 ## Zweryfikowany zakres EMP-003
 
@@ -32,7 +37,7 @@ EMP-003 dostarcza pierwszy endpoint biznesowy wraz z testami jednostkowymi, inte
 - test 24 równoległych wariantów case z dokładnie jednym sukcesem;
 - machine-readable `docs/api/openapi.yaml` dla operacji create.
 
-Endpoint wykorzystania kuponu, GeoIP i pełne OpenAPI pozostają w kolejnych zadaniach.
+Endpoint wykorzystania kuponu i GeoIP pozostają w kolejnych zadaniach. EMP-007 udostępnia testerom pełny kontrakt aktualnie zaimplementowanego create coupon przez Swagger UI.
 
 ## Zamrożony kierunek techniczny
 
@@ -82,7 +87,26 @@ Lżejsze bramki bez Dockera i pobierania zależności:
 make docs-check
 make bootstrap-check
 make emp003-check
+make emp007-check
 ```
+
+
+## OpenAPI i Swagger UI dla testerów
+
+Po uruchomieniu stosu na izolowanym porcie:
+
+```bash
+make docker-up APP_PORT=18080
+```
+
+tester otrzymuje:
+
+```text
+Swagger UI:       http://localhost:18080/swagger-ui
+OpenAPI YAML:     http://localhost:18080/openapi.yaml
+```
+
+Swagger UI korzysta bezpośrednio z wersjonowanego `docs/api/openapi.yaml`. Tester może przejrzeć istniejący endpoint, requesty, odpowiedzi, walidację i przykłady. Specyfikacja opisuje tylko endpointy rzeczywiście zaimplementowane. Ewentualny generated `/v3/api-docs` jest jedynie diagnostycznym widokiem runtime i nie zastępuje wersjonowanego kontraktu. Redemption i GeoIP nie są jeszcze zaimplementowane.
 
 ## Docker na macOS
 
@@ -180,8 +204,9 @@ Najlepsza kolejność czytania:
 
 1. [Aktualny status](docs/project/current-status.md)
 2. [Podsumowanie refinementu EMP-001](docs/project/refinements/EMP-001-summary.md)
-3. [Refinement EMP-003](docs/project/refinements/EMP-003.md)
-4. [Pełny refinement EMP-001](docs/project/refinements/EMP-001.md)
+3. [Refinement EMP-007](docs/project/refinements/EMP-007.md)
+4. [Refinement EMP-003](docs/project/refinements/EMP-003.md)
+5. [Pełny refinement EMP-001](docs/project/refinements/EMP-001.md)
 5. [Backlog](docs/project/backlog.md)
 6. [Kontrakt API](docs/api/api-contract.md)
 7. [Architektura](docs/architecture/overview.md)

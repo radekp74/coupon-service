@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.Set;
 
-/** ISO 3166-1 alpha-2 country code. */
+/** Validated ISO 3166-1 alpha-2 country code stored in uppercase form. */
 public final class CountryCode {
 
     private static final Set<String> ISO_ALPHA_2 = Set.copyOf(Arrays.asList(Locale.getISOCountries()));
@@ -15,6 +15,13 @@ public final class CountryCode {
         this.value = value;
     }
 
+    /**
+     * Normalizes and validates a country code against the JDK ISO country list.
+     *
+     * @param rawValue country code supplied by an API client
+     * @return a validated uppercase ISO 3166-1 alpha-2 code
+     * @throws InvalidCouponValueException when the value is null or not a known country code
+     */
     public static CountryCode of(String rawValue) {
         if (rawValue == null) {
             throw new InvalidCouponValueException("countryCode", "Country code is required.");
@@ -30,6 +37,11 @@ public final class CountryCode {
         return new CountryCode(normalized);
     }
 
+    /**
+     * Returns the persisted canonical representation.
+     *
+     * @return the normalized uppercase country code
+     */
     public String value() {
         return value;
     }

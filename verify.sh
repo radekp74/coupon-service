@@ -32,6 +32,10 @@ echo "=== EMP-003 STATIC CREATE COUPON CONTRACT ==="
 python3 scripts/check_emp003.py
 
 echo
+echo "=== EMP-007 STATIC OPENAPI AND JAVADOC CONTRACT ==="
+python3 scripts/check_emp007.py
+
+echo
 echo "=== SCRIPT SYNTAX ==="
 PYCACHE_DIR="$(mktemp -d)"
 trap 'rm -rf "$PYCACHE_DIR"' EXIT
@@ -39,6 +43,7 @@ PYTHONPYCACHEPREFIX="$PYCACHE_DIR" python3 -m py_compile \
   scripts/check_documentation.py \
   scripts/check_bootstrap.py \
   scripts/check_emp003.py \
+  scripts/check_emp007.py \
   scripts/generate_checksums.py
 bash -n verify.sh scripts/package_source.sh scripts/docker_smoke.sh mvnw
 
@@ -49,6 +54,7 @@ grep -Fqx 'MAVEN ?= ./mvnw' Makefile
 grep -Fqx 'SOURCE_EXPORT_DIR ?= $(HOME)/Downloads' Makefile
 grep -Eq '^bootstrap-check:$' Makefile
 grep -Eq '^emp003-check:$' Makefile
+grep -Eq '^emp007-check:$' Makefile
 grep -Eq '^docker-check:$' Makefile
 grep -Eq '^compose-config: docker-check$' Makefile
 grep -Eq '^docker-build: compose-config$' Makefile
@@ -59,6 +65,7 @@ grep -Eq '^maven-verify: java-check docker-check$' Makefile
 grep -Eq '^export-source:$' Makefile
 make -n bootstrap-check >/dev/null
 make -n emp003-check >/dev/null
+make -n emp007-check >/dev/null
 make -n docker-check >/dev/null
 make -n compose-config >/dev/null
 make -n docker-build >/dev/null
@@ -98,6 +105,12 @@ test -f target/coupon-service-0.0.1-SNAPSHOT.jar || {
   echo "ERROR: expected Spring Boot artifact was not produced" >&2
   exit 1
 }
+
+jar tf target/coupon-service-0.0.1-SNAPSHOT.jar   | grep -Fq 'BOOT-INF/classes/static/openapi.yaml' || {
+    echo "ERROR: canonical OpenAPI was not packaged into the Spring Boot artifact" >&2
+    exit 1
+  }
+echo "SUCCESS: canonical OpenAPI is present in the application artifact"
 
 echo
 echo "=== CONTAINER BUILD AND RUNTIME SMOKE ==="

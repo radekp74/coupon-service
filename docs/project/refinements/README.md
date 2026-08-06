@@ -21,7 +21,10 @@ Dokument ze stanem `DRAFT` nie zezwala na implementację.
 - [EMP-003 — tworzenie kuponu](EMP-003.md) — `ACCEPTED`
 - [EMP-003 — podsumowanie](EMP-003-summary.md)
 - [EMP-003 — review checklist](EMP-003-review-checklist.md) — `PASS`
+- [EMP-007 — OpenAPI, Swagger UI i Javadoc](EMP-007.md) — `ACCEPTED`
+- [EMP-007 — podsumowanie](EMP-007-summary.md)
+- [EMP-007 — review checklist](EMP-007-review-checklist.md) — `PASS`
 
 ## Pokrycie zadań
 
-`EMP-001` zamraża kontrakt całego MVP, a `EMP-003` uszczegóławia pierwszy endpoint biznesowy zgodnie z trwałą regułą refinementu przed implementacją. Zasady amendmentu opisuje [proces refinementu](../refinement-process.md).
+`EMP-001` zamraża kontrakt całego MVP. `EMP-003` uszczegóławia tworzenie kuponu, a `EMP-007` tester-facing OpenAPI i zasady dokumentacji kodu. `EMP-004` pozostaje zablokowane do ukończenia zależności GeoIP i kontraktu API. Zasady amendmentu opisuje [proces refinementu](../refinement-process.md).
