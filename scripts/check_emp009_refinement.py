@@ -10,7 +10,7 @@ FILES = {
         "Task-ID: EMP-009", "Stan-Refinementu:", "Implementation-Allowed:",
         "EMP009-AC-01", "EMP009-AC-15", "Co najmniej 3", "100 różnych userId",
         "19 `COUPON_ALREADY_REDEEMED`", "1 `COUPON_EXHAUSTED`", "row lock coupon-A",
-        "Thread.sleep", "Testcontainers", "ExecutorService", "Future", "EVIDENCE_PARTIAL",
+        "Thread.sleep", "Testcontainers", "ExecutorService", "Future", "Evidence-State:",
         "CreateCouponApiIT.concurrentCaseVariantsProduceExactlyOneCreatedCoupon",
         "CouponRedemptionApiIT.concurrentUsersRespectExactCapacityInThreeRounds",
         "CouponRedemptionApiIT.sameUserConcurrentRetriesProduceExactlyOneSuccessAndNineteenConflicts",
@@ -65,6 +65,8 @@ refinement = refinement_path.read_text(encoding="utf-8") if refinement_path.is_f
 state = re.search(r"^Stan-Refinementu:\s*(\S+)", refinement, re.MULTILINE)
 allowed = re.search(r"^Implementation-Allowed:\s*(\S+)", refinement, re.MULTILINE)
 evidence_state = re.search(r"^Evidence-State:\s*(\S+)", refinement, re.MULTILINE)
+task_status = re.search(r"^Status:\s*(\S+)", refinement, re.MULTILINE)
+implementation = re.search(r"^Implementation:\s*(\S+)", refinement, re.MULTILINE)
 if not state or state.group(1) not in {"DRAFT", "ACCEPTED"}:
     errors.append("EMP-009 refinement must be DRAFT or ACCEPTED")
 elif state.group(1) == "DRAFT" and (not allowed or allowed.group(1) != "NO"):
@@ -82,6 +84,21 @@ elif state.group(1) == "ACCEPTED":
     ]:
         if token not in refinement:
             errors.append(f"ACCEPTED EMP-009 missing {token}")
+    if not task_status or task_status.group(1) not in {"READY", "IN_PROGRESS", "DONE_AND_VERIFIED"}:
+        errors.append("ACCEPTED EMP-009 must use READY, IN_PROGRESS or DONE_AND_VERIFIED status")
+    if not implementation or implementation.group(1) not in {"NOT_STARTED", "IN_PROGRESS", "DONE_AND_VERIFIED"}:
+        errors.append("ACCEPTED EMP-009 must expose an allowed implementation state")
+    if task_status and task_status.group(1) == "DONE_AND_VERIFIED":
+        for token in [
+            "Implementation: DONE_AND_VERIFIED",
+            "Evidence-State: COMPLETE",
+            "scripts/check_emp009.py",
+            "pełny Maven/Testcontainers i Docker gate",
+        ]:
+            if token not in refinement:
+                errors.append(f"verified EMP-009 missing {token}")
+        if not (ROOT / "scripts/check_emp009.py").is_file():
+            errors.append("verified EMP-009 requires scripts/check_emp009.py")
 
 backlog = (ROOT / "docs/project/backlog.md").read_text(encoding="utf-8")
 current = (ROOT / "docs/project/current-status.md").read_text(encoding="utf-8")

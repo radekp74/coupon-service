@@ -2,8 +2,8 @@
 
 - **Data:** 2026-08-07
 - **Termin:** 2026-08-10, koniec dnia
-- **Faza:** `CONCURRENCY_EVIDENCE_REFINEMENT_ACCEPTED`
-- **Active task:** `EMP-009 — implementation of missing exact assertions and checker`
+- **Faza:** `CONCURRENCY_EVIDENCE_DONE_AND_VERIFIED`
+- **Active task:** `EMP-008 — refinement coverage/JaCoCo`
 - **EMP-004 refinement:** `ACCEPTED`
 - **Implementation EMP-004:** `DONE_AND_VERIFIED`; verification remediation `COMPLETED`
 - **Implementation allowed:** `YES` dla `EMP-004` na podstawie accepted własnego refinementu
@@ -14,14 +14,15 @@
 - **Implementation allowed EMP-006:** `YES`
 - **EMP-007:** `DONE_AND_VERIFIED`
 - **EMP-008:** `PLANNED`; JaCoCo i warning budget pozostają poza aktywnym scope
-- **EMP-009:** `READY`; refinement `ACCEPTED`, evidence `PARTIAL`, implementation `NOT_STARTED`, implementation allowed `YES`
+- **EMP-009:** `DONE_AND_VERIFIED`; refinement `ACCEPTED`, evidence `COMPLETE`, implementation `DONE_AND_VERIFIED`, implementation allowed `YES`
 - **Kod aplikacji:** create coupon, Client IP/GeoIP i transactional redemption są zaimplementowane oraz lokalnie zweryfikowane
 - **OpenAPI/Swagger UI:** canonical `/openapi.yaml` zawiera `createCoupon` i `redeemCoupon`; Swagger UI używa tej specyfikacji
 - **Javadoc/DocLint policy:** `ACTIVE_AND_VERIFIED`
-- **Runtime verification:** `LOCAL_EMP004_REMEDIATION_GATE_PASS`
+- **Runtime verification:** `LOCAL_EMP009_GATE_PASS`
 - **Historyczne evidence bootstrapu:** `BOOTSTRAP_DONE_AND_VERIFIED`, `LOCAL_DOCKER_GATE_PASS`
 - **Historyczne evidence EMP-003:** `CREATE_COUPON_DONE_AND_VERIFIED`, `LOCAL_EMP003_GATE_PASS`
 - **Historyczne evidence EMP-007:** `OPENAPI_DOCUMENTATION_DONE_AND_VERIFIED`, `LOCAL_EMP007_GATE_PASS`
+- **Evidence EMP-009:** `CONCURRENCY_EVIDENCE_DONE_AND_VERIFIED`, `LOCAL_EMP009_GATE_PASS`
 
 ## Ukończone i zweryfikowane
 
@@ -57,8 +58,8 @@ Implementacja już dostarczyła:
 
 ## Następny krok
 
-EMP-009 — implementation of missing exact assertions and checker. Właściciel zaakceptował wyłącznie klasyfikację 90 exhausted, 10 unikalnych userId, jednego last-slot usera oraz checker; EMP-009 nie jest jeszcze zamknięte.
+EMP-008 — refinement coverage/JaCoCo. EMP-009 zakończyło ograniczony scope: exact 90 exhausted, 10 unikalnych userId, dokładnie jeden last-slot user oraz checker; pełny gate potwierdził evidence `COMPLETE`.
 
 ## Blokery
 
-Brak blockerów. EMP-008 pozostaje `PLANNED`, a EMP-009 pozostaje `PLANNED` do odrębnego refinementu.
+Brak blockerów. EMP-008 pozostaje `PLANNED` do własnego refinementu; EMP-009 jest `DONE_AND_VERIFIED`.

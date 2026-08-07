@@ -2,7 +2,7 @@
 
 ## Stan realizacji
 
-EMP-002, EMP-003, EMP-004, EMP-006 i EMP-007 są `DONE_AND_VERIFIED`. EMP-004 ma PostgreSQL evidence 100/10 w trzech rundach, same-user 1/19, last-slot 1/1, per-row locking oraz rollbacków; EMP-009 pozostaje osobnym checkpointem formalnego mapowania tego evidence.
+EMP-002, EMP-003, EMP-004, EMP-006, EMP-007 i EMP-009 są `DONE_AND_VERIFIED`. EMP-004 ma PostgreSQL evidence 100/10 w trzech rundach, same-user 1/19, last-slot 1/1, per-row locking oraz rollbacków; EMP-009 sformalizował i zweryfikował jego exact concurrency evidence.
 
 ## Cel
 
@@ -112,9 +112,9 @@ WireMock:
 - test może być powtórzony kilka razy w dedykowanym profilu;
 - assertions opierają się na exact counts, nie „co najmniej”.
 
-## EMP-009 — refinement concurrency evidence
+## EMP-009 — verified concurrency evidence
 
-EMP-009 jest `ACCEPTED` i nie tworzy nowych scenariuszy biznesowych. Formalnie mapuje `CreateCouponApiIT.concurrentCaseVariantsProduceExactlyOneCreatedCoupon` oraz metody concurrency `CouponRedemptionApiIT`. Evidence jest `PARTIAL`: przyszły checkpoint może wyłącznie sklasyfikować 90 konfliktów jako `COUPON_EXHAUSTED`, sprawdzić 10 unikalnych userId i jednego zapisanego usera last-slot oraz dodać checker. JaCoCo i 42 warnings Javadoc są scope EMP-008, nie EMP-009.
+EMP-009 jest `DONE_AND_VERIFIED` i nie stworzył nowych scenariuszy biznesowych. Formalnie mapuje `CreateCouponApiIT.concurrentCaseVariantsProduceExactlyOneCreatedCoupon` oraz metody concurrency `CouponRedemptionApiIT`; 100/10 klasyfikuje 90 odpowiedzi po publicznym `code=COUPON_EXHAUSTED` i sprawdza 10 unikalnych userId, a last-slot potwierdza zapis dokładnie jednego konkurenta. `make emp009-check` analizuje to evidence, a pełny gate uruchamia checker. JaCoCo i 42 warnings Javadoc są scope EMP-008, nie EMP-009.
 
 ## Pokrycie
 

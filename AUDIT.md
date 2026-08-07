@@ -113,7 +113,13 @@ Pełne lokalne `./mvnw -B -ntp clean verify` przeszło: 60 testów unit i 22 int
 
 ## Draft EMP-009
 
-EMP-009 nie uznaje poprzednich deklaracji za automatyczny closeout. Mapa kodu przypisuje konkretne metody Testcontainers z EMP-003 i EMP-004, ale oznacza `EVIDENCE_PARTIAL`: 100/10 nie klasyfikuje kodu 90 konfliktów ani 10 unikalnych userId, a last-slot nie potwierdza jednego zapisanego nowego użytkownika. Radosław Piątek formalnie zaakceptował 2026-08-07 ograniczony checkpoint trzech asercji i implementacyjnego checkera; EMP-009 pozostaje `READY`, implementation `NOT_STARTED` i nie jest zamknięte.
+EMP-009 nie uznaje poprzednich deklaracji za automatyczny closeout. Mapa kodu przypisuje konkretne metody Testcontainers z EMP-003 i EMP-004, ale oznacza `EVIDENCE_PARTIAL`: 100/10 nie klasyfikowało kodu 90 konfliktów ani 10 unikalnych userId, a last-slot nie potwierdzał jednego zapisanego nowego użytkownika. Radosław Piątek formalnie zaakceptował 2026-08-07 ograniczony checkpoint trzech asercji i implementacyjnego checkera; EMP-009 jest `IN_PROGRESS`, evidence pozostaje `PARTIAL` do pełnego gate i zadanie nie jest zamknięte.
+
+## Closeout EMP-009
+
+Minimalna implementacja zmieniła wyłącznie istniejące testy współbieżności i dodała `scripts/check_emp009.py`. Każda z trzech rund 100/10 klasyfikuje teraz dokładnie 10 × 201, 90 × `COUPON_EXHAUSTED`, zero other/unknown oraz potwierdza `current_uses=10`, 10 rekordów i 10 unikalnych `user_id`. Last-slot potwierdza 1 × 201, 1 × exhausted i zapis dokładnie jednego z dwóch konkurujących użytkowników. Checker failuje po kontrolowanym usunięciu każdej z tych trzech asercji na kopii tymczasowej.
+
+Pełne `./mvnw -B -ntp clean verify` zakończyło się sukcesem: 60 testów unit i 22 integration, DocLint 0 błędów (42 istniejące ostrzeżenia). Pełne `make verify` przeszło z własnym projektem Compose i dynamicznym loopback `127.0.0.1:55006`; health, canonical OpenAPI i Swagger UI przeszły, a stack został usunięty. To jest evidence dla `EMP-009 = DONE_AND_VERIFIED`; nie zmienia historii remediation EMP-004.
 
 
 ## Refinement EMP-004

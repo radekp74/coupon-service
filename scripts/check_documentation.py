@@ -203,7 +203,11 @@ def validate_current_status(tasks: Dict[str, Dict[str, str]], errors: List[str])
         active = task_id_match.group(1)
     if active not in tasks:
         errors.append(f"Current status wskazuje nieistniejące zadanie: {active}")
-    elif tasks[active]["Status"] not in {"REFINEMENT", "READY", "IN_PROGRESS", "BLOCKED"}:
+    elif tasks[active]["Status"] == "PLANNED" and "refinement" not in match.group(1).lower():
+        errors.append(
+            f"Planned active task {active} musi być wyłącznie jawnym następnym refinementem"
+        )
+    elif tasks[active]["Status"] not in {"PLANNED", "REFINEMENT", "READY", "IN_PROGRESS", "BLOCKED"}:
         errors.append(
             f"Active task {active} ma niedozwolony status {tasks[active]['Status']}"
         )

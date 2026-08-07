@@ -31,7 +31,7 @@
 | R-025 | HIGH | OPEN | insert redemption commitnie się bez incrementu albo odwrotnie | jedna transakcja, conditional update i fault-injection rollback tests | EMP-004 |
 | R-026 | MEDIUM | OPEN | retry po utracie 201 jest mylony z nowym użyciem | stabilny 409 `COUPON_ALREADY_REDEEMED`, jawny brak idempotency key | EMP-004/011 |
 | R-027 | MEDIUM | OPEN | kontrakt UserId rozchodzi się między EMP-001, aplikacją i V1 | zaakceptowany amendment EMP-001 zamraża `^[!-~]{1,128}$` bez trimowania/normalizacji; implementacja EMP-004 musi dodać zgodne Bean Validation, PostgreSQL `CHECK`, OpenAPI i testy | EMP-004 implementation evidence |
-| R-028 | MEDIUM | OPEN | formalne concurrency evidence może nie klasyfikować wszystkich wyników albo stanów końcowych | accepted EMP-009 ogranicza poprawkę do exact code 100/10, unikalnych userId i zapisanego last-slot usera | minimalny test checkpoint + pełny gate |
+| R-028 | MEDIUM | MITIGATED | formalne concurrency evidence może nie klasyfikować wszystkich wyników albo stanów końcowych | EMP-009 sprawdza exact 90 `COUPON_EXHAUSTED`, 10 unikalnych userId i dokładnie jednego last-slot usera; checker + pełny gate | EMP-009 verified evidence |
 
 ## Zasada statusu
 

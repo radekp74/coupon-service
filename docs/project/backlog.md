@@ -13,7 +13,7 @@ Ten plik jest jedynym źródłem prawdy dla identyfikatorów, priorytetów i sta
 | EMP-006 | EMP-001 | P0 | DONE_AND_VERIFIED | EMP-006 | Client IP i provider-neutral GeoIP | accepted EMP-006 refinement + implementation evidence + `make emp006-check` |
 | EMP-007 | EMP-001 | P0 | DONE_AND_VERIFIED | EMP-007 | Stabilny error contract, OpenAPI, Swagger UI i Javadoc | UI/YAML HTTP test + DocLint + `make verify` |
 | EMP-008 | EMP-001 | P0 | PLANNED | EMP-001 | Testy jednostkowe i integracyjne | JaCoCo + Testcontainers |
-| EMP-009 | EMP-001 | P0 | READY | EMP-009 | Deterministyczne testy współbieżności — `ACCEPTED`, `NOT_STARTED`, evidence `PARTIAL` | trzy exact assertions + checker + pełny gate |
+| EMP-009 | EMP-001 | P0 | DONE_AND_VERIFIED | EMP-009 | Deterministyczne testy współbieżności — evidence `COMPLETE` | `make emp009-check` + pełny Maven/Testcontainers/Docker gate |
 | EMP-010 | EMP-001 | P1 | PLANNED | EMP-001 | CI, delivery hardening i podstawowe metryki | green CI + reproducible delivery gate |
 | EMP-011 | EMP-001 | P0 | PLANNED | EMP-001 | Finalny review, README i closeout | final `make verify` + public repo |
 
@@ -24,6 +24,6 @@ Ten plik jest jedynym źródłem prawdy dla identyfikatorów, priorytetów i sta
 - `EMP-006` jest `DONE_AND_VERIFIED` po pełnym `make verify` z izolowanym Docker smoke.
 - `EMP-004` jest `DONE_AND_VERIFIED`; refinement jest `ACCEPTED`, a implementation i verification remediation mają pełne lokalne evidence.
 - `EMP-005` ma disposition `MERGED_INTO_EMP-004`; user-once pozostaje obowiązkowym invariantem i evidence EMP-004.
-- `EMP-009` jest `READY`; refinement jest `ACCEPTED`, evidence pozostaje `PARTIAL`, a implementacja jest dozwolona wyłącznie w zamrożonym zakresie trzech asercji i checkera.
+- `EMP-009` jest `DONE_AND_VERIFIED`; refinement jest `ACCEPTED`, implementation `DONE_AND_VERIFIED`, a evidence `COMPLETE` po exact assertions, checkerze i pełnym gate.
 - Zmiana contract boundary wymaga amendmentu `EMP-001`.
 - `DONE_AND_VERIFIED` wymaga dowodów wskazanych w ostatniej kolumnie.

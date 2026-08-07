@@ -10,7 +10,8 @@
 - [x] JaCoCo i Javadoc warnings pozostają scope EMP-008.
 - [x] Zidentyfikowano luki AC-02, AC-03 i AC-07.
 - [x] Właściciel zaakceptował `Implementation-Allowed: YES` wyłącznie dla trzech asercji i implementacyjnego checkera.
-- [x] EMP-009 nadal nie może zostać zamknięte: evidence jest `PARTIAL`, implementation `NOT_STARTED`.
+- [x] Implementacja uzupełniła wyłącznie trzy zaakceptowane exact assertions i `scripts/check_emp009.py`.
+- [x] Pełny Maven/Testcontainers i Docker `make verify` potwierdziły wszystkie AC; evidence jest `COMPLETE`.
 
 ## Rekomendacja
 

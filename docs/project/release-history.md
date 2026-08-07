@@ -484,3 +484,13 @@ Dokumentacyjny draft mapuje istniejące Testcontainers evidence: EMP-003 ma `Cre
 ## 2026-08-07 — EMP-009 refinement accepted
 
 Radosław Piątek zaakceptował refinement przy `Evidence-State: PARTIAL`. Zamrożony przyszły checkpoint może zmienić wyłącznie trzy brakujące exact assertions w istniejących testach oraz dodać `scripts/check_emp009.py` i jego bramkę. Nie zaakceptowano nowych scenariuszy, kodu produkcyjnego, endpointów, OpenAPI, JaCoCo ani EMP-008. EMP-009 jest `READY`, implementation `NOT_STARTED`; nie jest to evidence DONE.
+
+## 2026-08-07 — EMP-009 implementation started
+
+Rozpoczęto wyłącznie zatwierdzony zakres: trzy missing exact assertions w istniejących testach współbieżności oraz implementacyjny checker. EMP-009 jest `IN_PROGRESS`, a `Evidence-State` pozostaje `PARTIAL` do czasu pełnego Maven/Testcontainers/Docker gate; nie dodano funkcji biznesowej ani nowego scenariusza testowego.
+
+## 2026-08-07 — 0.0.18-emp-009-verified
+
+EMP-009 jest `DONE_AND_VERIFIED`. `CouponRedemptionApiIT.concurrentUsersRespectExactCapacityInThreeRounds` wykonał 3 rundy po 100 requestów: w każdej dokładnie 10 × 201, 90 × `COUPON_EXHAUSTED`, zero other/unknown, `current_uses=10`, 10 redemption i `COUNT(DISTINCT user_id)=10`. `sameUserConcurrentRetriesProduceExactlyOneSuccessAndNineteenConflicts` zachował 1 × 201, 19 × `COUPON_ALREADY_REDEEMED`, 0 exhausted oraz uses/records=1. `twoDifferentUsersCompeteForTheLastSlotWithExactOutcomes` zachował 1 × 201, 1 × exhausted i dokładnie jednego zapisanego z `user-A`/`user-B`. `rowLockOnOneCouponDoesNotGloballySerializeAnotherCoupon` potwierdził zakończenie coupon-B przed release latcha coupon-A; concurrent create pozostał 3 × 24 z jednym rekordem.
+
+`scripts/check_emp009.py` i `make emp009-check` zostały uruchomione także przez `verify.sh`; kontrolowane mutacje każdej z trzech nowych asercji na kopii tymczasowej zostały odrzucone. `./mvnw -B -ntp clean verify` przeszło w 57.47 s (60 unit + 22 integration; DocLint 0 errors, 42 warnings). `make verify` przeszło w 90.98 s; izolowany Docker smoke użył `127.0.0.1:55006`, zweryfikował health/OpenAPI/Swagger UI i usunął wyłącznie własny stos.

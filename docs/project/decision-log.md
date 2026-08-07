@@ -50,3 +50,4 @@
 | D-046 | 2026-08-06 | ACCEPTED | `READ COMMITTED + SELECT FOR UPDATE`, bez HTTP pod lockiem, custom lock timeout i retry DB | Client IP i GeoIP pozostają poza transakcją; brak JVM/Redis/distributed lock utrzymuje model spójności w PostgreSQL |
 | D-047 | 2026-08-07 | PROPOSED | EMP-009 formalizuje reuse evidence EMP-003/EMP-004 bez kopiowania testów | po review jest wymagany accepted refinement; obecne evidence jest częściowe z trzema brakującymi exact assertions |
 | D-048 | 2026-08-07 | ACCEPTED | EMP-009 implementuje wyłącznie trzy exact assertions i checker | brak nowego scenariusza, kodu produkcyjnego, OpenAPI, JaCoCo lub scope EMP-008; evidence pozostaje PARTIAL do pełnego gate |
+| D-049 | 2026-08-07 | VERIFIED | EMP-009 closeout następuje po exact assertions, checkerze i pełnym gate | trzy uzupełnione asercje oraz Maven/Testcontainers/Docker evidence dają `Evidence-State: COMPLETE`; EMP-008 pozostaje osobnym scope coverage |

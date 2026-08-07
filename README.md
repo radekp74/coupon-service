@@ -5,19 +5,19 @@ REST-owy serwis do tworzenia i bezpiecznego wykorzystywania kuponów rabatowych.
 
 ## Aktualny stan
 
-- **Checkpoint:** `0.0.17-emp-004-verification-remediation`
+- **Checkpoint:** `0.0.18-emp-009-verified`
 - **Data stanu:** `2026-08-07`
 - **Termin oddania:** `2026-08-10`, koniec dnia
 - **EMP-000–EMP-003:** `DONE_AND_VERIFIED`
 - **EMP-007:** `DONE_AND_VERIFIED`
 - **EMP-006:** `DONE_AND_VERIFIED`
-- **Aktywne zadanie:** EMP-009 — implementation of missing exact assertions and checker
+- **Aktywne zadanie:** EMP-008 — refinement coverage/JaCoCo
 - **Refinement EMP-006:** `ACCEPTED`
 - **Implementation EMP-006:** `DONE_AND_VERIFIED`
 - **EMP-004:** `DONE_AND_VERIFIED`; refinement i implementation `DONE_AND_VERIFIED`
 - **EMP-005:** `MERGED_INTO_EMP-004`; user-once pozostaje obowiązkowym invariantem i evidence EMP-004
 - **EMP-008:** `PLANNED`; JaCoCo i coverage są poza tym checkpointem
-- **EMP-009:** `READY`, refinement `ACCEPTED`; evidence `PARTIAL`, implementation `NOT_STARTED`, implementation allowed `YES`
+- **EMP-009:** `DONE_AND_VERIFIED`, refinement `ACCEPTED`; evidence `COMPLETE`, implementation `DONE_AND_VERIFIED`
 - **Kod biznesowy:** `CREATE_COUPON_DONE_AND_VERIFIED`
 - **OpenAPI/Swagger UI:** `DONE_AND_VERIFIED`
 - **Javadoc/DocLint policy:** `ACTIVE_AND_VERIFIED`
@@ -42,7 +42,7 @@ EMP-004 dostarcza transakcyjny endpoint redemption z server-side Client IP/GeoIP
 - test 24 równoległych wariantów case z dokładnie jednym sukcesem;
 - machine-readable `docs/api/openapi.yaml` dla operacji create.
 
-Endpoint wykorzystania kuponu jest zaimplementowany i opisany w canonical OpenAPI/Swagger UI. EMP-009 nie zmienia API; mapuje istniejące evidence współbieżności i nie jest jeszcze zamknięte.
+Endpoint wykorzystania kuponu jest zaimplementowany i opisany w canonical OpenAPI/Swagger UI. EMP-009 nie zmienił API; zamknął deterministyczne evidence współbieżności po exact assertions i pełnym gate.
 
 ## Zamrożony kierunek techniczny
 
@@ -75,7 +75,7 @@ Bramka wykonuje kolejno:
 
 1. governance dokumentacji;
 2. statyczne kontrakty bootstrapu i EMP-003;
-3. statyczne kontrakty accepted refinementu i implementacji EMP-006 oraz kontrolę składni skryptów i Makefile;
+3. statyczne kontrakty accepted refinementów i implementacji EMP-004, EMP-006, EMP-007 oraz EMP-009, a także kontrolę składni skryptów i Makefile;
 4. kontrolę Java 21;
 5. kontrolę skonfigurowanego klienta i daemona Docker;
 6. `./mvnw -B -ntp clean verify`;
@@ -96,6 +96,8 @@ make emp004-refinement-check
 make emp006-refinement-check
 make emp006-check
 make emp007-check
+make emp009-refinement-check
+make emp009-check
 ```
 
 

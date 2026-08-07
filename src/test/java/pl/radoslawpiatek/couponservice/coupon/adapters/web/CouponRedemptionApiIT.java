@@ -76,21 +76,27 @@ class CouponRedemptionApiIT {
             ExecutorService executor = Executors.newFixedThreadPool(100);
             CountDownLatch ready = new CountDownLatch(100);
             CountDownLatch start = new CountDownLatch(1);
-            List<Future<HttpStatusCode>> futures = new ArrayList<>();
+            List<Future<ResponseEntity<Map>>> futures = new ArrayList<>();
             try {
                 for (int index = 0; index < 100; index++) {
                     String user = "race-" + round + "-" + index;
-                    futures.add(executor.submit(() -> { ready.countDown(); assertThat(start.await(15, TimeUnit.SECONDS)).isTrue(); return redeem(code, user, Map.class).getStatusCode(); }));
+                    futures.add(executor.submit(() -> { ready.countDown(); assertThat(start.await(15, TimeUnit.SECONDS)).isTrue(); return redeem(code, user, Map.class); }));
                 }
                 assertThat(ready.await(15, TimeUnit.SECONDS)).isTrue(); start.countDown();
-                int created=0, exhausted=0;
-                for (Future<HttpStatusCode> future : futures) {
-                    HttpStatusCode status=future.get(60, TimeUnit.SECONDS);
-                    if (status == HttpStatus.CREATED) created++; else if (status == HttpStatus.CONFLICT) exhausted++; else throw new AssertionError(status);
+                int created=0, couponExhausted=0, otherExpectedBusinessErrors=0, unknownOutcomes=0;
+                for (Future<ResponseEntity<Map>> future : futures) {
+                    ResponseEntity<Map> response=future.get(60, TimeUnit.SECONDS);
+                    if (response.getStatusCode() == HttpStatus.CREATED) created++;
+                    else if (response.getStatusCode() == HttpStatus.CONFLICT
+                            && "COUPON_EXHAUSTED".equals(response.getBody().get("code"))) couponExhausted++;
+                    else if (response.getStatusCode().is4xxClientError()) otherExpectedBusinessErrors++;
+                    else unknownOutcomes++;
                 }
-                assertThat(created).isEqualTo(10); assertThat(exhausted).isEqualTo(90);
+                assertThat(created).isEqualTo(10); assertThat(couponExhausted).isEqualTo(90);
+                assertThat(otherExpectedBusinessErrors).isZero(); assertThat(unknownOutcomes).isZero();
                 assertThat(jdbc.sql("SELECT current_uses FROM coupons WHERE normalized_code=:code").param("code", code).query(Integer.class).single()).isEqualTo(10);
                 assertThat(jdbc.sql("SELECT COUNT(*) FROM coupon_redemptions r JOIN coupons c ON c.id=r.coupon_id WHERE c.normalized_code=:code").param("code", code).query(Long.class).single()).isEqualTo(10L);
+                assertThat(jdbc.sql("SELECT COUNT(DISTINCT r.user_id) FROM coupon_redemptions r JOIN coupons c ON c.id=r.coupon_id WHERE c.normalized_code=:code").param("code", code).query(Long.class).single()).isEqualTo(10L);
             } finally { start.countDown(); executor.shutdownNow(); assertThat(executor.awaitTermination(15, TimeUnit.SECONDS)).isTrue(); }
         }
     }
@@ -116,6 +122,7 @@ class CouponRedemptionApiIT {
                 .map(ResponseEntity::getBody).map(body -> body.get("code"))).containsOnly("COUPON_EXHAUSTED");
         assertThat(jdbc.sql("SELECT current_uses FROM coupons WHERE normalized_code='LASTSLOT'").query(Integer.class).single()).isEqualTo(2);
         assertThat(jdbc.sql("SELECT COUNT(*) FROM coupon_redemptions").query(Long.class).single()).isEqualTo(2L);
+        assertThat(jdbc.sql("SELECT COUNT(*) FROM coupon_redemptions r JOIN coupons c ON c.id=r.coupon_id WHERE c.normalized_code='LASTSLOT' AND r.user_id IN ('user-A', 'user-B')").query(Long.class).single()).isEqualTo(1L);
     }
 
     @Test void rowLockOnOneCouponDoesNotGloballySerializeAnotherCoupon() throws Exception {
