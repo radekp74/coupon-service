@@ -183,3 +183,19 @@ Nowe wymagane scenariusze po akceptacji:
 - `current_uses == count(coupon_redemptions)`;
 - retry tego samego userId daje 409 bez replay;
 - wszystkie testy używają PostgreSQL i deterministycznego GeoIP stubu, bez `Thread.sleep`.
+
+
+## EMP-010 — zaakceptowany plan CI, delivery i obserwowalności
+
+Właściciel zaakceptował refinement 2026-08-07. Poniższy plan jest zamrożonym kontraktem przyszłej implementacji; nie stanowi jeszcze measured evidence.
+
+- request ID: valid safe incoming value, invalid/multiple fallback UUID, response header, MDC cleanup/no leakage;
+- metrics: `SimpleMeterRegistry` dla exact meter names/tag vocabularies; bez IP, userId, coupon code, request ID i country labels;
+- provider/Client IP instrumentation: existing failure categories bez dodatkowego HTTP call/retry;
+- `/actuator/prometheus`: 200 i obecność custom meters po kontrolowanych scenariuszach;
+- structured logs: Docker runtime emituje parseable Logstash JSON i nie dodaje wrażliwych structured fields;
+- OpenAPI: response `X-Request-Id` jest opisany dla publicznych odpowiedzi;
+- Docker smoke: dynamiczny loopback + health/OpenAPI/Swagger + Prometheus/request ID/JSON logging;
+- CI: `DOCKER=docker make verify` na Ubuntu 24.04, minimal permissions i full action SHA;
+- delivery: dwa eksporty tego samego clean commita mają identyczny SHA-256, a stale checksum lub prohibited file powoduje failure;
+- brak publicznej sieci w testach, brak H2, brak `Thread.sleep`, brak publish/deploy side effects.

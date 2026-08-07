@@ -139,3 +139,10 @@ Po realnym pomiarze 89.23% LINE / 70.26% BRANCH globalnie i 88.13% / 70.52% dla 
 Phase 2 przeszło pełny lokalny gate. Maven/Testcontainers wykonał 106 testów unit i 22 integration bez failures/errors. JaCoCo 0.8.15 zmierzył globalnie 96.07% LINE / 86.27% BRANCH oraz 96.46% / 88.81% dla critical aggregate; oba Maven checks i niezależny report checker z fail-closed self-testami przeszły. Nie ma exclusions ani PIT. Docker smoke przeszedł na dynamicznym `127.0.0.1:55008` i posprzątał własny stos.
 
 DocLint zakończył się z 0 errors i 5 warnings, redukując baseline 42. Finalny budget 5 został zaakceptowany jako świadome zastosowanie polityki „nie dokumentuj mechanicznie”: trzy warnings dotyczą implicit default constructors klas frameworkowych, a dwa prywatnych pól wyjątków, których publiczne kontrakty są już udokumentowane. Nie dodano pustych konstruktorów ani tautologicznych komentarzy wyłącznie dla wyzerowania licznika. EMP-008 ma `DONE_AND_VERIFIED`, coverage `MEASURED_AND_VERIFIED`.
+
+
+## Zaakceptowany refinement EMP-010 — CI, delivery i obserwowalność
+
+Po zamknięciu quality gate przygotowano i formalnie zaakceptowano własny refinement Wave 6 zamiast bezpośrednio dodawać GitHub Actions i metryki. Refinement rozdziela trzy dowody: zgodność CI z lokalnym `make verify`, powtarzalność artefaktu źródłowego oraz obserwowalność bez naruszenia privacy contract. CI ma jeden job na Ubuntu 24.04, minimalne permissions i immutable action SHA; delivery ma bazować na tracked files, digest-pinned base images i dwóch identycznych SHA-256 ZIP-a; Prometheus/request ID/logging mają wyłącznie zamknięte, niskokardynalne pola bez IP, userId i coupon code.
+
+To nadal nie jest runtime evidence: EMP-010 jest `READY/ACCEPTED`, implementation `NOT_STARTED`, `Implementation-Allowed: YES`, a CI/delivery/observability evidence pozostają `NOT_MEASURED`. Akceptacja właściciela z 2026-08-07 zamroziła osiem decyzji bez uruchamiania implementacji.

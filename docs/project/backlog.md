@@ -14,7 +14,7 @@ Ten plik jest jedynym źródłem prawdy dla identyfikatorów, priorytetów i sta
 | EMP-007 | EMP-001 | P0 | DONE_AND_VERIFIED | EMP-007 | Stabilny error contract, OpenAPI, Swagger UI i Javadoc | UI/YAML HTTP test + DocLint + `make verify` |
 | EMP-008 | EMP-001 | P0 | DONE_AND_VERIFIED | EMP-008 | Coverage, JaCoCo, test completeness i quality evidence | JaCoCo `verify` gate + measured report checker + manual review + full local gate |
 | EMP-009 | EMP-001 | P0 | DONE_AND_VERIFIED | EMP-009 | Deterministyczne testy współbieżności — evidence `COMPLETE` | `make emp009-check` + pełny Maven/Testcontainers/Docker gate |
-| EMP-010 | EMP-001 | P1 | PLANNED | EMP-001 | CI, delivery hardening i podstawowe metryki | green CI + reproducible delivery gate |
+| EMP-010 | EMP-001 | P1 | READY | EMP-010 | CI, delivery hardening i podstawowe metryki | accepted EMP-010 refinement + green CI + reproducible delivery gate |
 | EMP-011 | EMP-001 | P0 | PLANNED | EMP-001 | Finalny review, README i closeout | final `make verify` + public repo |
 
 ## Reguły przejścia
@@ -26,5 +26,6 @@ Ten plik jest jedynym źródłem prawdy dla identyfikatorów, priorytetów i sta
 - `EMP-005` ma disposition `MERGED_INTO_EMP-004`; user-once pozostaje obowiązkowym invariantem i evidence EMP-004.
 - `EMP-009` jest `DONE_AND_VERIFIED`; refinement jest `ACCEPTED`, implementation `DONE_AND_VERIFIED`, a evidence `COMPLETE` po exact assertions, checkerze i pełnym gate.
 - `EMP-008` jest `DONE_AND_VERIFIED`; refinement jest `ACCEPTED`, implementation `DONE_AND_VERIFIED`, `Implementation-Allowed: YES`, a coverage evidence `MEASURED_AND_VERIFIED` po pełnym JaCoCo/Maven/Docker gate.
+- `EMP-010` jest `READY`; refinement `ACCEPTED`, `Implementation-Allowed: YES`, implementation `NOT_STARTED`, a CI/delivery/observability evidence pozostają `NOT_MEASURED`.
 - Zmiana contract boundary wymaga amendmentu `EMP-001`.
 - `DONE_AND_VERIFIED` wymaga dowodów wskazanych w ostatniej kolumnie.

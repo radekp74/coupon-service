@@ -2,8 +2,8 @@
 
 - **Data:** 2026-08-07
 - **Termin:** 2026-08-10, koniec dnia
-- **Faza:** `QUALITY_GATE_DONE_AND_VERIFIED`
-- **Active task:** `EMP-010 — refinement CI/delivery/observability`
+- **Faza:** `EMP010_READY`
+- **Active task:** `EMP-010 — implementacja CI/delivery/observability po zaakceptowanym refinemencie`
 - **EMP-004 refinement:** `ACCEPTED`
 - **Implementation EMP-004:** `DONE_AND_VERIFIED`; verification remediation `COMPLETED`
 - **Implementation allowed:** `YES` dla `EMP-004` na podstawie accepted własnego refinementu
@@ -15,6 +15,7 @@
 - **EMP-007:** `DONE_AND_VERIFIED`
 - **EMP-008:** `DONE_AND_VERIFIED`; refinement `ACCEPTED`, JaCoCo implementation `DONE_AND_VERIFIED`, coverage evidence `MEASURED_AND_VERIFIED`, implementation allowed `YES`
 - **EMP-009:** `DONE_AND_VERIFIED`; refinement `ACCEPTED`, evidence `COMPLETE`, implementation `DONE_AND_VERIFIED`, implementation allowed `YES`
+- **EMP-010:** `READY`; refinement `ACCEPTED`, implementation `NOT_STARTED`, `Implementation-Allowed: YES`, CI/delivery/observability evidence `NOT_MEASURED`, scope frozen `YES`
 - **Kod aplikacji:** create coupon, Client IP/GeoIP i transactional redemption są zaimplementowane oraz lokalnie zweryfikowane
 - **OpenAPI/Swagger UI:** canonical `/openapi.yaml` zawiera `createCoupon` i `redeemCoupon`; Swagger UI używa tej specyfikacji
 - **Javadoc/DocLint policy:** `ACTIVE_AND_VERIFIED`
@@ -62,4 +63,4 @@ EMP-008 jest `DONE_AND_VERIFIED`. Pierwszy raport JaCoCo wynosił 89.23%/70.26% 
 
 ## Blokery
 
-Brak blokera technicznego dla jakości. EMP-008 i EMP-009 są `DONE_AND_VERIFIED`. Następny krok to refinement EMP-010 zgodnie z Wave 6 zaakceptowanego EMP-001; nie rozpoczęto jeszcze CI/observability hardening.
+Brak blokera technicznego. EMP-008 i EMP-009 są `DONE_AND_VERIFIED`. Refinement EMP-010 został formalnie zaakceptowany przez właściciela 2026-08-07: jeden GitHub Actions gate, immutable action/image references, byte-reproducible source delivery, strict request ID, structured JSON logs i Prometheus/Micrometer z low-cardinality labels. Implementacja jest dozwolona w zamrożonym zakresie, ale jeszcze nie została rozpoczęta.

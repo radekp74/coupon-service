@@ -68,6 +68,10 @@ echo "=== EMP-009 IMPLEMENTATION CONTRACT ==="
 python3 scripts/check_emp009.py
 
 echo
+echo "=== EMP-010 REFINEMENT CONTRACT ==="
+python3 scripts/check_emp010_refinement.py
+
+echo
 echo "=== SCRIPT SYNTAX ==="
 PYCACHE_DIR="$(mktemp -d)"
 trap 'rm -rf "$PYCACHE_DIR"' EXIT
@@ -84,6 +88,7 @@ PYTHONPYCACHEPREFIX="$PYCACHE_DIR" python3 -m py_compile \
   scripts/check_emp008.py \
   scripts/check_emp009_refinement.py \
   scripts/check_emp009.py \
+  scripts/check_emp010_refinement.py \
   scripts/generate_checksums.py
 bash -n verify.sh scripts/package_source.sh scripts/docker_smoke.sh mvnw
 
@@ -104,6 +109,7 @@ grep -Eq '^emp008-check:$' Makefile
 grep -Eq '^emp008-report-check:$' Makefile
 grep -Eq '^emp009-refinement-check:$' Makefile
 grep -Eq '^emp009-check:$' Makefile
+grep -Eq '^emp010-refinement-check:$' Makefile
 grep -Eq '^docker-check:$' Makefile
 grep -Eq '^compose-config: docker-check$' Makefile
 grep -Eq '^docker-build: compose-config$' Makefile
@@ -124,6 +130,7 @@ make -n emp008-check >/dev/null
 make -n emp008-report-check >/dev/null
 make -n emp009-refinement-check >/dev/null
 make -n emp009-check >/dev/null
+make -n emp010-refinement-check >/dev/null
 make -n docker-check >/dev/null
 make -n compose-config >/dev/null
 make -n docker-build >/dev/null

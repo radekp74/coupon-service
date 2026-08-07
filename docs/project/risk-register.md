@@ -34,6 +34,12 @@
 | R-028 | MEDIUM | MITIGATED | formalne concurrency evidence może nie klasyfikować wszystkich wyników albo stanów końcowych | EMP-009 sprawdza exact 90 `COUPON_EXHAUSTED`, 10 unikalnych userId i dokładnie jednego last-slot usera; checker + pełny gate | EMP-009 verified evidence |
 | R-029 | MEDIUM | MITIGATED | brak mierzalnego gate coverage może ukryć niepokryte gałęzie mimo silnego evidence integration | JaCoCo 0.8.15, global 80/70, critical 75/65, brak exclusions, niezależny report checker i manualny missed-branch review | EMP-008: global 96.07/86.27, critical 96.46/88.81, full `make verify` PASS |
 
+| R-030 | HIGH | OPEN | CI różni się od lokalnego gate i daje fałszywe green | jeden `DOCKER=docker make verify`, jawny Ubuntu 24.04, brak osobnego DB service | EMP-010 green GitHub Actions run |
+| R-031 | HIGH | OPEN | mutable GitHub Action/base-image reference może zmienić supply chain bez zmiany repo | full action SHA i Docker `@sha256` digest pins | EMP-010 static checker + CI |
+| R-032 | MEDIUM | OPEN | obecny source ZIP nie jest byte-reproducible przez wall-clock i metadata | tracked files, normalized ZIP metadata, clean commit, two-run SHA equality | EMP-010 delivery-check |
+| R-033 | HIGH | OPEN | metryki/logi ujawnią IP/userId/coupon code lub eksplodują cardinality | zamknięte tag vocabularies, privacy tests, brak danych requestu w MDC/labels | EMP-010 metrics/log tests + Prometheus scrape |
+| R-034 | MEDIUM | OPEN | client request ID prowadzi do log injection albo MDC leakage | strict regex/single field-line, UUID fallback, `finally` cleanup | EMP-010 request-ID tests |
+
 ## Zasada statusu
 
 Ryzyko nie jest oznaczane `MITIGATED` tylko dlatego, że istnieje plan. Status zmienia się dopiero po pojawieniu się dowodu w kodzie, teście lub zweryfikowanym procesie.
