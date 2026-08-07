@@ -547,3 +547,11 @@ Nie uruchomiono GitHub CI ani nie zaimplementowano metryk, workflow, request-ID,
 ## EMP-010 implementation candidate — 2026-08-07
 
 Rozpoczęto implementację wyłącznie zaakceptowanego zakresu EMP-010: jeden immutable-SHA GitHub Actions gate, przypięte Docker base digests, deterministyczny tracked-file source ZIP, strict `X-Request-Id`, Logstash JSON oraz sześć rodzin metryk Micrometer/Prometheus. Stan pozostaje `IN_PROGRESS`; brak closeoutu i brak deklaracji measured evidence przed pełnym lokalnym gate, delivery-check i rzeczywistym GitHub Actions run.
+
+## Closeout EMP-010 — 2026-08-07
+
+EMP-010 zakończono po finalnym repair `35fa7c7e07ac341a410fad38c8ced030ac30ed25`. Lokalny canonical gate wykonał 112 unit i 23 integration tests bez failures/errors, zachował progi JaCoCo (95.76% LINE / 86.39% BRANCH globalnie; 95.06% / 88.21% critical) oraz potwierdził Docker runtime: health, canonical OpenAPI, Swagger UI, Prometheus, `X-Request-Id` i structured JSON logging.
+
+Post-commit `make delivery-check` potwierdził byte-for-byte reproducibility oraz fail-closed dla stale checksum. Deterministyczny source artifact `coupon-service-source-35fa7c7e07ac.zip` ma SHA-256 `ed3791e735485bb452209c3c4c8e2bdd32a9eab8df36f1e28f3375d770b8e3fa`.
+
+Pierwszy zdalny run dla `43b4331` wykrył nieprzenośny CRLF regex w smoke checku, mimo że runtime zwracał poprawny header. Minimalna korekta oraz stabilizacja testowego GeoIP transportu nie zmieniły produkcyjnego kontraktu. GitHub Actions `CI #2` dla `35fa7c7` na `main` zakończył się zielonym wynikiem w 2m48s. Stan: `EMP-010 = DONE_AND_VERIFIED`, CI/delivery/observability evidence `MEASURED_AND_VERIFIED`. Następne zadanie: EMP-011.

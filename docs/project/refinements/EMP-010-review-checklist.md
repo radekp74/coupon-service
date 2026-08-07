@@ -20,9 +20,12 @@
 | test scope | PASS | SimpleMeterRegistry/HTTP/Docker/CI delivery; bez publicznej sieci, H2 i sleep |
 | exclusions | PASS | Grafana/OTel/alerts/deploy/signing/SBOM/CodeQL poza zakresem |
 | owner decisions | PASS | osiem decyzji zostało formalnie zaakceptowanych przez Radosława Piątka 2026-08-07 |
-| implementation | IN_PROGRESS | kandydat implementuje wyłącznie zamrożony zakres; lokalny/full/CI evidence nie jest jeszcze zapisany |
+| implementation | PASS | `DONE_AND_VERIFIED`; finalny SHA `35fa7c7e07ac341a410fad38c8ced030ac30ed25` |
+| local canonical gate | PASS | 112 unit + 23 integration; JaCoCo 95.76/86.39 global i 95.06/88.21 critical; Docker observability smoke PASS |
+| delivery evidence | PASS | byte-for-byte SHA-256 `ed3791e735485bb452209c3c4c8e2bdd32a9eab8df36f1e28f3375d770b8e3fa`; stale checksum mutation fail-closed |
+| GitHub Actions | PASS | `CI #2` dla `35fa7c7` na `main` — green, 2m48s |
 | CODEX_PROMPT | PASS | plik zabroniony |
 
 ## Wynik
 
-`ACCEPTED`. Refinement pozostaje zamrożony; bieżący kandydat ma `Status: IN_PROGRESS`, implementation `IN_PROGRESS` i `Implementation-Allowed: YES`. Evidence CI/delivery/observability pozostaje `NOT_MEASURED` do wykonania pełnych gate’ów.
+`DONE_AND_VERIFIED`. Refinement pozostaje zamrożony i `ACCEPTED`; implementation ma `DONE_AND_VERIFIED`, `Implementation-Allowed: YES`, a CI/delivery/observability evidence są `MEASURED_AND_VERIFIED`. Następne zadanie: `EMP-011`.

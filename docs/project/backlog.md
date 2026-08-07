@@ -14,7 +14,7 @@ Ten plik jest jedynym źródłem prawdy dla identyfikatorów, priorytetów i sta
 | EMP-007 | EMP-001 | P0 | DONE_AND_VERIFIED | EMP-007 | Stabilny error contract, OpenAPI, Swagger UI i Javadoc | UI/YAML HTTP test + DocLint + `make verify` |
 | EMP-008 | EMP-001 | P0 | DONE_AND_VERIFIED | EMP-008 | Coverage, JaCoCo, test completeness i quality evidence | JaCoCo `verify` gate + measured report checker + manual review + full local gate |
 | EMP-009 | EMP-001 | P0 | DONE_AND_VERIFIED | EMP-009 | Deterministyczne testy współbieżności — evidence `COMPLETE` | `make emp009-check` + pełny Maven/Testcontainers/Docker gate |
-| EMP-010 | EMP-001 | P1 | IN_PROGRESS | EMP-010 | CI, delivery hardening i podstawowe metryki | accepted EMP-010 refinement + green CI + reproducible delivery gate |
+| EMP-010 | EMP-001 | P1 | DONE_AND_VERIFIED | EMP-010 | CI, delivery hardening i podstawowe metryki | accepted EMP-010 refinement + local gate + green CI #2 on `35fa7c7` + reproducible delivery gate |
 | EMP-011 | EMP-001 | P0 | PLANNED | EMP-001 | Finalny review, README i closeout | final `make verify` + public repo |
 
 ## Reguły przejścia
@@ -26,6 +26,6 @@ Ten plik jest jedynym źródłem prawdy dla identyfikatorów, priorytetów i sta
 - `EMP-005` ma disposition `MERGED_INTO_EMP-004`; user-once pozostaje obowiązkowym invariantem i evidence EMP-004.
 - `EMP-009` jest `DONE_AND_VERIFIED`; refinement jest `ACCEPTED`, implementation `DONE_AND_VERIFIED`, a evidence `COMPLETE` po exact assertions, checkerze i pełnym gate.
 - `EMP-008` jest `DONE_AND_VERIFIED`; refinement jest `ACCEPTED`, implementation `DONE_AND_VERIFIED`, `Implementation-Allowed: YES`, a coverage evidence `MEASURED_AND_VERIFIED` po pełnym JaCoCo/Maven/Docker gate.
-- `EMP-010` jest `IN_PROGRESS`; refinement `ACCEPTED`, `Implementation-Allowed: YES`, implementation `IN_PROGRESS`, a CI/delivery/observability evidence pozostają `NOT_MEASURED` do pełnej walidacji.
+- `EMP-010` jest `DONE_AND_VERIFIED`; refinement `ACCEPTED`, `Implementation-Allowed: YES`, implementation `DONE_AND_VERIFIED`, a CI/delivery/observability evidence są `MEASURED_AND_VERIFIED` po lokalnym canonical gate, reproducible delivery i zielonym GitHub Actions `CI #2` dla `35fa7c7`.
 - Zmiana contract boundary wymaga amendmentu `EMP-001`.
 - `DONE_AND_VERIFIED` wymaga dowodów wskazanych w ostatniej kolumnie.

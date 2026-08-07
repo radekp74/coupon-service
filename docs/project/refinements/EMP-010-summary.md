@@ -1,6 +1,6 @@
 # EMP-010 — podsumowanie refinementu
 
-EMP-010 ma przenieść zweryfikowany lokalny gate do GitHub Actions, utwardzić źródłowy artefakt dostawy oraz dodać minimalną obserwowalność zapisaną już w EMP-001/006. Refinement pozostaje zaakceptowany i zamrożony. EMP-010 jest `IN_PROGRESS`, implementation `IN_PROGRESS`, `Implementation-Allowed: YES`, a CI/delivery/observability evidence pozostają `NOT_MEASURED` do zakończenia pełnych gate’ów.
+EMP-010 przeniósł zweryfikowany lokalny gate do GitHub Actions, utwardził źródłowy artefakt dostawy oraz dodał minimalną obserwowalność zapisaną już w EMP-001/006. Refinement pozostaje zaakceptowany i zamrożony. EMP-010 jest `DONE_AND_VERIFIED`, implementation `DONE_AND_VERIFIED`, `Implementation-Allowed: YES`, a CI/delivery/observability evidence mają status `MEASURED_AND_VERIFIED`.
 
 ## Zaakceptowany kontrakt
 
@@ -20,4 +20,8 @@ Właściciel Radosław Piątek zaakceptował refinement i wszystkie osiem decyzj
 
 ## Checkpoint implementacyjny
 
-Rozpoczęto implementację wyłącznie zaakceptowanego zakresu: CI, immutable Docker bases, deterministyczny source ZIP, `X-Request-Id`, structured Logstash JSON oraz Prometheus/Micrometer. Closeout i evidence wymagają jeszcze pełnego lokalnego gate, delivery check i rzeczywistego GitHub Actions run.
+Implementację zakończono wyłącznie w zaakceptowanym zakresie: CI, immutable Docker bases, deterministyczny source ZIP, `X-Request-Id`, structured Logstash JSON oraz Prometheus/Micrometer.
+
+## Closeout
+
+Finalny SHA: `35fa7c7e07ac341a410fad38c8ced030ac30ed25`. Lokalny `make verify` przeszedł z 112 unit + 23 integration tests, coverage 95.76%/86.39% globalnie i 95.06%/88.21% dla critical aggregate oraz kompletnym Docker smoke observability. `make delivery-check` odtworzył byte-for-byte ZIP `ed3791e735485bb452209c3c4c8e2bdd32a9eab8df36f1e28f3375d770b8e3fa`. Po naprawie portability CRLF i stabilizacji testowego transportu GeoIP GitHub Actions `CI #2` dla `35fa7c7` zakończył się zielonym wynikiem w 2m48s. `EMP-010 = DONE_AND_VERIFIED`; następny checkpoint to EMP-011.
