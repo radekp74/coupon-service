@@ -78,3 +78,12 @@ Status:
 - **Dowód:** audyt EMP-008/EMP-009 wskazał brak same-user 1/19, last-slot 1/1, per-row lock, rollbacków i HTTP 403/503; remediation dodało je, a pełny Maven verify przeszedł.
 - **Zmiana procesu lub kodu:** checker EMP-004 wymaga teraz testowych artefaktów tych scenariuszy, a release evidence odwołuje się do rzeczywiście uruchomionych testów.
 - **Status:** `CONFIRMED`
+
+## LL-007 — coverage gate wymaga manualnego review, nie mechanicznego dobijania procentu
+
+- **Data:** 2026-08-07
+- **Powiązane zadanie:** EMP-008
+- **Obserwacja:** pierwszy raport już spełniał progi, ale ujawnił konkretne niepokryte security/domain branches; samo 89.23%/70.26% nie mówiło, które luki są wartościowe.
+- **Dowód:** report-driven test remediation podniosło finalny wynik do 96.07% LINE / 86.27% BRANCH globalnie i 96.46% / 88.81% dla critical aggregate bez exclusions i bez zmiany produkcyjnego behavior.
+- **Zmiana procesu lub kodu:** coverage jest obowiązkowym gate, ale nowe testy wynikają z ręcznego missed-branch review; Javadoc warning budget może zachować niewielkie, jawnie uzasadnione ostrzeżenia zamiast wprowadzać mechaniczny kod lub komentarze.
+- **Status:** `CONFIRMED`

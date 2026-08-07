@@ -28,11 +28,18 @@ public class TransactionalCouponRedemptionService implements CouponRedemptionTra
     private final UuidGenerator uuidGenerator;
     private final Clock clock;
 
-    /** @param repository database operations guarded by this transaction @param uuidGenerator ID source @param clock UTC time source */
+    /**
+     * Creates the short transaction service without any HTTP or geolocation dependency.
+     *
+     * @param repository database operations executed under the same transaction and row lock
+     * @param uuidGenerator source of persistent redemption identifiers
+     * @param clock server-side time source used for the committed redemption timestamp
+     */
     public TransactionalCouponRedemptionService(CouponRedemptionRepository repository, UuidGenerator uuidGenerator, Clock clock) {
         this.repository = Objects.requireNonNull(repository); this.uuidGenerator = Objects.requireNonNull(uuidGenerator); this.clock = Objects.requireNonNull(clock);
     }
 
+    /** {@inheritDoc} */
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public CouponRedemptionResult redeem(String normalizedCode, UserId userId, CountryCode resolvedCountry) {

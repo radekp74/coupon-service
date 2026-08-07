@@ -9,6 +9,8 @@ import java.util.regex.Pattern;
  * <p>The value is deliberately neither trimmed nor normalized. It is restricted to one through 128
  * visible ASCII characters so the HTTP contract, PostgreSQL constraint and application validation
  * can have exactly the same meaning.
+ *
+ * @param value exact visible-ASCII identity retained without trimming or canonicalization
  */
 public record UserId(String value) {
 

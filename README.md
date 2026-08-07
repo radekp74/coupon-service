@@ -5,18 +5,18 @@ REST-owy serwis do tworzenia i bezpiecznego wykorzystywania kuponów rabatowych.
 
 ## Aktualny stan
 
-- **Checkpoint:** `0.0.20-emp-008-refinement-accepted`
+- **Checkpoint:** `0.0.21-emp-008-done-and-verified`
 - **Data stanu:** `2026-08-07`
 - **Termin oddania:** `2026-08-10`, koniec dnia
 - **EMP-000–EMP-003:** `DONE_AND_VERIFIED`
 - **EMP-007:** `DONE_AND_VERIFIED`
 - **EMP-006:** `DONE_AND_VERIFIED`
-- **Aktywne zadanie:** EMP-008 — implementation coverage/JaCoCo
+- **Aktywne zadanie:** EMP-010 — refinement CI/delivery/observability
 - **Refinement EMP-006:** `ACCEPTED`
 - **Implementation EMP-006:** `DONE_AND_VERIFIED`
 - **EMP-004:** `DONE_AND_VERIFIED`; refinement i implementation `DONE_AND_VERIFIED`
 - **EMP-005:** `MERGED_INTO_EMP-004`; user-once pozostaje obowiązkowym invariantem i evidence EMP-004
-- **EMP-008:** `READY`, refinement `ACCEPTED`; implementation `NOT_STARTED`, implementation allowed `YES`; JaCoCo i coverage evidence pozostają `NOT_MEASURED`
+- **EMP-008:** `DONE_AND_VERIFIED`, refinement `ACCEPTED`; implementation `DONE_AND_VERIFIED`, implementation allowed `YES`; coverage evidence `MEASURED_AND_VERIFIED`
 - **EMP-009:** `DONE_AND_VERIFIED`, refinement `ACCEPTED`; evidence `COMPLETE`, implementation `DONE_AND_VERIFIED`
 - **Kod biznesowy:** `CREATE_COUPON_DONE_AND_VERIFIED`
 - **OpenAPI/Swagger UI:** `DONE_AND_VERIFIED`
@@ -24,6 +24,8 @@ REST-owy serwis do tworzenia i bezpiecznego wykorzystywania kuponów rabatowych.
 - **Weryfikacja runtime EMP-007:** `PASS`
 
 EMP-004 dostarcza transakcyjny endpoint redemption z server-side Client IP/GeoIP, row lockiem PostgreSQL i exact-count concurrency. Swagger UI oraz canonical OpenAPI opisują oba istniejące endpointy.
+
+EMP-008 zamyka quality gate bez exclusions: JaCoCo 0.8.15 jest częścią Maven `verify`; finalny pomiar wynosi globalnie **96.07% LINE / 86.27% BRANCH** oraz **96.46% LINE / 88.81% BRANCH** dla critical aggregate. Pełny gate przeszedł przy 106 testach unit i 22 integration. DocLint ma 0 błędów; świadomie pozostawiono 5 ostrzeżeń o niskiej wartości dokumentacyjnej (3 implicit default constructors klas frameworkowych i 2 prywatne pola wyjątków), mieszcząc się w zaakceptowanym budget <=5 bez dodawania mechanicznego Javadoc.
 
 
 ## Zweryfikowany zakres EMP-003
@@ -93,14 +95,23 @@ make docs-check
 make bootstrap-check
 make emp003-check
 make emp004-refinement-check
+make emp004-check
 make emp006-refinement-check
 make emp006-check
 make emp007-check
 make emp008-refinement-check
+make emp008-check
 make emp009-refinement-check
 make emp009-check
 ```
 
+Po `./mvnw -B -ntp clean verify` raport JaCoCo jest dodatkowo weryfikowany niezależnym checkerem repozytorium:
+
+```bash
+make emp008-report-check
+```
+
+Checker ponownie liczy globalne 80/70 i critical aggregate 75/65 z `target/site/jacoco/jacoco.xml` oraz wykonuje fail-closed self-testy na kopiach tymczasowych raportu.
 
 ## OpenAPI i Swagger UI dla testerów
 

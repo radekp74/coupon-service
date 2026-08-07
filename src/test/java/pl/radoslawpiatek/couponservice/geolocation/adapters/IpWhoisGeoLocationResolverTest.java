@@ -51,7 +51,17 @@ class IpWhoisGeoLocationResolverTest {
 
     @Test
     void treatsProviderFailuresAsPrivacySafeUnavailable() {
-        for (String body : new String[] {"{\"success\":false}", "{\"country_code\":\"PL\"}", "{\"success\":true,\"country_code\":\"XXX\"}", "not-json"}) {
+        for (String body : new String[] {
+                "{\"success\":false}",
+                "{\"success\":\"true\",\"country_code\":\"PL\"}",
+                "{\"country_code\":\"PL\"}",
+                "{\"success\":true}",
+                "{\"success\":true,\"country_code\":null}",
+                "{\"success\":true,\"country_code\":123}",
+                "{\"success\":true,\"country_code\":\"XXX\"}",
+                "{\"success\":true,\"country_code\":\"ZZ\"}",
+                "not-json"
+        }) {
             wireMock.resetAll();
             wireMock.stubFor(get(urlEqualTo("/8.8.8.8?fields=success,country_code,message"))
                     .willReturn(aResponse().withStatus(200).withBody(body)));
@@ -106,6 +116,32 @@ class IpWhoisGeoLocationResolverTest {
                 .willReturn(aResponse().withStatus(200).withFixedDelay(250).withBody("{\"success\":true,\"country_code\":\"PL\"}")));
 
         assertUnavailable(resolver(Duration.ofMillis(100)));
+        wireMock.verify(1, getRequestedFor(urlEqualTo("/8.8.8.8?fields=success,country_code,message")));
+    }
+
+    @Test
+    void rejectsNonPublicAddressesBeforeAnyProviderRequest() {
+        assertThatThrownBy(() -> resolver(Duration.ofSeconds(1)).resolve(ClientIpAddress.parseLiteral("10.0.0.7")))
+                .isInstanceOf(GeolocationUnavailableException.class);
+        wireMock.verify(0, getRequestedFor(com.github.tomakehurst.wiremock.client.WireMock.anyUrl()));
+    }
+
+    @Test
+    void baseUriWithTrailingSlashProducesTheSameSingleRequestPath() {
+        wireMock.stubFor(get(urlEqualTo("/8.8.8.8?fields=success,country_code,message"))
+                .willReturn(aResponse().withStatus(200).withBody("{\"success\":true,\"country_code\":\"pl\"}")));
+
+        GeolocationProperties properties = new GeolocationProperties(
+                GeolocationProperties.Provider.IPWHOIS,
+                URI.create("http://localhost:" + wireMock.port() + "/"),
+                Duration.ofMillis(500), Duration.ofSeconds(1), 16_384, "PL"
+        );
+        IpWhoisGeoLocationResolver resolver = new IpWhoisGeoLocationResolver(
+                HttpClient.newBuilder().connectTimeout(Duration.ofMillis(500))
+                        .followRedirects(HttpClient.Redirect.NEVER).build(),
+                new ObjectMapper(), properties, new PublicIpAddressPolicy());
+
+        assertThat(resolver.resolve(ClientIpAddress.parseLiteral("8.8.8.8"))).isEqualTo(CountryCode.of("PL"));
         wireMock.verify(1, getRequestedFor(urlEqualTo("/8.8.8.8?fields=success,country_code,message")));
     }
 

@@ -116,13 +116,13 @@ WireMock:
 
 EMP-009 jest `DONE_AND_VERIFIED` i nie stworzył nowych scenariuszy biznesowych. Formalnie mapuje `CreateCouponApiIT.concurrentCaseVariantsProduceExactlyOneCreatedCoupon` oraz metody concurrency `CouponRedemptionApiIT`; 100/10 klasyfikuje 90 odpowiedzi po publicznym `code=COUPON_EXHAUSTED` i sprawdza 10 unikalnych userId, a last-slot potwierdza zapis dokładnie jednego konkurenta. `make emp009-check` analizuje to evidence, a pełny gate uruchamia checker. JaCoCo i 42 warnings Javadoc są scope EMP-008, nie EMP-009.
 
-## Pokrycie — accepted refinement EMP-008
+## Pokrycie — verified EMP-008
 
-JaCoCo nie jest jeszcze skonfigurowane, więc `Coverage-Evidence` jest `NOT_MEASURED`. Właściciel zaakceptował przyszły gate `org.jacoco:jacoco-maven-plugin:0.8.15`: globalnie `LINE >= 80%` i `BRANCH >= 70%` oraz dla jednej krytycznej grupy logicznej `LINE >= 75%` i `BRANCH >= 65%`. Te wartości nie są jeszcze wynikiem projektu ani aktywnym thresholdem.
+JaCoCo `0.8.15` jest obowiązkową częścią Maven `verify`. Gate egzekwuje globalnie `LINE >= 80%` i `BRANCH >= 70%` oraz jeden critical aggregate `LINE >= 75%` i `BRANCH >= 65%`. Finalny measured report: global 464/483 LINE = 96.07% i 264/306 BRANCH = 86.27%; critical 382/396 LINE = 96.46% i 238/268 BRANCH = 88.81%. Coverage zawiera Surefire i Failsafe; 106 unit + 22 integration tests przeszły bez failures/errors.
 
-Przyszły `verify` ma generować `target/site/jacoco/index.html` i `target/site/jacoco/jacoco.xml`, agregować Surefire/Failsafe i failować przy regresji. Report nie trafia do Git ani exportu; closeout wymaga manualnego review missed branches. Na początku nie ma exclusions — także dla bootstrap, configuration, DTO, exceptions i records. Domain/application/persistence/security logic nie mogą zostać wyłączone, a nowy test musi udowadniać zachowanie, nie podnosić sam procent.
+`verify` generuje `target/site/jacoco/index.html` i `target/site/jacoco/jacoco.xml`, a `scripts/check_emp008.py --report ... --self-test` niezależnie przelicza progi i testuje fail-closed. Raport nie trafia do Git ani exportu. Nie ma exclusions; report-driven remediation dodało tylko wartościowe security/domain tests wskazane przez manualny missed-branch review.
 
-DocLint pozostaje 0 errors. EMP-008 naprawia 18 kategorii A i indywidualnie rozstrzyga 19 kategorii D; po remediation pozostaje najwyżej 5 jawnie uzasadnionych warnings, przy `new warnings = 0`. PIT pozostaje `OUT_OF_SCOPE`.
+DocLint kończy z 0 errors i 5 jawnie zaakceptowanymi warnings. Trzy dotyczą implicit default constructors klas frameworkowych, dwa prywatnych pól wyjątków z już udokumentowanym publicznym kontraktem; dodawanie pustych konstruktorów lub tautologicznych komentarzy byłoby mechaniczne. Budget `<=5` jest spełniony, a PIT pozostaje `OUT_OF_SCOPE`.
 
 ## Bramka
 

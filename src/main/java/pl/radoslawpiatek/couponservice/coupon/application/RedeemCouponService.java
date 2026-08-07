@@ -26,13 +26,21 @@ public class RedeemCouponService implements RedeemCouponUseCase {
     private final GeoLocationResolver geoLocationResolver;
     private final CouponRedemptionTransaction transaction;
 
-    /** Creates the ordered orchestrator from persistence, trust-boundary and transactional ports. */
+    /**
+     * Creates the ordered orchestrator from persistence, trust-boundary and transactional ports.
+     *
+     * @param repository non-locking snapshot access used before network-dependent geolocation
+     * @param clientIpResolver trusted transport-boundary resolver executed before the transaction
+     * @param geoLocationResolver provider-neutral country resolver executed before the transaction
+     * @param transaction short row-locking redemption transaction that receives no raw IP data
+     */
     public RedeemCouponService(CouponRedemptionRepository repository, ClientIpResolver clientIpResolver,
                                GeoLocationResolver geoLocationResolver, CouponRedemptionTransaction transaction) {
         this.repository = Objects.requireNonNull(repository); this.clientIpResolver = Objects.requireNonNull(clientIpResolver);
         this.geoLocationResolver = Objects.requireNonNull(geoLocationResolver); this.transaction = Objects.requireNonNull(transaction);
     }
 
+    /** {@inheritDoc} */
     @Override
     public CouponRedemptionResult redeem(RedeemCouponCommand command, HttpServletRequest request) {
         Objects.requireNonNull(command); Objects.requireNonNull(request);

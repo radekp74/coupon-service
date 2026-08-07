@@ -35,6 +35,7 @@ public final class ServletClientIpResolver implements ClientIpResolver {
         this.trustedProxies = properties.trustedProxies().stream().map(CidrBlock::parse).toList();
     }
 
+    /** {@inheritDoc} */
     @Override
     public ClientIpAddress resolve(HttpServletRequest request) {
         ClientIpAddress immediatePeer = ClientIpAddress.parseLiteral(request.getRemoteAddr());

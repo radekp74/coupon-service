@@ -49,6 +49,7 @@ public class JdbcCouponRepository implements CouponRepository {
         this.jdbcClient = jdbcClient;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void insert(Coupon coupon) {
         try {

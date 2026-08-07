@@ -63,6 +63,7 @@ public final class CouponCode {
         return normalizedValue;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object other) {
         return this == other
@@ -70,11 +71,13 @@ public final class CouponCode {
                 && normalizedValue.equals(couponCode.normalizedValue);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         return Objects.hash(normalizedValue);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return value;

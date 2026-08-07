@@ -24,7 +24,8 @@ public final class CouponController {
     /**
      * Connects the HTTP boundary to the create-coupon use case.
      *
-     * @param createCouponUseCase transactional operation that owns creation semantics
+     * @param createCouponUseCase application boundary that owns coupon creation semantics
+     * @param redeemCouponUseCase application boundary that resolves request context before redemption
      */
     public CouponController(CreateCouponUseCase createCouponUseCase, RedeemCouponUseCase redeemCouponUseCase) {
         this.createCouponUseCase = createCouponUseCase;

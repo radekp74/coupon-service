@@ -6,6 +6,8 @@ Wszystkie istotne zmiany projektu są rejestrowane w tym pliku. Format jest insp
 
 ### Added
 
+- zakończone i zweryfikowane EMP-008: JaCoCo 0.8.15 w `verify`, global 96.07% LINE / 86.27% BRANCH, critical 96.46% / 88.81%, 106 unit + 22 integration, zero exclusions, report checker fail-closed oraz DocLint 0 errors / finalny justified warning budget 5;
+- EMP-008 Phase 2 candidate: behavior-driven security/domain coverage remediation, measured JaCoCo report checker z fail-closed self-testami oraz Javadoc contract remediation bez exclusions i bez zmiany produkcyjnej logiki;
 - draft refinement EMP-008: polityka JaCoCo LINE/BRANCH, manualny gap review, minimalne exclusions, quality evidence i warning budget; bez implementacji POM/testów;
 - formalnie zaakceptowany refinement EMP-008: JaCoCo 0.8.15, global 80/70, critical group 75/65, no-default-exclusions, Javadoc budget <=5 i PIT `OUT_OF_SCOPE`; coverage pozostaje `NOT_MEASURED` do implementation checkpointu;
 - draft refinement EMP-009: formalne mapowanie concurrency evidence EMP-003/EMP-004, standard deterministyczności i `make emp009-refinement-check`; wskazane trzy pozostałe exact assertions przed closeoutem;
@@ -71,8 +73,8 @@ Wszystkie istotne zmiany projektu są rejestrowane w tym pliku. Format jest insp
 
 ### Planned
 
-- JaCoCo i scope EMP-008;
-- CI.
+- CI, delivery hardening i podstawowe metryki (EMP-010);
+- final review/README/public repo closeout (EMP-011).
 
 ## [0.0.1-foundation] — 2026-08-06
 

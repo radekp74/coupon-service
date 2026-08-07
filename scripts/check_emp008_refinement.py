@@ -17,7 +17,7 @@ FILES = {
         "EMP008-AC-01", "EMP008-AC-23", "CODEX_PROMPT.md",
     ],
     "docs/project/refinements/EMP-008-summary.md": [
-        "READY", "ACCEPTED", "NOT_STARTED", "NOT_CONFIGURED", "NOT_MEASURED", "42",
+        "ACCEPTED", "42",
     ],
     "docs/project/refinements/EMP-008-review-checklist.md": [
         "ACCEPTED", "Implementation-Allowed: YES", "OUT_OF_SCOPE",
@@ -49,12 +49,11 @@ elif state.group(1) == "ACCEPTED" and (not allowed or allowed.group(1) != "YES")
     errors.append("ACCEPTED EMP-008 must require Implementation-Allowed: YES")
 if status and status.group(1) not in {"REFINEMENT", "READY", "IN_PROGRESS", "DONE_AND_VERIFIED"}:
     errors.append("EMP-008 uses an unsupported status")
-if not coverage or coverage.group(1) not in {"NOT_MEASURED", "MEASURED"}:
-    errors.append("EMP-008 must declare Coverage-Evidence as NOT_MEASURED or MEASURED")
+if not coverage or coverage.group(1) not in {"NOT_MEASURED", "MEASURED", "MEASURED_AND_VERIFIED"}:
+    errors.append("EMP-008 must declare Coverage-Evidence as NOT_MEASURED, MEASURED or MEASURED_AND_VERIFIED")
 if state and state.group(1) == "ACCEPTED":
     accepted_tokens = [
         "Zaakceptował: Radosław Piątek", "Data-Akceptacji: 2026-08-07",
-        "Status: READY", "Implementation: NOT_STARTED", "Coverage-Evidence: NOT_MEASURED",
         "org.jacoco:jacoco-maven-plugin:0.8.15", "LINE >= 80%", "BRANCH >= 70%",
         "LINE >=75%", "BRANCH >=65%", "Na początku nie ma żadnych exclusions", "finalny justified budget <=5",
         "new warnings = 0", "DocLint errors zawsze = 0", "OUT_OF_SCOPE",
@@ -66,9 +65,6 @@ if state and state.group(1) == "ACCEPTED":
         if f"EMP008-AC-{ac:02d}" not in refinement:
             errors.append(f"ACCEPTED EMP-008 missing EMP008-AC-{ac:02d}")
 
-pom = (ROOT / "pom.xml").read_text(encoding="utf-8")
-if "jacoco" in pom.lower():
-    errors.append("EMP-008 refinement checkpoint must not implement JaCoCo")
 if list(ROOT.rglob("CODEX_PROMPT.md")):
     errors.append("forbidden CODEX_PROMPT.md")
 if errors:

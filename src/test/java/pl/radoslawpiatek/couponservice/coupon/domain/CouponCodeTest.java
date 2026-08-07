@@ -26,4 +26,20 @@ class CouponCodeTest {
                 .isInstanceOf(InvalidCouponValueException.class)
                 .hasMessageContaining("ASCII letters");
     }
+    @Test
+    void enforcesRequiredAndLengthBoundaries() {
+        assertThat(CouponCode.of("ABC").value()).isEqualTo("ABC");
+        assertThat(CouponCode.of("A".repeat(64)).value()).hasSize(64);
+        assertThatThrownBy(() -> CouponCode.of(null)).isInstanceOf(InvalidCouponValueException.class);
+        assertThatThrownBy(() -> CouponCode.of("AB")).isInstanceOf(InvalidCouponValueException.class);
+        assertThatThrownBy(() -> CouponCode.of("A".repeat(65))).isInstanceOf(InvalidCouponValueException.class);
+    }
+
+    @Test
+    void hashCodeFollowsCaseInsensitiveEquality() {
+        assertThat(CouponCode.of("WIOSNA").hashCode()).isEqualTo(CouponCode.of("wiosna").hashCode());
+        assertThat(CouponCode.of("WIOSNA").toString()).isEqualTo("WIOSNA");
+        assertThat(CouponCode.of("WIOSNA")).isNotEqualTo("WIOSNA");
+    }
+
 }

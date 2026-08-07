@@ -16,3 +16,13 @@
 ## Rekomendacja
 
 `ACCEPTED`: owner Radosław Piątek, 2026-08-07. Przyszła implementacja jest ograniczona do JaCoCo, report-driven wartościowych testów, Javadoc remediation i implementacyjnego checkera; nie rozszerza API ani biznesowego scope.
+
+## Phase 2 candidate
+
+- [x] Progi pozostają 80/70 globalnie i 75/65 dla jednego critical aggregate; brak exclusions i PIT.
+- [x] Test remediation jest ograniczony do istniejących security/domain contracts wskazanych przez pierwszy raport.
+- [x] `scripts/check_emp008.py` weryfikuje statyczny POM oraz rzeczywisty `jacoco.xml`; kontrolowane mutacje raportu mają failować.
+- [x] Zmiany produkcyjnej Java są ograniczone do Javadoc/`{@inheritDoc}` bez zmiany zachowania.
+- [x] Finalny Maven/Testcontainers/DocLint i `make verify` potwierdziły kandydata: 106 unit + 22 integration, global 96.07/86.27, critical 96.46/88.81, Docker smoke `127.0.0.1:55008`.
+- [x] Finalny DocLint: 0 errors i 5 jawnie zaakceptowanych warnings; budget `<=5` spełniony bez mechanicznego Javadoc.
+- [x] `Coverage-Evidence: MEASURED_AND_VERIFIED`; EMP-008 może mieć `DONE_AND_VERIFIED`.

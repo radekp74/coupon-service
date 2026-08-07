@@ -21,12 +21,18 @@ public class JdbcCouponRedemptionRepository implements CouponRedemptionRepositor
     private static final String USER_CONSTRAINT = "uq_coupon_redemptions_coupon_user";
     private final JdbcClient jdbc;
 
-    /** @param jdbc parameterized PostgreSQL client */
+    /**
+     * Creates the PostgreSQL redemption adapter.
+     *
+     * @param jdbc parameterized client used for snapshot, lock, redemption and counter operations
+     */
     public JdbcCouponRedemptionRepository(JdbcClient jdbc) { this.jdbc = jdbc; }
 
+    /** {@inheritDoc} */
     @Override
     public Optional<Coupon> findSnapshot(String normalizedCode) { return find(normalizedCode, false); }
 
+    /** {@inheritDoc} */
     @Override
     public Optional<Coupon> findForUpdate(String normalizedCode) { return find(normalizedCode, true); }
 
@@ -39,6 +45,7 @@ public class JdbcCouponRedemptionRepository implements CouponRedemptionRepositor
                 rs.getInt("current_uses"), CountryCode.of(rs.getString("country_code")))).optional();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean exists(UUID couponId, UserId userId) {
         Long count = jdbc.sql("SELECT COUNT(*) FROM coupon_redemptions WHERE coupon_id=:couponId AND user_id=:userId")
@@ -46,6 +53,7 @@ public class JdbcCouponRedemptionRepository implements CouponRedemptionRepositor
         return count > 0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void insert(UUID redemptionId, UUID couponId, UserId userId, String countryCode, OffsetDateTime redeemedAt) {
         try {
@@ -61,6 +69,7 @@ public class JdbcCouponRedemptionRepository implements CouponRedemptionRepositor
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Optional<Integer> incrementIfCapacity(UUID couponId) {
         return jdbc.sql("""

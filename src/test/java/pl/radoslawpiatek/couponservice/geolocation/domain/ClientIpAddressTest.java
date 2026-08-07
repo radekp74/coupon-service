@@ -19,11 +19,33 @@ class ClientIpAddressTest {
     }
 
     @Test
-    void rejectsHostNamesZonesAndPortsBeforeDnsCanRun() {
-        for (String value : new String[] {"example.com", "fe80::1%eth0", "8.8.8.8:53", "[2001:db8::1]"}) {
+    void rejectsHostNamesZonesPortsWhitespaceAndMalformedLiteralsBeforeDnsCanRun() {
+        for (String value : new String[] {
+                "example.com",
+                "fe80::1%eth0",
+                "8.8.8.8:53",
+                "[2001:db8::1]",
+                "256.1.1.1",
+                "01.2.3.4",
+                "1.2.3",
+                "gggg::1",
+                " "
+        }) {
             assertThatThrownBy(() -> ClientIpAddress.parseLiteral(value))
                     .isInstanceOf(ClientIpResolutionException.class)
                     .hasMessage("Client address could not be resolved.");
         }
+        assertThatThrownBy(() -> ClientIpAddress.parseLiteral(null))
+                .isInstanceOf(ClientIpResolutionException.class);
+    }
+
+    @Test
+    void equalityAndHashCodeUseNormalizedAddressBytes() {
+        ClientIpAddress first = ClientIpAddress.parseLiteral("2001:4860:4860::8888");
+        ClientIpAddress equivalent = ClientIpAddress.parseLiteral("2001:4860:4860:0:0:0:0:8888");
+        ClientIpAddress different = ClientIpAddress.parseLiteral("2001:4860:4860::8844");
+
+        assertThat(first).isEqualTo(first).isEqualTo(equivalent).isNotEqualTo(different).isNotEqualTo("not-an-address");
+        assertThat(first.hashCode()).isEqualTo(equivalent.hashCode());
     }
 }

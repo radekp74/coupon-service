@@ -24,6 +24,7 @@ public final class StubGeoLocationResolver implements GeoLocationResolver {
         this.countryCode = Objects.requireNonNull(countryCode);
     }
 
+    /** {@inheritDoc} */
     @Override
     public CountryCode resolve(ClientIpAddress clientIpAddress) {
         Objects.requireNonNull(clientIpAddress);

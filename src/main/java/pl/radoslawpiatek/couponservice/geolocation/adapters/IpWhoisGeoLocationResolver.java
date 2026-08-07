@@ -62,6 +62,7 @@ public final class IpWhoisGeoLocationResolver implements GeoLocationResolver {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public CountryCode resolve(ClientIpAddress clientIpAddress) {
         if (!publicIpAddressPolicy.permitsPublicLookup(Objects.requireNonNull(clientIpAddress))) {

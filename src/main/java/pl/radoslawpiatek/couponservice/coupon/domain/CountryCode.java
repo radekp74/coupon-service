@@ -46,16 +46,19 @@ public final class CountryCode {
         return value;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object other) {
         return this == other || other instanceof CountryCode countryCode && value.equals(countryCode.value);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         return value.hashCode();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return value;

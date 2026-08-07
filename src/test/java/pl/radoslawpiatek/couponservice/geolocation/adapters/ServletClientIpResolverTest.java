@@ -101,6 +101,36 @@ class ServletClientIpResolverTest {
                 .isInstanceOf(ClientIpResolutionException.class);
     }
 
+    @Test
+    void trustedProxyRequiresOneUsableForwardingHeader() {
+        MockHttpServletRequest missing = requestFrom("10.0.0.2");
+        assertThatThrownBy(() -> resolver(ClientIpProperties.Mode.TRUSTED_PROXY).resolve(missing))
+                .isInstanceOf(ClientIpResolutionException.class);
+
+        MockHttpServletRequest blank = requestFrom("10.0.0.2");
+        blank.addHeader("Forwarded", " ");
+        assertThatThrownBy(() -> resolver(ClientIpProperties.Mode.TRUSTED_PROXY).resolve(blank))
+                .isInstanceOf(ClientIpResolutionException.class);
+    }
+
+    @Test
+    void trustedProxyFailsClosedWhenEveryHopIsTrusted() {
+        MockHttpServletRequest request = requestFrom("10.0.0.2");
+        request.addHeader("Forwarded", "for=10.0.0.3, for=10.0.0.1");
+
+        assertThatThrownBy(() -> resolver(ClientIpProperties.Mode.TRUSTED_PROXY).resolve(request))
+                .isInstanceOf(ClientIpResolutionException.class);
+    }
+
+    @Test
+    void trustedProxyAcceptsUnbracketedIpv6OnlyThroughXff() {
+        MockHttpServletRequest request = requestFrom("10.0.0.2");
+        request.addHeader("X-Forwarded-For", "2001:4860:4860::8888");
+
+        assertThat(resolver(ClientIpProperties.Mode.TRUSTED_PROXY).resolve(request).canonicalLiteral())
+                .contains(":");
+    }
+
     private ServletClientIpResolver resolver(ClientIpProperties.Mode mode) {
         return new ServletClientIpResolver(new ClientIpProperties(mode, List.of("10.0.0.0/8"), 20, 4096));
     }

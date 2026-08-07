@@ -56,6 +56,10 @@ echo "=== EMP-008 REFINEMENT CONTRACT ==="
 python3 scripts/check_emp008_refinement.py
 
 echo
+echo "=== EMP-008 JACOCO IMPLEMENTATION CONTRACT ==="
+python3 scripts/check_emp008.py
+
+echo
 echo "=== EMP-009 REFINEMENT CONTRACT ==="
 python3 scripts/check_emp009_refinement.py
 
@@ -77,6 +81,7 @@ PYTHONPYCACHEPREFIX="$PYCACHE_DIR" python3 -m py_compile \
   scripts/check_emp006.py \
   scripts/check_emp007.py \
   scripts/check_emp008_refinement.py \
+  scripts/check_emp008.py \
   scripts/check_emp009_refinement.py \
   scripts/check_emp009.py \
   scripts/generate_checksums.py
@@ -95,6 +100,8 @@ grep -Eq '^emp006-refinement-check:$' Makefile
 grep -Eq '^emp006-check:$' Makefile
 grep -Eq '^emp007-check:$' Makefile
 grep -Eq '^emp008-refinement-check:$' Makefile
+grep -Eq '^emp008-check:$' Makefile
+grep -Eq '^emp008-report-check:$' Makefile
 grep -Eq '^emp009-refinement-check:$' Makefile
 grep -Eq '^emp009-check:$' Makefile
 grep -Eq '^docker-check:$' Makefile
@@ -113,6 +120,8 @@ make -n emp006-refinement-check >/dev/null
 make -n emp006-check >/dev/null
 make -n emp007-check >/dev/null
 make -n emp008-refinement-check >/dev/null
+make -n emp008-check >/dev/null
+make -n emp008-report-check >/dev/null
 make -n emp009-refinement-check >/dev/null
 make -n emp009-check >/dev/null
 make -n docker-check >/dev/null
@@ -149,6 +158,20 @@ echo "SUCCESS: docker-compose.yml is valid"
 echo
 echo "=== MAVEN CLEAN VERIFY ==="
 "$MAVEN" -B -ntp clean verify
+
+test -s target/site/jacoco/index.html || {
+  echo "ERROR: JaCoCo HTML report was not produced" >&2
+  exit 1
+}
+test -s target/site/jacoco/jacoco.xml || {
+  echo "ERROR: JaCoCo XML report was not produced" >&2
+  exit 1
+}
+echo "SUCCESS: JaCoCo HTML and XML reports are present"
+
+echo
+echo "=== EMP-008 MEASURED COVERAGE CONTRACT ==="
+python3 scripts/check_emp008.py --report target/site/jacoco/jacoco.xml --self-test
 
 test -f target/coupon-service-0.0.1-SNAPSHOT.jar || {
   echo "ERROR: expected Spring Boot artifact was not produced" >&2

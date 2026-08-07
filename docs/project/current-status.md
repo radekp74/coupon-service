@@ -2,8 +2,8 @@
 
 - **Data:** 2026-08-07
 - **Termin:** 2026-08-10, koniec dnia
-- **Faza:** `COVERAGE_QUALITY_REFINEMENT_ACCEPTED`
-- **Active task:** `EMP-008 — implementation coverage/JaCoCo`
+- **Faza:** `QUALITY_GATE_DONE_AND_VERIFIED`
+- **Active task:** `EMP-010 — refinement CI/delivery/observability`
 - **EMP-004 refinement:** `ACCEPTED`
 - **Implementation EMP-004:** `DONE_AND_VERIFIED`; verification remediation `COMPLETED`
 - **Implementation allowed:** `YES` dla `EMP-004` na podstawie accepted własnego refinementu
@@ -13,12 +13,12 @@
 - **Implementation EMP-006:** `DONE_AND_VERIFIED`
 - **Implementation allowed EMP-006:** `YES`
 - **EMP-007:** `DONE_AND_VERIFIED`
-- **EMP-008:** `READY`; refinement `ACCEPTED`, JaCoCo `NOT_CONFIGURED`, coverage evidence `NOT_MEASURED`, implementation `NOT_STARTED`, implementation allowed `YES`
+- **EMP-008:** `DONE_AND_VERIFIED`; refinement `ACCEPTED`, JaCoCo implementation `DONE_AND_VERIFIED`, coverage evidence `MEASURED_AND_VERIFIED`, implementation allowed `YES`
 - **EMP-009:** `DONE_AND_VERIFIED`; refinement `ACCEPTED`, evidence `COMPLETE`, implementation `DONE_AND_VERIFIED`, implementation allowed `YES`
 - **Kod aplikacji:** create coupon, Client IP/GeoIP i transactional redemption są zaimplementowane oraz lokalnie zweryfikowane
 - **OpenAPI/Swagger UI:** canonical `/openapi.yaml` zawiera `createCoupon` i `redeemCoupon`; Swagger UI używa tej specyfikacji
 - **Javadoc/DocLint policy:** `ACTIVE_AND_VERIFIED`
-- **Runtime verification:** `LOCAL_EMP009_GATE_PASS`
+- **Runtime verification:** `LOCAL_EMP008_GATE_PASS`
 - **Historyczne evidence bootstrapu:** `BOOTSTRAP_DONE_AND_VERIFIED`, `LOCAL_DOCKER_GATE_PASS`
 - **Historyczne evidence EMP-003:** `CREATE_COUPON_DONE_AND_VERIFIED`, `LOCAL_EMP003_GATE_PASS`
 - **Historyczne evidence EMP-007:** `OPENAPI_DOCUMENTATION_DONE_AND_VERIFIED`, `LOCAL_EMP007_GATE_PASS`
@@ -58,8 +58,8 @@ Implementacja już dostarczyła:
 
 ## Następny krok
 
-EMP-008 — implementation coverage/JaCoCo. Zaakceptowany scope obejmuje JaCoCo 0.8.15, future global 80/70 i critical 75/65, report-driven test remediation oraz Javadoc warning policy; nie oznacza jeszcze zmierzonego coverage.
+EMP-008 jest `DONE_AND_VERIFIED`. Pierwszy raport JaCoCo wynosił 89.23%/70.26% globalnie i 88.13%/70.52% dla critical aggregate. Po report-driven remediation finalny pełny gate potwierdził 96.07% LINE / 86.27% BRANCH globalnie oraz 96.46% / 88.81% dla critical aggregate, bez exclusions. `make verify` przeszedł z 106 unit + 22 integration tests, report checkerem i jego negatywnymi self-testami oraz Docker smoke na dynamicznym `127.0.0.1:55008`. DocLint ma 0 errors i finalny jawnie zaakceptowany budget 5 technicznych/małowartościowych warnings.
 
 ## Blokery
 
-Brak blokera technicznego. EMP-008 ma formalnie zaakceptowane decyzje właściciela; implementation checkpoint musi najpierw wygenerować realny raport i nie może zmienić progów ani exclusions bez amendmentu. EMP-009 jest `DONE_AND_VERIFIED`.
+Brak blokera technicznego dla jakości. EMP-008 i EMP-009 są `DONE_AND_VERIFIED`. Następny krok to refinement EMP-010 zgodnie z Wave 6 zaakceptowanego EMP-001; nie rozpoczęto jeszcze CI/observability hardening.

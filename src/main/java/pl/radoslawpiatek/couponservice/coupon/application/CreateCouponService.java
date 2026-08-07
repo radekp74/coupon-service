@@ -42,6 +42,7 @@ public class CreateCouponService implements CreateCouponUseCase {
         this.clock = Objects.requireNonNull(clock);
     }
 
+    /** {@inheritDoc} */
     @Override
     @Transactional
     public Coupon create(CreateCouponCommand command) {

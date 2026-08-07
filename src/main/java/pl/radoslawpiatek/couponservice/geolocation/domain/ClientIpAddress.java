@@ -88,12 +88,14 @@ public final class ClientIpAddress {
         return true;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object other) {
         return this == other || other instanceof ClientIpAddress address
                 && Arrays.equals(inetAddress.getAddress(), address.inetAddress.getAddress());
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         return Objects.hash(Arrays.hashCode(inetAddress.getAddress()));

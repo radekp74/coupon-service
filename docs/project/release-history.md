@@ -502,3 +502,38 @@ Po aktualnym audycie coverage/test completeness utworzono dokumentacyjny draft. 
 ## 2026-08-07 — `0.0.20-emp-008-refinement-accepted`
 
 Radosław Piątek formalnie zaakceptował refinement EMP-008. Zamrożono przyszły `org.jacoco:jacoco-maven-plugin:0.8.15`, globalne LINE >=80% i BRANCH >=70%, jedną logiczną grupę krytyczną 75%/65%, brak default exclusions, manualny missed line/branch review, report-driven test remediation oraz PIT `OUT_OF_SCOPE`. Dla Javadoc ustalono: naprawić 18 A, indywidualnie rozstrzygnąć 19 D, `DocLint errors=0`, `new warnings=0` i finalny jawnie uzasadniony budget <=5. `Coverage-Evidence` pozostaje `NOT_MEASURED`: w tym checkpointcie nie wdrożono JaCoCo ani nie uruchomiono Maven/Docker gate. EMP-008 jest `READY`, refinement `ACCEPTED`, implementation `NOT_STARTED`, `Implementation-Allowed: YES`.
+
+## 2026-08-07 — EMP-008 phase 1 measurement in progress
+
+Dodano JaCoCo 0.8.15 z `append=true`, pełnym HTML/XML reportem oraz globalnym BUNDLE 80/70 i critical BUNDLE 75/65. Pierwszy `clean verify` przeszedł: 60 unit, 22 integration, globalnie LINE 431/483 (89.23%) i BRANCH 215/306 (70.26%), critical LINE 349/396 (88.13%) i BRANCH 189/268 (70.52%). Raport obejmuje Failsafe: persistence, transactional redemption, controller i handler mają rzeczywiste coverage. DocLint nadal ma 0 errors i 42 warnings. EMP-008 pozostaje `IN_PROGRESS`; nie dodano testów, exclusions ani Javadoc remediation i nie wykonano closeoutu.
+
+## 2026-08-07 — EMP-008 phase 2 remediation candidate
+
+Po pierwszym zielonym pomiarze właściciel utrzymał globalne 80/70, critical 75/65 i brak exclusions. Kandydat dodaje behavior-driven testy bezpiecznego podzbioru `Forwarded`/XFF, strict IP/CIDR, trusted-proxy fail-closed, wybranych provider failure branches i jawnych invariantów domeny. `scripts/check_emp008.py` otrzymał report-mode przeliczający rzeczywisty `jacoco.xml` oraz kontrolowane fail-closed self-testy; `verify.sh` uruchamia ten pomiar po Mavenie. Javadoc remediation naprawia brakujące kontrakty A/D wyłącznie komentarzami i `{@inheritDoc}`. Ten wpis nie jest closeoutem: finalne coverage, DocLint warning count, Testcontainers i Docker smoke oczekują pełnego gate.
+
+## 2026-08-07 — `0.0.21-emp-008-done-and-verified`
+
+EMP-008 zamknięto po pełnym lokalnym gate bez obniżania progów i bez exclusions. Pierwszy measured baseline 89.23% LINE / 70.26% BRANCH globalnie i 88.13% / 70.52% dla critical aggregate uruchomił manualny missed-branch review. Dodano wyłącznie wartościowe testy istniejących security/domain contracts: `Forwarded`/XFF, strict IP/CIDR, trusted proxy, provider failure/body oraz invariants domenowe. Produkcyjna logika nie została zmieniona; zmiany `src/main/java` w Phase 2 były wyłącznie Javadoc/comments.
+
+Finalny evidence:
+
+```text
+Maven/Testcontainers: PASS
+Unit: 106/106
+Integration: 22/22
+All: 128/128
+Global JaCoCo LINE: 464/483 = 96.07%
+Global JaCoCo BRANCH: 264/306 = 86.27%
+Critical LINE: 382/396 = 96.46%
+Critical BRANCH: 238/268 = 88.81%
+JaCoCo exclusions: 0
+EMP-008 report checker: PASS
+Negative report self-tests: PASS
+DocLint: 0 errors, 5 justified warnings
+Docker smoke: PASS, 127.0.0.1:55008
+Cleanup: PASS
+```
+
+Warning budget 5 został świadomie zaakceptowany zamiast dodawania mechanicznych konstruktorów/komentarzy. Trzy warnings dotyczą implicit default constructors (`ApiExceptionHandler`, `CoreConfiguration`, `CouponServiceApplication`), dwa prywatnych pól (`CouponCodeConflictException.normalizedCode`, `InvalidCouponValueException.field`) z już udokumentowanym publicznym kontraktem. To spełnia zaakceptowane `<=5` i zachowuje zasadę `new warnings = 0`.
+
+Stan: `EMP-008 = DONE_AND_VERIFIED`, `Coverage-Evidence = MEASURED_AND_VERIFIED`. Następny checkpoint: refinement EMP-010; EMP-009 pozostaje `DONE_AND_VERIFIED`.

@@ -129,3 +129,13 @@ Aktualny audyt po remediation EMP-004 i closeoucie EMP-009 potwierdza 60 unit i 
 ## Refinement EMP-004
 
 Po zweryfikowaniu EMP-006 przygotowano własny draft transakcyjnego redemption. Dokument rozdziela snapshot/GeoIP od krótkiej transakcji, wymaga osobnego proxied bean, zamraża `SELECT ... FOR UPDATE`, kolejność błędów, atomowy insert/increment, rollback i exact-count concurrency. Pierwszy review dał rekomendację `REJECT`, ponieważ `userId` był niespójny z EMP-001, a granica kontroler/orchestrator wymagała doprecyzowania. 2026-08-06 właściciel zaakceptował amendment EMP-001 dla opaque, case-sensitive `userId` `^[!-~]{1,128}$`, konsolidację EMP-005, retry 409, precedence i model transakcyjny. Refinement jest `ACCEPTED`; endpoint, migracja i canonical OpenAPI nadal nie istnieją.
+
+## EMP-008 Phase 2 candidate — 2026-08-07
+
+Po realnym pomiarze 89.23% LINE / 70.26% BRANCH globalnie i 88.13% / 70.52% dla critical aggregate nie zmieniono progów ani exclusions. Kandydat uzupełnia tylko istotne missed security/domain branches, wzmacnia checker o niezależne parsowanie `jacoco.xml` i naprawia znaczące braki Javadoc bez modyfikacji produkcyjnego behavior. Status pozostaje `IN_PROGRESS` do pełnego Maven/Testcontainers/DocLint/Docker gate.
+
+## Closeout EMP-008 — 2026-08-07
+
+Phase 2 przeszło pełny lokalny gate. Maven/Testcontainers wykonał 106 testów unit i 22 integration bez failures/errors. JaCoCo 0.8.15 zmierzył globalnie 96.07% LINE / 86.27% BRANCH oraz 96.46% / 88.81% dla critical aggregate; oba Maven checks i niezależny report checker z fail-closed self-testami przeszły. Nie ma exclusions ani PIT. Docker smoke przeszedł na dynamicznym `127.0.0.1:55008` i posprzątał własny stos.
+
+DocLint zakończył się z 0 errors i 5 warnings, redukując baseline 42. Finalny budget 5 został zaakceptowany jako świadome zastosowanie polityki „nie dokumentuj mechanicznie”: trzy warnings dotyczą implicit default constructors klas frameworkowych, a dwa prywatnych pól wyjątków, których publiczne kontrakty są już udokumentowane. Nie dodano pustych konstruktorów ani tautologicznych komentarzy wyłącznie dla wyzerowania licznika. EMP-008 ma `DONE_AND_VERIFIED`, coverage `MEASURED_AND_VERIFIED`.
