@@ -133,7 +133,13 @@ def static_check() -> list[str]:
     require('LOCAL_STUB_RESPONSE_TIMEOUT = Duration.ofSeconds(1)' in provider_test
             and 'http://127.0.0.1:' in provider_test
             and 'http://localhost:' not in provider_test,
-            "GeoIP WireMock tests must use deterministic IPv4 loopback and a test-only response margin", errors)
+            "GeoIP WireMock tests must use deterministic IPv4 loopback and the frozen 1s provider timeout", errors)
+    require('LOCAL_TRANSPORT_WARMUP_TIMEOUT = Duration.ofSeconds(5)' in provider_test
+            and 'LOCAL_HTTP_CLIENT' in provider_test
+            and 'warmUpLocalTransport()' in provider_test
+            and '/__test-transport-warmup' in provider_test
+            and provider_test.count('HttpClient.newBuilder()') == 1,
+            "GeoIP WireMock tests must warm one shared production-shaped JDK HttpClient before bounded provider assertions", errors)
 
     observability_it = read("src/test/java/pl/radoslawpiatek/couponservice/observability/ObservabilityApiIT.java")
     require('management.endpoints.web.exposure.include' in observability_it
@@ -165,6 +171,9 @@ def static_check() -> list[str]:
     for token in ["/actuator/prometheus", "X-Request-Id: smoke-request-010",
                   "container structured JSON logging detected"]:
         require(token in smoke, f"Docker smoke observability evidence missing: {token}", errors)
+    require("tr -d '\\r' < \"$headers_file\"" in smoke
+            and "smoke-request-010[[:space:]]*$" in smoke,
+            "Docker smoke must normalize HTTP CRLF before request-ID header validation", errors)
 
     makefile = read("Makefile")
     require(re.search(r"^emp010-check:\s*$", makefile, re.M) is not None, "make emp010-check missing", errors)

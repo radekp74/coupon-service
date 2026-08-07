@@ -48,7 +48,7 @@ printf '%s' "$openapi_payload" | grep -Fq 'operationId: redeemCoupon' || {
   echo "ERROR: canonical OpenAPI does not describe the implemented redemption endpoint" >&2
   exit 1
 }
-grep -Eiq '^X-Request-Id:[[:space:]]*smoke-request-010\r?$' "$headers_file" || {
+tr -d '\r' < "$headers_file" | grep -Eiq '^X-Request-Id:[[:space:]]*smoke-request-010[[:space:]]*$' || {
   echo "ERROR: runtime did not echo the accepted X-Request-Id" >&2
   cat "$headers_file" >&2
   exit 1

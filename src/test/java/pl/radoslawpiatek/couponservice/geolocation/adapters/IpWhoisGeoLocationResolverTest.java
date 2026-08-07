@@ -14,6 +14,8 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import java.net.URI;
 import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.Duration;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,13 +29,19 @@ import pl.radoslawpiatek.couponservice.observability.CouponServiceMetrics;
 class IpWhoisGeoLocationResolverTest {
 
     private static final Duration LOCAL_STUB_RESPONSE_TIMEOUT = Duration.ofSeconds(1);
+    private static final Duration LOCAL_TRANSPORT_WARMUP_TIMEOUT = Duration.ofSeconds(5);
+    private static final HttpClient LOCAL_HTTP_CLIENT = HttpClient.newBuilder()
+            .connectTimeout(Duration.ofMillis(500))
+            .followRedirects(HttpClient.Redirect.NEVER)
+            .build();
 
     private WireMockServer wireMock;
 
     @BeforeEach
-    void startServer() {
+    void startServer() throws Exception {
         wireMock = new WireMockServer(WireMockConfiguration.wireMockConfig().dynamicPort());
         wireMock.start();
+        warmUpLocalTransport();
     }
 
     @AfterEach
@@ -191,9 +199,8 @@ class IpWhoisGeoLocationResolverTest {
                 Duration.ofMillis(500), Duration.ofSeconds(1), 16_384, "PL"
         );
         IpWhoisGeoLocationResolver resolver = new IpWhoisGeoLocationResolver(
-                HttpClient.newBuilder().connectTimeout(Duration.ofMillis(500))
-                        .followRedirects(HttpClient.Redirect.NEVER).build(),
-                new ObjectMapper(), properties, new PublicIpAddressPolicy(), new CouponServiceMetrics(new SimpleMeterRegistry()));
+                LOCAL_HTTP_CLIENT, new ObjectMapper(), properties, new PublicIpAddressPolicy(),
+                new CouponServiceMetrics(new SimpleMeterRegistry()));
 
         assertThat(resolver.resolve(ClientIpAddress.parseLiteral("8.8.8.8"))).isEqualTo(CountryCode.of("PL"));
         wireMock.verify(1, getRequestedFor(urlEqualTo("/8.8.8.8?fields=success,country_code,message")));
@@ -218,9 +225,21 @@ class IpWhoisGeoLocationResolverTest {
                 Duration.ofMillis(500), responseTimeout, 16_384, "PL"
         );
         return new IpWhoisGeoLocationResolver(
-                HttpClient.newBuilder().connectTimeout(Duration.ofMillis(500))
-                        .followRedirects(HttpClient.Redirect.NEVER).build(),
-                new ObjectMapper(), properties, new PublicIpAddressPolicy(), new CouponServiceMetrics(registry));
+                LOCAL_HTTP_CLIENT, new ObjectMapper(), properties, new PublicIpAddressPolicy(),
+                new CouponServiceMetrics(registry));
+    }
+
+    private void warmUpLocalTransport() throws Exception {
+        wireMock.stubFor(get(urlEqualTo("/__test-transport-warmup"))
+                .willReturn(aResponse().withStatus(204)));
+        HttpRequest request = HttpRequest.newBuilder(
+                        URI.create("http://127.0.0.1:" + wireMock.port() + "/__test-transport-warmup"))
+                .timeout(LOCAL_TRANSPORT_WARMUP_TIMEOUT)
+                .GET()
+                .build();
+        HttpResponse<Void> response = LOCAL_HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.discarding());
+        assertThat(response.statusCode()).isEqualTo(204);
+        wireMock.resetAll();
     }
 
     private void assertProviderMetric(SimpleMeterRegistry registry, String outcome, double counter, long timer) {
