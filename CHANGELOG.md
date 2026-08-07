@@ -6,6 +6,7 @@ Wszystkie istotne zmiany projektu są rejestrowane w tym pliku. Format jest insp
 
 ### Added
 
+- rozpoczęta implementacja zaakceptowanego EMP-010 (CI, delivery, request-ID, structured logging, Prometheus) bez rozszerzenia scope;
 - zaakceptowany refinement EMP-010: jeden GitHub Actions gate na Ubuntu 24.04, immutable action/base-image references, byte-reproducible source delivery, strict `X-Request-Id`, structured JSON logs i low-cardinality Prometheus/Micrometer; `READY`, implementation `NOT_STARTED`, evidence `NOT_MEASURED`;
 - zakończone i zweryfikowane EMP-008: JaCoCo 0.8.15 w `verify`, global 96.07% LINE / 86.27% BRANCH, critical 96.46% / 88.81%, 106 unit + 22 integration, zero exclusions, report checker fail-closed oraz DocLint 0 errors / finalny justified warning budget 5;
 - EMP-008 Phase 2 candidate: behavior-driven security/domain coverage remediation, measured JaCoCo report checker z fail-closed self-testami oraz Javadoc contract remediation bez exclusions i bez zmiany produkcyjnej logiki;

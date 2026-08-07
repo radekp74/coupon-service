@@ -51,7 +51,9 @@ class OpenApiDocumentationIT {
                 .contains("/api/v1/coupons/{code}/redemptions")
                 .contains("operationId: redeemCoupon")
                 .contains("COUPON_ALREADY_REDEEMED")
-                .contains("^[!-~]{1,128}$");
+                .contains("^[!-~]{1,128}$")
+                .contains("X-Request-Id")
+                .contains("#/components/headers/RequestId");
     }
 
     @Test

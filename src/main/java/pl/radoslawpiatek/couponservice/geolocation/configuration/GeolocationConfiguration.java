@@ -14,6 +14,7 @@ import pl.radoslawpiatek.couponservice.geolocation.adapters.ServletClientIpResol
 import pl.radoslawpiatek.couponservice.geolocation.adapters.StubGeoLocationResolver;
 import pl.radoslawpiatek.couponservice.geolocation.ports.ClientIpResolver;
 import pl.radoslawpiatek.couponservice.geolocation.ports.GeoLocationResolver;
+import pl.radoslawpiatek.couponservice.observability.CouponServiceMetrics;
 
 /**
  * Wires the trusted-client-IP and provider-neutral GeoIP adapters from validated configuration.
@@ -34,11 +35,12 @@ public class GeolocationConfiguration {
      * Exposes the servlet trust-boundary adapter as the application client-IP port.
      *
      * @param properties validated client-IP settings
+     * @param metrics low-cardinality client-IP metrics
      * @return resolver that is direct by default and bounded in trusted-proxy mode
      */
     @Bean
-    ClientIpResolver clientIpResolver(ClientIpProperties properties) {
-        return new ServletClientIpResolver(properties);
+    ClientIpResolver clientIpResolver(ClientIpProperties properties, CouponServiceMetrics metrics) {
+        return new ServletClientIpResolver(properties, metrics);
     }
 
     /**
@@ -62,6 +64,7 @@ public class GeolocationConfiguration {
      * @param environment active Spring profiles used to guard the deterministic stub
      * @param httpClient shared HTTP client for the ipwho.is adapter
      * @param objectMapper Spring's configured JSON parser
+     * @param metrics low-cardinality provider metrics
      * @return either the HTTPS provider adapter or the local/test-only stub
      */
     @Bean
@@ -69,7 +72,8 @@ public class GeolocationConfiguration {
             GeolocationProperties properties,
             Environment environment,
             HttpClient httpClient,
-            ObjectMapper objectMapper
+            ObjectMapper objectMapper,
+            CouponServiceMetrics metrics
     ) {
         if (properties.provider() == GeolocationProperties.Provider.IPWHOIS
                 && !"https".equalsIgnoreCase(properties.baseUri().getScheme())) {
@@ -79,9 +83,9 @@ public class GeolocationConfiguration {
             if (!hasLocalOrTestProfile(environment)) {
                 throw new IllegalStateException("The geolocation stub is restricted to local or test profiles.");
             }
-            return new StubGeoLocationResolver(CountryCode.of(properties.stubCountry()));
+            return new StubGeoLocationResolver(CountryCode.of(properties.stubCountry()), metrics);
         }
-        return new IpWhoisGeoLocationResolver(httpClient, objectMapper, properties, new PublicIpAddressPolicy());
+        return new IpWhoisGeoLocationResolver(httpClient, objectMapper, properties, new PublicIpAddressPolicy(), metrics);
     }
 
     private boolean hasLocalOrTestProfile(Environment environment) {

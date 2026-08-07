@@ -20,9 +20,9 @@
 | test scope | PASS | SimpleMeterRegistry/HTTP/Docker/CI delivery; bez publicznej sieci, H2 i sleep |
 | exclusions | PASS | Grafana/OTel/alerts/deploy/signing/SBOM/CodeQL poza zakresem |
 | owner decisions | PASS | osiem decyzji zostało formalnie zaakceptowanych przez Radosława Piątka 2026-08-07 |
-| implementation | PASS | workflow, Prometheus dependency i kod obserwowalności nie istnieją w tym draft checkpointcie |
+| implementation | IN_PROGRESS | kandydat implementuje wyłącznie zamrożony zakres; lokalny/full/CI evidence nie jest jeszcze zapisany |
 | CODEX_PROMPT | PASS | plik zabroniony |
 
 ## Wynik
 
-`ACCEPTED`. Refinement ma `Status: READY`, `Stan-Refinementu: ACCEPTED`, implementation `NOT_STARTED` i `Implementation-Allowed: YES`. Evidence CI/delivery/observability pozostaje `NOT_MEASURED`; implementacja może rozpocząć się wyłącznie w zamrożonym zakresie.
+`ACCEPTED`. Refinement pozostaje zamrożony; bieżący kandydat ma `Status: IN_PROGRESS`, implementation `IN_PROGRESS` i `Implementation-Allowed: YES`. Evidence CI/delivery/observability pozostaje `NOT_MEASURED` do wykonania pełnych gate’ów.

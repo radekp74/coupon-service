@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import pl.radoslawpiatek.couponservice.coupon.domain.Coupon;
 import pl.radoslawpiatek.couponservice.coupon.ports.CouponRepository;
 import pl.radoslawpiatek.couponservice.coupon.ports.UuidGenerator;
+import pl.radoslawpiatek.couponservice.observability.CouponServiceMetrics;
 
 @ExtendWith(MockitoExtension.class)
 class CreateCouponServiceTest {
@@ -30,7 +32,7 @@ class CreateCouponServiceTest {
     void createsAndPersistsACouponWithInjectedIdentityAndTime() {
         UuidGenerator uuidGenerator = () -> COUPON_ID;
         Clock clock = Clock.fixed(CREATED_AT, ZoneOffset.UTC);
-        CreateCouponService service = new CreateCouponService(couponRepository, uuidGenerator, clock);
+        CreateCouponService service = new CreateCouponService(couponRepository, uuidGenerator, clock, new CouponServiceMetrics(new SimpleMeterRegistry()));
 
         Coupon created = service.create(new CreateCouponCommand(" wiosna ", 100, "pl"));
 

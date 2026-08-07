@@ -18,7 +18,7 @@ REST-owy serwis do tworzenia i bezpiecznego wykorzystywania kuponów rabatowych.
 - **EMP-005:** `MERGED_INTO_EMP-004`; user-once pozostaje obowiązkowym invariantem i evidence EMP-004
 - **EMP-008:** `DONE_AND_VERIFIED`, refinement `ACCEPTED`; implementation `DONE_AND_VERIFIED`, implementation allowed `YES`; coverage evidence `MEASURED_AND_VERIFIED`
 - **EMP-009:** `DONE_AND_VERIFIED`, refinement `ACCEPTED`; evidence `COMPLETE`, implementation `DONE_AND_VERIFIED`
-- **EMP-010:** `READY`, refinement `ACCEPTED`; implementation `NOT_STARTED`, `Implementation-Allowed: YES`; CI/delivery/observability evidence `NOT_MEASURED`
+- **EMP-010:** `IN_PROGRESS`, refinement `ACCEPTED`; implementation `IN_PROGRESS`, `Implementation-Allowed: YES`; CI/delivery/observability evidence `NOT_MEASURED`
 - **Kod biznesowy:** `CREATE_COUPON_DONE_AND_VERIFIED`
 - **OpenAPI/Swagger UI:** `DONE_AND_VERIFIED`
 - **Javadoc/DocLint policy:** `ACTIVE_AND_VERIFIED`
@@ -28,7 +28,7 @@ EMP-004 dostarcza transakcyjny endpoint redemption z server-side Client IP/GeoIP
 
 EMP-008 zamyka quality gate bez exclusions: JaCoCo 0.8.15 jest częścią Maven `verify`; finalny pomiar wynosi globalnie **96.07% LINE / 86.27% BRANCH** oraz **96.46% LINE / 88.81% BRANCH** dla critical aggregate. Pełny gate przeszedł przy 106 testach unit i 22 integration. DocLint ma 0 błędów; świadomie pozostawiono 5 ostrzeżeń o niskiej wartości dokumentacyjnej (3 implicit default constructors klas frameworkowych i 2 prywatne pola wyjątków), mieszcząc się w zaakceptowanym budget <=5 bez dodawania mechanicznego Javadoc.
 
-EMP-010 ma formalnie zaakceptowany refinement. Zamrożony kontrakt obejmuje pojedynczy GitHub Actions gate korzystający z istniejącego `make verify`, deterministyczny source export, immutable references dla actions/base images oraz minimalną obserwowalność: `X-Request-Id`, structured JSON logs i `/actuator/prometheus` z niskokardynalnymi metrykami. Implementacja jest dozwolona, ale jeszcze `NOT_STARTED`; evidence pozostaje `NOT_MEASURED`.
+EMP-010 ma formalnie zaakceptowany refinement. Zamrożony kontrakt obejmuje pojedynczy GitHub Actions gate korzystający z istniejącego `make verify`, deterministyczny source export, immutable references dla actions/base images oraz minimalną obserwowalność: `X-Request-Id`, structured JSON logs i `/actuator/prometheus` z niskokardynalnymi metrykami. Implementacja jest `IN_PROGRESS` w zamrożonym zakresie; evidence pozostaje `NOT_MEASURED` do pełnej walidacji lokalnej i CI.
 
 
 ## Zweryfikowany zakres EMP-003

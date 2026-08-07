@@ -10,6 +10,9 @@ import pl.radoslawpiatek.couponservice.geolocation.configuration.ClientIpPropert
 import pl.radoslawpiatek.couponservice.geolocation.domain.ClientIpAddress;
 import pl.radoslawpiatek.couponservice.geolocation.domain.ClientIpResolutionException;
 import pl.radoslawpiatek.couponservice.geolocation.ports.ClientIpResolver;
+import pl.radoslawpiatek.couponservice.observability.CouponServiceMetrics;
+import pl.radoslawpiatek.couponservice.observability.CouponServiceMetrics.ClientIpOutcome;
+import pl.radoslawpiatek.couponservice.observability.CouponServiceMetrics.ClientIpSource;
 
 /**
  * Servlet adapter implementing the direct and trusted-proxy client-address contracts.
@@ -24,51 +27,70 @@ public final class ServletClientIpResolver implements ClientIpResolver {
     private final List<CidrBlock> trustedProxies;
     private final ForwardedHeaderParser forwardedHeaderParser = new ForwardedHeaderParser();
     private final XForwardedForParser xForwardedForParser = new XForwardedForParser();
+    private final CouponServiceMetrics metrics;
 
     /**
      * Creates the resolver from configuration already validated during application startup.
      *
      * @param properties immutable security boundary configuration
+     * @param metrics low-cardinality client-IP resolution metrics
      */
-    public ServletClientIpResolver(ClientIpProperties properties) {
+    public ServletClientIpResolver(ClientIpProperties properties, CouponServiceMetrics metrics) {
         this.properties = Objects.requireNonNull(properties);
         this.trustedProxies = properties.trustedProxies().stream().map(CidrBlock::parse).toList();
+        this.metrics = Objects.requireNonNull(metrics);
     }
 
     /** {@inheritDoc} */
     @Override
     public ClientIpAddress resolve(HttpServletRequest request) {
-        ClientIpAddress immediatePeer = ClientIpAddress.parseLiteral(request.getRemoteAddr());
-        if (properties.mode() == ClientIpProperties.Mode.DIRECT || !isTrusted(immediatePeer)) {
-            return immediatePeer;
-        }
-
-        List<String> forwarded = physicalHeaderValues(request.getHeaders("Forwarded"));
-        List<String> xForwardedFor = physicalHeaderValues(request.getHeaders("X-Forwarded-For"));
-        if (forwarded.size() > 1 || xForwardedFor.size() > 1) {
-            throw new ClientIpResolutionException();
-        }
-
-        List<ClientIpAddress> chain;
-        if (!forwarded.isEmpty()) {
-            chain = forwardedHeaderParser.parse(
-                    forwarded.getFirst(), properties.maxHeaderLength(), properties.maxForwardedHops());
-        } else if (!xForwardedFor.isEmpty()) {
-            chain = xForwardedForParser.parse(
-                    xForwardedFor.getFirst(), properties.maxHeaderLength(), properties.maxForwardedHops());
-        } else {
-            throw new ClientIpResolutionException();
-        }
-
-        List<ClientIpAddress> completeChain = new ArrayList<>(chain);
-        completeChain.add(immediatePeer);
-        for (int index = completeChain.size() - 1; index >= 0; index--) {
-            ClientIpAddress candidate = completeChain.get(index);
-            if (!isTrusted(candidate)) {
-                return candidate;
+        Objects.requireNonNull(request);
+        ClientIpSource source = ClientIpSource.DIRECT;
+        try {
+            ClientIpAddress immediatePeer = ClientIpAddress.parseLiteral(request.getRemoteAddr());
+            if (properties.mode() == ClientIpProperties.Mode.DIRECT || !isTrusted(immediatePeer)) {
+                metrics.recordClientIp(source, ClientIpOutcome.SUCCESS);
+                return immediatePeer;
             }
+
+            List<String> forwarded = physicalHeaderValues(request.getHeaders("Forwarded"));
+            List<String> xForwardedFor = physicalHeaderValues(request.getHeaders("X-Forwarded-For"));
+            if (!forwarded.isEmpty()) {
+                source = ClientIpSource.FORWARDED;
+            } else if (!xForwardedFor.isEmpty()) {
+                source = ClientIpSource.X_FORWARDED_FOR;
+            }
+            if (forwarded.size() > 1 || xForwardedFor.size() > 1
+                    || forwarded.stream().anyMatch(value -> value == null || value.isBlank())
+                    || xForwardedFor.stream().anyMatch(value -> value == null || value.isBlank())) {
+                throw new ClientIpResolutionException();
+            }
+
+            List<ClientIpAddress> chain;
+            if (!forwarded.isEmpty()) {
+                chain = forwardedHeaderParser.parse(
+                        forwarded.getFirst(), properties.maxHeaderLength(), properties.maxForwardedHops());
+            } else if (!xForwardedFor.isEmpty()) {
+                chain = xForwardedForParser.parse(
+                        xForwardedFor.getFirst(), properties.maxHeaderLength(), properties.maxForwardedHops());
+            } else {
+                throw new ClientIpResolutionException();
+            }
+
+            List<ClientIpAddress> completeChain = new ArrayList<>(chain);
+            completeChain.add(immediatePeer);
+            for (int index = completeChain.size() - 1; index >= 0; index--) {
+                ClientIpAddress candidate = completeChain.get(index);
+                if (!isTrusted(candidate)) {
+                    metrics.recordClientIp(source, ClientIpOutcome.SUCCESS);
+                    return candidate;
+                }
+            }
+            throw new ClientIpResolutionException();
+        } catch (RuntimeException exception) {
+            metrics.recordClientIp(source, ClientIpOutcome.FAILURE);
+            throw exception;
         }
-        throw new ClientIpResolutionException();
     }
 
     private boolean isTrusted(ClientIpAddress address) {
@@ -79,10 +101,6 @@ public final class ServletClientIpResolver implements ClientIpResolver {
         if (values == null) {
             return List.of();
         }
-        List<String> result = Collections.list(values);
-        if (result.stream().anyMatch(value -> value == null || value.isBlank())) {
-            throw new ClientIpResolutionException();
-        }
-        return result;
+        return Collections.list(values);
     }
 }

@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Coupon Service API
-  version: 0.0.16-emp-004-verified
+  version: 0.0.17-emp-010-observability
   description: |
     Public REST contract for the Empik backend recruitment assignment.
     This checkpoint documents the implemented coupon creation and transactional redemption endpoints.
@@ -37,6 +37,9 @@ paths:
       responses:
         '201':
           description: Coupon created
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
           content:
             application/json:
               schema:
@@ -83,6 +86,9 @@ paths:
       responses:
         '201':
           description: Coupon redeemed
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
           content:
             application/json:
               schema: {$ref: '#/components/schemas/CouponRedemptionResponse'}
@@ -94,6 +100,9 @@ paths:
         '404': {$ref: '#/components/responses/CouponNotFound'}
         '409':
           description: Already redeemed or exhausted
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
           content:
             application/problem+json:
               schema: {$ref: '#/components/schemas/ProblemDetail'}
@@ -103,6 +112,14 @@ paths:
         '503': {$ref: '#/components/responses/GeolocationUnavailable'}
         '500': {$ref: '#/components/responses/InternalError'}
 components:
+  headers:
+    RequestId:
+      description: Correlation identifier used for this response. A valid single incoming value is reused; otherwise the server generates a UUID.
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 64
+        pattern: '^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$'
   schemas:
     RedeemCouponRequest:
       type: object
@@ -202,6 +219,9 @@ components:
   responses:
     InvalidRequest:
       description: Invalid JSON or field value
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
       content:
         application/problem+json:
           schema:
@@ -217,6 +237,9 @@ components:
                 code: INVALID_REQUEST
     CouponCodeConflict:
       description: Canonical coupon code already exists
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
       content:
         application/problem+json:
           schema:
@@ -232,6 +255,9 @@ components:
                 code: COUPON_CODE_CONFLICT
     CouponNotFound:
       description: Coupon does not exist
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
       content:
         application/problem+json:
           schema: {$ref: '#/components/schemas/ProblemDetail'}
@@ -239,6 +265,9 @@ components:
             missing: {value: {type: urn:problem:coupon-not-found, title: Coupon not found, status: 404, detail: The coupon was not found., instance: /api/v1/coupons/MISSING/redemptions, code: COUPON_NOT_FOUND}}
     CountryNotAllowed:
       description: Resolved country is not allowed; country and IP are never disclosed
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
       content:
         application/problem+json:
           schema: {$ref: '#/components/schemas/ProblemDetail'}
@@ -246,6 +275,9 @@ components:
             denied: {value: {type: urn:problem:country-not-allowed, title: Country not allowed, status: 403, detail: The coupon is not available in this country., instance: /api/v1/coupons/WIOSNA/redemptions, code: COUNTRY_NOT_ALLOWED}}
     GeolocationUnavailable:
       description: Server-side Client IP or GeoIP infrastructure is unavailable
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
       content:
         application/problem+json:
           schema: {$ref: '#/components/schemas/ProblemDetail'}
@@ -253,6 +285,9 @@ components:
             unavailable: {value: {type: urn:problem:geolocation-unavailable, title: Geolocation unavailable, status: 503, detail: The request could not be located., instance: /api/v1/coupons/WIOSNA/redemptions, code: GEOLOCATION_UNAVAILABLE}}
     InternalError:
       description: Unexpected server failure
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
       content:
         application/problem+json:
           schema:

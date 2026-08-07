@@ -2,15 +2,18 @@ package pl.radoslawpiatek.couponservice.geolocation.configuration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import pl.radoslawpiatek.couponservice.geolocation.adapters.StubGeoLocationResolver;
 import pl.radoslawpiatek.couponservice.geolocation.ports.GeoLocationResolver;
+import pl.radoslawpiatek.couponservice.observability.CouponServiceMetrics;
 
 class GeolocationConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
+            .withBean(CouponServiceMetrics.class, () -> new CouponServiceMetrics(new SimpleMeterRegistry()))
             .withUserConfiguration(GeolocationConfiguration.class, JacksonAutoConfiguration.class)
             .withPropertyValues(
                     "coupon.client-ip.mode=direct",

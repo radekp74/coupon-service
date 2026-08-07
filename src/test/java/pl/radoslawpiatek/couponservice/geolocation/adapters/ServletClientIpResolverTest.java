@@ -3,11 +3,13 @@ package pl.radoslawpiatek.couponservice.geolocation.adapters;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import pl.radoslawpiatek.couponservice.geolocation.configuration.ClientIpProperties;
 import pl.radoslawpiatek.couponservice.geolocation.domain.ClientIpResolutionException;
+import pl.radoslawpiatek.couponservice.observability.CouponServiceMetrics;
 
 class ServletClientIpResolverTest {
 
@@ -131,8 +133,40 @@ class ServletClientIpResolverTest {
                 .contains(":");
     }
 
+    @Test
+    void recordsExactBoundedSourceAndOutcomeMetrics() {
+        SimpleMeterRegistry registry = new SimpleMeterRegistry();
+        CouponServiceMetrics metrics = new CouponServiceMetrics(registry);
+        ServletClientIpResolver resolver = new ServletClientIpResolver(
+                new ClientIpProperties(ClientIpProperties.Mode.TRUSTED_PROXY, List.of("10.0.0.0/8"), 20, 4096),
+                metrics
+        );
+
+        MockHttpServletRequest forwarded = requestFrom("10.0.0.2");
+        forwarded.addHeader("Forwarded", "for=8.8.8.8");
+        assertThat(resolver.resolve(forwarded).canonicalLiteral()).isEqualTo("8.8.8.8");
+
+        MockHttpServletRequest xff = requestFrom("10.0.0.2");
+        xff.addHeader("X-Forwarded-For", "1.1.1.1");
+        assertThat(resolver.resolve(xff).canonicalLiteral()).isEqualTo("1.1.1.1");
+
+        MockHttpServletRequest malformed = requestFrom("10.0.0.2");
+        malformed.addHeader("Forwarded", "for=unknown");
+        assertThatThrownBy(() -> resolver.resolve(malformed))
+                .isInstanceOf(ClientIpResolutionException.class);
+
+        assertThat(registry.get("client.ip.resolution")
+                .tags("source", "forwarded", "outcome", "success").counter().count()).isEqualTo(1.0);
+        assertThat(registry.get("client.ip.resolution")
+                .tags("source", "x_forwarded_for", "outcome", "success").counter().count()).isEqualTo(1.0);
+        assertThat(registry.get("client.ip.resolution")
+                .tags("source", "forwarded", "outcome", "failure").counter().count()).isEqualTo(1.0);
+        assertThat(registry.get("client.ip.resolution")
+                .tags("source", "direct", "outcome", "failure").counter().count()).isZero();
+    }
+
     private ServletClientIpResolver resolver(ClientIpProperties.Mode mode) {
-        return new ServletClientIpResolver(new ClientIpProperties(mode, List.of("10.0.0.0/8"), 20, 4096));
+        return new ServletClientIpResolver(new ClientIpProperties(mode, List.of("10.0.0.0/8"), 20, 4096), new CouponServiceMetrics(new SimpleMeterRegistry()));
     }
 
     private MockHttpServletRequest requestFrom(String remoteAddress) {

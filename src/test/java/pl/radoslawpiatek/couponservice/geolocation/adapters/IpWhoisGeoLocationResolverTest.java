@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import java.net.URI;
@@ -21,8 +22,11 @@ import pl.radoslawpiatek.couponservice.coupon.domain.CountryCode;
 import pl.radoslawpiatek.couponservice.geolocation.configuration.GeolocationProperties;
 import pl.radoslawpiatek.couponservice.geolocation.domain.ClientIpAddress;
 import pl.radoslawpiatek.couponservice.geolocation.domain.GeolocationUnavailableException;
+import pl.radoslawpiatek.couponservice.observability.CouponServiceMetrics;
 
 class IpWhoisGeoLocationResolverTest {
+
+    private static final Duration LOCAL_STUB_RESPONSE_TIMEOUT = Duration.ofSeconds(1);
 
     private WireMockServer wireMock;
 
@@ -42,7 +46,7 @@ class IpWhoisGeoLocationResolverTest {
         wireMock.stubFor(get(urlEqualTo("/8.8.8.8?fields=success,country_code,message"))
                 .willReturn(aResponse().withStatus(200).withBody("{\"success\":true,\"country_code\":\"PL\"}")));
 
-        assertThat(resolver(Duration.ofSeconds(1)).resolve(ClientIpAddress.parseLiteral("8.8.8.8")))
+        assertThat(resolver(LOCAL_STUB_RESPONSE_TIMEOUT).resolve(ClientIpAddress.parseLiteral("8.8.8.8")))
                 .isEqualTo(CountryCode.of("PL"));
         wireMock.verify(1, getRequestedFor(urlEqualTo("/8.8.8.8?fields=success,country_code,message"))
                 .withHeader("Accept", equalTo("application/json"))
@@ -65,13 +69,13 @@ class IpWhoisGeoLocationResolverTest {
             wireMock.resetAll();
             wireMock.stubFor(get(urlEqualTo("/8.8.8.8?fields=success,country_code,message"))
                     .willReturn(aResponse().withStatus(200).withBody(body)));
-            assertUnavailable(resolver(Duration.ofSeconds(1)));
+            assertUnavailable(resolver(LOCAL_STUB_RESPONSE_TIMEOUT));
         }
         for (int status : new int[] {400, 429, 500}) {
             wireMock.resetAll();
             wireMock.stubFor(get(urlEqualTo("/8.8.8.8?fields=success,country_code,message"))
                     .willReturn(aResponse().withStatus(status)));
-            assertUnavailable(resolver(Duration.ofSeconds(1)));
+            assertUnavailable(resolver(LOCAL_STUB_RESPONSE_TIMEOUT));
         }
     }
 
@@ -81,7 +85,7 @@ class IpWhoisGeoLocationResolverTest {
                 .willReturn(aResponse().withStatus(302).withHeader("Location", "/target")));
         wireMock.stubFor(get(urlEqualTo("/target")).willReturn(aResponse().withStatus(200).withBody("{\"success\":true,\"country_code\":\"PL\"}")));
 
-        assertUnavailable(resolver(Duration.ofSeconds(1)));
+        assertUnavailable(resolver(LOCAL_STUB_RESPONSE_TIMEOUT));
         wireMock.verify(1, getRequestedFor(urlEqualTo("/8.8.8.8?fields=success,country_code,message")));
         wireMock.verify(0, getRequestedFor(urlEqualTo("/target")));
     }
@@ -90,12 +94,12 @@ class IpWhoisGeoLocationResolverTest {
     void rejectsOversizedDeclaredAndStreamingBodiesWithoutLeakage() {
         wireMock.stubFor(get(urlEqualTo("/8.8.8.8?fields=success,country_code,message"))
                 .willReturn(aResponse().withStatus(200).withHeader("Content-Length", "16385").withBody("x".repeat(16_385))));
-        assertUnavailable(resolver(Duration.ofSeconds(1)));
+        assertUnavailable(resolver(LOCAL_STUB_RESPONSE_TIMEOUT));
 
         wireMock.resetAll();
         wireMock.stubFor(get(urlEqualTo("/8.8.8.8?fields=success,country_code,message"))
                 .willReturn(aResponse().withStatus(200).withHeader("Transfer-Encoding", "chunked").withBody("x".repeat(16_385))));
-        assertUnavailable(resolver(Duration.ofSeconds(1)));
+        assertUnavailable(resolver(LOCAL_STUB_RESPONSE_TIMEOUT));
     }
 
     @Test
@@ -106,7 +110,7 @@ class IpWhoisGeoLocationResolverTest {
         wireMock.stubFor(get(urlEqualTo("/8.8.8.8?fields=success,country_code,message"))
                 .willReturn(aResponse().withStatus(200).withBody(body)));
 
-        assertThat(resolver(Duration.ofSeconds(1)).resolve(ClientIpAddress.parseLiteral("8.8.8.8")))
+        assertThat(resolver(LOCAL_STUB_RESPONSE_TIMEOUT).resolve(ClientIpAddress.parseLiteral("8.8.8.8")))
                 .isEqualTo(CountryCode.of("PL"));
     }
 
@@ -121,8 +125,58 @@ class IpWhoisGeoLocationResolverTest {
 
     @Test
     void rejectsNonPublicAddressesBeforeAnyProviderRequest() {
-        assertThatThrownBy(() -> resolver(Duration.ofSeconds(1)).resolve(ClientIpAddress.parseLiteral("10.0.0.7")))
+        assertThatThrownBy(() -> resolver(LOCAL_STUB_RESPONSE_TIMEOUT).resolve(ClientIpAddress.parseLiteral("10.0.0.7")))
                 .isInstanceOf(GeolocationUnavailableException.class);
+        wireMock.verify(0, getRequestedFor(com.github.tomakehurst.wiremock.client.WireMock.anyUrl()));
+    }
+
+    @Test
+    void recordsExactBoundedProviderOutcomeMetrics() {
+        SimpleMeterRegistry successRegistry = new SimpleMeterRegistry();
+        wireMock.stubFor(get(urlEqualTo("/8.8.8.8?fields=success,country_code,message"))
+                .willReturn(aResponse().withStatus(200).withBody("{\"success\":true,\"country_code\":\"PL\"}")));
+        assertThat(resolver(LOCAL_STUB_RESPONSE_TIMEOUT, successRegistry)
+                .resolve(ClientIpAddress.parseLiteral("8.8.8.8"))).isEqualTo(CountryCode.of("PL"));
+        assertProviderMetric(successRegistry, "success", 1.0, 1L);
+
+        wireMock.resetAll();
+        SimpleMeterRegistry rateLimitedRegistry = new SimpleMeterRegistry();
+        wireMock.stubFor(get(urlEqualTo("/8.8.8.8?fields=success,country_code,message"))
+                .willReturn(aResponse().withStatus(429)));
+        assertUnavailable(resolver(LOCAL_STUB_RESPONSE_TIMEOUT, rateLimitedRegistry));
+        assertProviderMetric(rateLimitedRegistry, "rate_limited", 1.0, 1L);
+
+        wireMock.resetAll();
+        SimpleMeterRegistry invalidRegistry = new SimpleMeterRegistry();
+        wireMock.stubFor(get(urlEqualTo("/8.8.8.8?fields=success,country_code,message"))
+                .willReturn(aResponse().withStatus(200).withBody("not-json")));
+        assertUnavailable(resolver(LOCAL_STUB_RESPONSE_TIMEOUT, invalidRegistry));
+        assertProviderMetric(invalidRegistry, "invalid_response", 1.0, 1L);
+
+        wireMock.resetAll();
+        SimpleMeterRegistry providerErrorRegistry = new SimpleMeterRegistry();
+        wireMock.stubFor(get(urlEqualTo("/8.8.8.8?fields=success,country_code,message"))
+                .willReturn(aResponse().withStatus(500)));
+        assertUnavailable(resolver(LOCAL_STUB_RESPONSE_TIMEOUT, providerErrorRegistry));
+        assertProviderMetric(providerErrorRegistry, "provider_error", 1.0, 1L);
+
+        wireMock.resetAll();
+        SimpleMeterRegistry timeoutRegistry = new SimpleMeterRegistry();
+        wireMock.stubFor(get(urlEqualTo("/8.8.8.8?fields=success,country_code,message"))
+                .willReturn(aResponse().withStatus(200).withFixedDelay(250)
+                        .withBody("{\"success\":true,\"country_code\":\"PL\"}")));
+        assertUnavailable(resolver(Duration.ofMillis(100), timeoutRegistry));
+        assertProviderMetric(timeoutRegistry, "timeout", 1.0, 1L);
+
+        wireMock.resetAll();
+        SimpleMeterRegistry nonPublicRegistry = new SimpleMeterRegistry();
+        assertThatThrownBy(() -> resolver(LOCAL_STUB_RESPONSE_TIMEOUT, nonPublicRegistry)
+                .resolve(ClientIpAddress.parseLiteral("10.0.0.7")))
+                .isInstanceOf(GeolocationUnavailableException.class);
+        assertThat(nonPublicRegistry.get("geolocation.resolution")
+                .tags("provider", "ipwhois", "outcome", "non_public_ip").counter().count()).isEqualTo(1.0);
+        assertThat(nonPublicRegistry.get("geolocation.provider")
+                .tags("provider", "ipwhois", "outcome", "non_public_ip").timer().count()).isZero();
         wireMock.verify(0, getRequestedFor(com.github.tomakehurst.wiremock.client.WireMock.anyUrl()));
     }
 
@@ -133,13 +187,13 @@ class IpWhoisGeoLocationResolverTest {
 
         GeolocationProperties properties = new GeolocationProperties(
                 GeolocationProperties.Provider.IPWHOIS,
-                URI.create("http://localhost:" + wireMock.port() + "/"),
+                URI.create("http://127.0.0.1:" + wireMock.port() + "/"),
                 Duration.ofMillis(500), Duration.ofSeconds(1), 16_384, "PL"
         );
         IpWhoisGeoLocationResolver resolver = new IpWhoisGeoLocationResolver(
                 HttpClient.newBuilder().connectTimeout(Duration.ofMillis(500))
                         .followRedirects(HttpClient.Redirect.NEVER).build(),
-                new ObjectMapper(), properties, new PublicIpAddressPolicy());
+                new ObjectMapper(), properties, new PublicIpAddressPolicy(), new CouponServiceMetrics(new SimpleMeterRegistry()));
 
         assertThat(resolver.resolve(ClientIpAddress.parseLiteral("8.8.8.8"))).isEqualTo(CountryCode.of("PL"));
         wireMock.verify(1, getRequestedFor(urlEqualTo("/8.8.8.8?fields=success,country_code,message")));
@@ -154,14 +208,25 @@ class IpWhoisGeoLocationResolverTest {
     }
 
     private IpWhoisGeoLocationResolver resolver(Duration responseTimeout) {
+        return resolver(responseTimeout, new SimpleMeterRegistry());
+    }
+
+    private IpWhoisGeoLocationResolver resolver(Duration responseTimeout, SimpleMeterRegistry registry) {
         GeolocationProperties properties = new GeolocationProperties(
                 GeolocationProperties.Provider.IPWHOIS,
-                URI.create("http://localhost:" + wireMock.port()),
+                URI.create("http://127.0.0.1:" + wireMock.port()),
                 Duration.ofMillis(500), responseTimeout, 16_384, "PL"
         );
         return new IpWhoisGeoLocationResolver(
                 HttpClient.newBuilder().connectTimeout(Duration.ofMillis(500))
                         .followRedirects(HttpClient.Redirect.NEVER).build(),
-                new ObjectMapper(), properties, new PublicIpAddressPolicy());
+                new ObjectMapper(), properties, new PublicIpAddressPolicy(), new CouponServiceMetrics(registry));
+    }
+
+    private void assertProviderMetric(SimpleMeterRegistry registry, String outcome, double counter, long timer) {
+        assertThat(registry.get("geolocation.resolution")
+                .tags("provider", "ipwhois", "outcome", outcome).counter().count()).isEqualTo(counter);
+        assertThat(registry.get("geolocation.provider")
+                .tags("provider", "ipwhois", "outcome", outcome).timer().count()).isEqualTo(timer);
     }
 }

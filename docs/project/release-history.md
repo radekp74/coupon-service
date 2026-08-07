@@ -543,3 +543,7 @@ Stan: `EMP-008 = DONE_AND_VERIFIED`, `Coverage-Evidence = MEASURED_AND_VERIFIED`
 Po `EMP-008 = DONE_AND_VERIFIED` przygotowano i 2026-08-07 formalnie zaakceptowano dokumentacyjny refinement CI/delivery/observability. Audyt potwierdził brak workflow `.github/workflows/ci.yml`, brak Prometheus registry/request-ID runtime, mutable Docker base tags oraz niedeterministyczne metadane source ZIP. Zamrożony kontrakt przewiduje jeden Ubuntu 24.04 GitHub Actions job uruchamiający istniejące `make verify`, pełne action SHA, digest-pinned base images, read-only byte-reproducible export i minimalną obserwowalność zgodną z privacy contract.
 
 Nie uruchomiono GitHub CI ani nie zaimplementowano metryk, workflow, request-ID, digest pinów i nowego packagera. `EMP-010 = READY`, refinement `ACCEPTED`, implementation `NOT_STARTED`, `Implementation-Allowed: YES`; evidence CI/delivery/observability pozostaje `NOT_MEASURED`. Właściciel zaakceptował wszystkie osiem decyzji i scope jest zamrożony.
+
+## EMP-010 implementation candidate — 2026-08-07
+
+Rozpoczęto implementację wyłącznie zaakceptowanego zakresu EMP-010: jeden immutable-SHA GitHub Actions gate, przypięte Docker base digests, deterministyczny tracked-file source ZIP, strict `X-Request-Id`, Logstash JSON oraz sześć rodzin metryk Micrometer/Prometheus. Stan pozostaje `IN_PROGRESS`; brak closeoutu i brak deklaracji measured evidence przed pełnym lokalnym gate, delivery-check i rzeczywistym GitHub Actions run.

@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21-jdk-jammy AS build
+FROM eclipse-temurin:21-jdk-jammy@sha256:55fb9bf738f5d9b4a6c01b39337e3070d3e27370dd3c478fd1d5d3cd2233c6d8 AS build
 
 WORKDIR /workspace
 
@@ -15,7 +15,7 @@ COPY docs/api/openapi.yaml docs/api/openapi.yaml
 RUN --mount=type=cache,target=/root/.m2,sharing=locked \
     ./mvnw -B -ntp -DskipTests package
 
-FROM eclipse-temurin:21-jre-jammy AS runtime
+FROM eclipse-temurin:21-jre-jammy@sha256:3097cbbebb7d490494a98aed2301f284b38f79eba158eef098c6fc8c8af11c23 AS runtime
 
 RUN apt-get update \
     && apt-get install --yes --no-install-recommends ca-certificates curl \

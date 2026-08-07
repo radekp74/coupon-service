@@ -1,6 +1,6 @@
 # EMP-010 — podsumowanie refinementu
 
-EMP-010 ma przenieść zweryfikowany lokalny gate do GitHub Actions, utwardzić źródłowy artefakt dostawy oraz dodać minimalną obserwowalność zapisaną już w EMP-001/006. Zaakceptowany refinement nie zawiera implementacji. EMP-010 jest `READY`, implementation `NOT_STARTED`, `Implementation-Allowed: YES`, a CI/delivery/observability evidence pozostają `NOT_MEASURED`.
+EMP-010 ma przenieść zweryfikowany lokalny gate do GitHub Actions, utwardzić źródłowy artefakt dostawy oraz dodać minimalną obserwowalność zapisaną już w EMP-001/006. Refinement pozostaje zaakceptowany i zamrożony. EMP-010 jest `IN_PROGRESS`, implementation `IN_PROGRESS`, `Implementation-Allowed: YES`, a CI/delivery/observability evidence pozostają `NOT_MEASURED` do zakończenia pełnych gate’ów.
 
 ## Zaakceptowany kontrakt
 
@@ -17,3 +17,7 @@ EMP-010 ma przenieść zweryfikowany lokalny gate do GitHub Actions, utwardzić 
 ## Review
 
 Właściciel Radosław Piątek zaakceptował refinement i wszystkie osiem decyzji 2026-08-07. Stan końcowy checkpointu refinementu: `READY / ACCEPTED / NOT_STARTED / Implementation-Allowed: YES`. Evidence pozostaje uczciwie `NOT_MEASURED`; dopiero osobny checkpoint może dodać workflow, Prometheus, request ID, metryki i delivery implementation.
+
+## Checkpoint implementacyjny
+
+Rozpoczęto implementację wyłącznie zaakceptowanego zakresu: CI, immutable Docker bases, deterministyczny source ZIP, `X-Request-Id`, structured Logstash JSON oraz Prometheus/Micrometer. Closeout i evidence wymagają jeszcze pełnego lokalnego gate, delivery check i rzeczywistego GitHub Actions run.

@@ -8,9 +8,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.radoslawpiatek.couponservice.coupon.domain.Coupon;
 import pl.radoslawpiatek.couponservice.coupon.domain.CouponCode;
+import pl.radoslawpiatek.couponservice.coupon.domain.CouponCodeConflictException;
 import pl.radoslawpiatek.couponservice.coupon.domain.CountryCode;
 import pl.radoslawpiatek.couponservice.coupon.ports.CouponRepository;
 import pl.radoslawpiatek.couponservice.coupon.ports.UuidGenerator;
+import pl.radoslawpiatek.couponservice.observability.CouponServiceMetrics;
+import pl.radoslawpiatek.couponservice.observability.CouponServiceMetrics.CreateOutcome;
 
 /**
  * Transactional implementation of coupon creation.
@@ -24,6 +27,7 @@ public class CreateCouponService implements CreateCouponUseCase {
     private final CouponRepository couponRepository;
     private final UuidGenerator uuidGenerator;
     private final Clock clock;
+    private final CouponServiceMetrics metrics;
 
     /**
      * Creates the use-case implementation with infrastructure ports supplied by Spring.
@@ -31,15 +35,18 @@ public class CreateCouponService implements CreateCouponUseCase {
      * @param couponRepository persistence authority for uniqueness conflicts
      * @param uuidGenerator source of identifiers for new coupons
      * @param clock source of the persisted UTC creation time
+     * @param metrics low-cardinality business-outcome metrics
      */
     public CreateCouponService(
             CouponRepository couponRepository,
             UuidGenerator uuidGenerator,
-            Clock clock
+            Clock clock,
+            CouponServiceMetrics metrics
     ) {
         this.couponRepository = Objects.requireNonNull(couponRepository);
         this.uuidGenerator = Objects.requireNonNull(uuidGenerator);
         this.clock = Objects.requireNonNull(clock);
+        this.metrics = Objects.requireNonNull(metrics);
     }
 
     /** {@inheritDoc} */
@@ -56,7 +63,13 @@ public class CreateCouponService implements CreateCouponUseCase {
                 CountryCode.of(command.countryCode())
         );
 
-        couponRepository.insert(coupon);
-        return coupon;
+        try {
+            couponRepository.insert(coupon);
+            metrics.recordCreate(CreateOutcome.SUCCESS);
+            return coupon;
+        } catch (CouponCodeConflictException exception) {
+            metrics.recordCreate(CreateOutcome.CONFLICT);
+            throw exception;
+        }
     }
 }

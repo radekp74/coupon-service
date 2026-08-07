@@ -172,9 +172,14 @@ def validate_java_contract(errors: List[str]) -> None:
 
 def validate_container_contract(errors: List[str]) -> None:
     dockerfile = read(ROOT / "Dockerfile")
+    for pattern in (
+        r"^FROM eclipse-temurin:21-jdk-jammy(?:@sha256:[0-9a-f]{64})? AS build$",
+        r"^FROM eclipse-temurin:21-jre-jammy(?:@sha256:[0-9a-f]{64})? AS runtime$",
+    ):
+        if not re.search(pattern, dockerfile, re.MULTILINE):
+            errors.append(f"Dockerfile missing compatible base-image contract: {pattern}")
+
     for token in (
-        "FROM eclipse-temurin:21-jdk-jammy AS build",
-        "FROM eclipse-temurin:21-jre-jammy AS runtime",
         "--mount=type=cache,target=/root/.m2,sharing=locked",
         "./mvnw -B -ntp -DskipTests package",
         "USER 10001:10001",
