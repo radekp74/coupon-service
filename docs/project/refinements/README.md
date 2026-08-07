@@ -39,6 +39,9 @@ Dokument ze stanem `DRAFT` nie zezwala na implementację.
 - [EMP-010 — CI, delivery hardening i obserwowalność](EMP-010.md) — `ACCEPTED`, status `READY`
 - [EMP-010 — podsumowanie](EMP-010-summary.md)
 - [EMP-010 — review checklist](EMP-010-review-checklist.md) — `PASS`
+- [EMP-011 — finalny review, README i closeout](EMP-011.md) — `DRAFT`, status `REFINEMENT`
+- [EMP-011 — podsumowanie](EMP-011-summary.md)
+- [EMP-011 — review checklist](EMP-011-review-checklist.md) — `PENDING_OWNER_ACCEPTANCE`
 
 ## Pokrycie zadań
 

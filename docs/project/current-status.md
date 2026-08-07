@@ -2,8 +2,8 @@
 
 - **Data:** 2026-08-07
 - **Termin:** 2026-08-10, koniec dnia
-- **Faza:** `EMP011_REFINEMENT`
-- **Active task:** `EMP-011 — refinement finalnego review, README i closeout`
+- **Faza:** `EMP011_READY`
+- **Active task:** `EMP-011 — final review, README i closeout`
 - **EMP-004 refinement:** `ACCEPTED`
 - **Implementation EMP-004:** `DONE_AND_VERIFIED`; verification remediation `COMPLETED`
 - **Implementation allowed:** `YES` dla `EMP-004` na podstawie accepted własnego refinementu
@@ -16,6 +16,7 @@
 - **EMP-008:** `DONE_AND_VERIFIED`; refinement `ACCEPTED`, JaCoCo implementation `DONE_AND_VERIFIED`, coverage evidence `MEASURED_AND_VERIFIED`, implementation allowed `YES`
 - **EMP-009:** `DONE_AND_VERIFIED`; refinement `ACCEPTED`, evidence `COMPLETE`, implementation `DONE_AND_VERIFIED`, implementation allowed `YES`
 - **EMP-010:** `DONE_AND_VERIFIED`; refinement `ACCEPTED`, implementation `DONE_AND_VERIFIED`, `Implementation-Allowed: YES`, CI/delivery/observability evidence `MEASURED_AND_VERIFIED`, finalny verified SHA `35fa7c7e07ac341a410fad38c8ced030ac30ed25`
+- **EMP-011:** `READY`; refinement `ACCEPTED`, implementation `NOT_STARTED`, `Implementation-Allowed: YES`, final review/public repo evidence `NOT_MEASURED`
 - **Kod aplikacji:** create coupon, Client IP/GeoIP i transactional redemption są zaimplementowane oraz lokalnie zweryfikowane
 - **OpenAPI/Swagger UI:** canonical `/openapi.yaml` zawiera `createCoupon` i `redeemCoupon`; Swagger UI używa tej specyfikacji
 - **Javadoc/DocLint policy:** `ACTIVE_AND_VERIFIED`

@@ -63,3 +63,11 @@
 
 | D-059 | 2026-08-07 | ACCEPTED | Observability scope EMP-010 nie obejmuje Grafany, OpenTelemetry, alertów, SLO ani centralnego log stacku | minimalny zakres rekrutacyjny pozostaje proporcjonalny i nie tworzy dodatkowej infrastruktury |
 | D-060 | 2026-08-07 | ACCEPTED | Flyway/PostgreSQL i Mockito/ByteBuddy warnings są odroczone do EMP-011, o ile nie staną się realnym blockerem CI | brak scope creep bez potwierdzonego wpływu na canonical gate |
+| D-061 | 2026-08-07 | ACCEPTED | EMP-011 jest final review bez zmian funkcjonalnych; blocker wymaga amendmentu | nie ukrywamy zmiany kontraktu jako kosmetycznego closeoutu |
+| D-062 | 2026-08-07 | ACCEPTED | README jest recruiter-first i opisuje finalny stan zamiast historii checkpointów | pierwsze minuty review mają pokazać rozwiązanie, uruchomienie, evidence i trade-offy |
+| D-063 | 2026-08-07 | ACCEPTED | Korygowane są tylko bieżące stale documents, a historia checkpointów pozostaje historyczna | zachowanie audytowalności bez sprzeczności w dokumentach opisujących stan obecny |
+| D-064 | 2026-08-07 | ACCEPTED | Zielone warningi Flyway/Mockito/@MockBean nie powodują dependency churn w EMP-011 | stabilność finalnego kandydata ma pierwszeństwo przed kosmetycznym maintenance |
+| D-065 | 2026-08-07 | ACCEPTED | Risk register jest reconciliowany wyłącznie na podstawie istniejącego evidence | status MITIGATED nie może wynikać z samego planu ani finalnej narracji |
+| D-066 | 2026-08-07 | ACCEPTED | OpenAPI, API, DB i kod produkcyjny są zamrożone w EMP-011 | final review nie rozszerza rozwiązania po zielonym EMP-010 |
+| D-067 | 2026-08-07 | ACCEPTED | Final closeout wymaga local verify, delivery, source export i zielonego GitHub CI finalnego SHA | DONE_AND_VERIFIED pozostaje evidence-based |
+| D-068 | 2026-08-07 | ACCEPTED | Branch protection, scanners, SBOM/signing i deployment pozostają poza EMP-011 | brak overengineeringu w zadaniu rekrutacyjnym |

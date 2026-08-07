@@ -15,7 +15,7 @@ Ten plik jest jedynym źródłem prawdy dla identyfikatorów, priorytetów i sta
 | EMP-008 | EMP-001 | P0 | DONE_AND_VERIFIED | EMP-008 | Coverage, JaCoCo, test completeness i quality evidence | JaCoCo `verify` gate + measured report checker + manual review + full local gate |
 | EMP-009 | EMP-001 | P0 | DONE_AND_VERIFIED | EMP-009 | Deterministyczne testy współbieżności — evidence `COMPLETE` | `make emp009-check` + pełny Maven/Testcontainers/Docker gate |
 | EMP-010 | EMP-001 | P1 | DONE_AND_VERIFIED | EMP-010 | CI, delivery hardening i podstawowe metryki | accepted EMP-010 refinement + local gate + green CI #2 on `35fa7c7` + reproducible delivery gate |
-| EMP-011 | EMP-001 | P0 | PLANNED | EMP-001 | Finalny review, README i closeout | final `make verify` + public repo |
+| EMP-011 | EMP-001 | P0 | READY | EMP-011 | Finalny review, README i closeout | accepted EMP-011 refinement + final `make verify` + delivery + green CI + public repo |
 
 ## Reguły przejścia
 
