@@ -2,7 +2,14 @@
 
 ## Stan implementacji
 
-`POST /api/v1/coupons` jest `DONE_AND_VERIFIED`. Jego canonical machine-readable schema znajduje się w [openapi.yaml](openapi.yaml) i jest udostępniana testerom jako `/openapi.yaml` oraz przez Swagger UI pod `/swagger-ui`. Endpoint wykorzystania kuponu pozostaje niezaimplementowany.
+Oba endpointy zadania są `DONE_AND_VERIFIED` i znajdują się w canonical machine-readable spec [openapi.yaml](openapi.yaml), serwowanej jako `/openapi.yaml` oraz przez Swagger UI pod `/swagger-ui`:
+
+```text
+POST /api/v1/coupons
+POST /api/v1/coupons/{code}/redemptions
+```
+
+`docs/api/openapi.yaml` jest źródłem prawdy dla requestów, odpowiedzi, statusów, schema i przykładów. Ten dokument opisuje semantykę i najważniejsze reguły integracyjne.
 
 ## Zasady wspólne
 
@@ -11,8 +18,9 @@
 - czas: ISO-8601 UTC;
 - identyfikatory: UUID;
 - błędy: `application/problem+json` z rozszerzeniem `code`;
+- `X-Request-Id`: bezpieczny pojedynczy token wejściowy jest zachowywany, w przeciwnym razie serwer generuje UUID; rzeczywista wartość jest zwracana w odpowiedzi;
 - uwierzytelnianie: poza zakresem zgodnie z treścią zadania;
-- tekst `detail` nie jest kontraktem integracyjnym; kontraktem jest `status` i `code`.
+- tekst `detail` nie jest kontraktem integracyjnym; klient integruje się przez HTTP status i `code`.
 
 ## Utworzenie kuponu
 
@@ -33,7 +41,7 @@ Request:
 
 Walidacja:
 
-- `code`: 3–64, `[A-Za-z0-9_-]`, trimowany;
+- `code`: 3–64, `[A-Za-z0-9_-]`, trimowany; unikalność jest case-insensitive przez canonical `normalized_code`;
 - `maxUses`: 1–1 000 000;
 - `countryCode`: istniejący ISO 3166-1 alpha-2, normalizowany do uppercase.
 
@@ -54,9 +62,7 @@ Sukces:
 }
 ```
 
-## Wykorzystanie kuponu — planowany kontrakt zaakceptowanego EMP-004
-
-Endpoint nie istnieje jeszcze w runtime i nie jest obecny w canonical OpenAPI. Poniższy kontrakt jest zaakceptowany dla przyszłej implementacji EMP-004.
+## Wykorzystanie kuponu
 
 ```http
 POST /api/v1/coupons/{code}/redemptions
@@ -71,11 +77,14 @@ Request:
 }
 ```
 
-Walidacja:
+Walidacja i semantyka:
 
-- `code` w ścieżce podlega tej samej canonicalizacji co przy tworzeniu;
-- `userId`: opaque, case-sensitive, dokładnie 1–128 widocznych znaków ASCII U+0021–U+007E, regex `^[!-~]{1,128}$`, bez trimowania i normalizacji;
-- IP pochodzi z połączenia lub zaufanego proxy, nie z body.
+- `code` podlega tej samej canonicalizacji co przy tworzeniu;
+- `userId`: opaque, case-sensitive, 1–128 widocznych znaków ASCII U+0021–U+007E, regex `^[!-~]{1,128}$`, bez trimowania i normalizacji;
+- Client IP pochodzi z połączenia albo jawnie zaufanego proxy, nigdy z body;
+- GeoIP jest wykonywane przed krótką transakcją PostgreSQL;
+- pod `SELECT ... FOR UPDATE` obowiązuje kolejność: country → already redeemed → exhausted;
+- insert redemption i increment `current_uses` są atomowe.
 
 Sukces:
 
@@ -102,7 +111,7 @@ Przykład:
   "type": "urn:problem:coupon-exhausted",
   "title": "Coupon usage limit reached",
   "status": 409,
-  "detail": "Coupon WIOSNA has reached its usage limit.",
+  "detail": "The coupon usage limit has been reached.",
   "instance": "/api/v1/coupons/WIOSNA/redemptions",
   "code": "COUPON_EXHAUSTED"
 }
@@ -124,17 +133,16 @@ Przykład:
 ## Reguły bezpieczeństwa odpowiedzi
 
 - brak stack trace i nazw tabel w odpowiedzi;
-- brak surowego IP;
-- brak treści odpowiedzi dostawcy GeoIP;
-- request ID może zostać zwrócony nagłówkiem `X-Request-Id`;
-- nieznane błędy są logowane z correlation ID, ale odpowiedź pozostaje ogólna.
+- brak surowego IP i kraju rozpoznanego przez GeoIP w payloadzie błędu;
+- brak treści odpowiedzi providera GeoIP;
+- odpowiedź zawiera `X-Request-Id` do korelacji;
+- nieznane błędy są logowane z correlation ID, ale publiczny Problem Details pozostaje ogólny.
 
-## Elementy poza MVP
+## Elementy poza zakresem
 
-- GET kuponu;
-- lista kuponów;
+- GET/lista kuponów;
 - update/delete;
 - data ważności;
 - auth i role;
-- idempotency key;
+- `Idempotency-Key`;
 - bulk redemption.

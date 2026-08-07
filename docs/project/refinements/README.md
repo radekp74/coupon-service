@@ -36,13 +36,13 @@ Dokument ze stanem `DRAFT` nie zezwala na implementację.
 - [EMP-009 — deterministyczne concurrency evidence](EMP-009.md) — `ACCEPTED`, implementation `DONE_AND_VERIFIED`
 - [EMP-009 — podsumowanie](EMP-009-summary.md)
 - [EMP-009 — review checklist](EMP-009-review-checklist.md) — `PASS`
-- [EMP-010 — CI, delivery hardening i obserwowalność](EMP-010.md) — `ACCEPTED`, status `READY`
+- [EMP-010 — CI, delivery hardening i obserwowalność](EMP-010.md) — `ACCEPTED`, `DONE_AND_VERIFIED`
 - [EMP-010 — podsumowanie](EMP-010-summary.md)
 - [EMP-010 — review checklist](EMP-010-review-checklist.md) — `PASS`
-- [EMP-011 — finalny review, README i closeout](EMP-011.md) — `DRAFT`, status `REFINEMENT`
+- [EMP-011 — finalny review, README i closeout](EMP-011.md) — `ACCEPTED`, status `IN_PROGRESS`
 - [EMP-011 — podsumowanie](EMP-011-summary.md)
-- [EMP-011 — review checklist](EMP-011-review-checklist.md) — `PENDING_OWNER_ACCEPTANCE`
+- [EMP-011 — review checklist](EMP-011-review-checklist.md) — `PASS`
 
 ## Pokrycie zadań
 
-`EMP-001` zamraża kontrakt całego MVP i zawiera amendment UserId dla EMP-004. EMP-003 i EMP-004 są zweryfikowanymi właścicielami implementacji create/redemption. EMP-009 sformalizował concurrency evidence; EMP-008 jest zakończonym i zweryfikowanym quality gate z JaCoCo oraz measured evidence. EMP-010 ma własny zaakceptowany refinement dla CI/delivery/observability i zezwala na implementację wyłącznie w zamrożonym zakresie; evidence pozostaje `NOT_MEASURED`. Zasady amendmentu opisuje [proces refinementu](../refinement-process.md).
+`EMP-001` zamraża kontrakt całego MVP i zawiera amendment UserId dla EMP-004. EMP-003 i EMP-004 są zweryfikowanymi właścicielami implementacji create/redemption. EMP-009 sformalizował concurrency evidence; EMP-008 jest zakończonym i zweryfikowanym quality gate z JaCoCo oraz measured evidence. EMP-010 jest `DONE_AND_VERIFIED` z measured CI/delivery/observability evidence. EMP-011 ma zaakceptowany, zamrożony refinement i wykonuje finalny review bez zmian funkcjonalnych. Zasady amendmentu opisuje [proces refinementu](../refinement-process.md).

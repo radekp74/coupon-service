@@ -57,18 +57,28 @@ def validate_metadata(text: str, errors):
             if metadata(text, key) != value:
                 errors.append("DRAFT EMP-011 requires %s=%s" % (key, value))
     elif state == "ACCEPTED":
-        expected = {
-            "Status": "READY",
-            "Implementation": "NOT_STARTED",
+        expected_fixed = {
             "Implementation-Allowed": "YES",
             "Scope-Frozen": "YES",
             "Zaakceptował": "Radosław Piątek",
             "Data-Akceptacji": "2026-08-07",
-            "Review-Result": "ACCEPTED",
         }
-        for key, value in expected.items():
+        for key, value in expected_fixed.items():
             if metadata(text, key) != value:
                 errors.append("ACCEPTED EMP-011 requires %s=%s" % (key, value))
+        lifecycle = {
+            "READY": ("NOT_STARTED", "ACCEPTED"),
+            "IN_PROGRESS": ("IN_PROGRESS", "IN_PROGRESS"),
+            "DONE_AND_VERIFIED": ("DONE_AND_VERIFIED", "PASS"),
+        }
+        if status not in lifecycle:
+            errors.append("ACCEPTED EMP-011 has invalid lifecycle status")
+        else:
+            expected_impl, expected_review = lifecycle[status]
+            if implementation != expected_impl:
+                errors.append("ACCEPTED EMP-011 status %s requires Implementation=%s" % (status, expected_impl))
+            if metadata(text, "Review-Result") != expected_review:
+                errors.append("ACCEPTED EMP-011 status %s requires Review-Result=%s" % (status, expected_review))
 
 
 def validate_content(text: str, errors):
@@ -102,7 +112,8 @@ def validate_governance(text: str, errors):
         require(status_doc, "refinement `DRAFT`", errors, "current-status")
         require(status_doc, "Implementation-Allowed: NO", errors, "current-status")
     else:
-        require(backlog, "| EMP-011 | EMP-001 | P0 | READY | EMP-011 |", errors, "backlog")
+        current_status = metadata(text, "Status")
+        require(backlog, "| EMP-011 | EMP-001 | P0 | %s | EMP-011 |" % current_status, errors, "backlog")
         require(status_doc, "refinement `ACCEPTED`", errors, "current-status")
         require(status_doc, "Implementation-Allowed: YES", errors, "current-status")
 
@@ -120,8 +131,10 @@ def validate_supporting_docs(text: str, errors):
             errors.append("Missing %s" % path.relative_to(ROOT))
     if SUMMARY.is_file():
         summary = read(SUMMARY)
-        for token in ["README", "api-contract.md", "112 unit + 23 integration", "NOT_STARTED"]:
+        for token in ["README", "api-contract.md", "112 unit + 23 integration"]:
             require(summary, token, errors, "EMP-011 summary")
+        if not any(token in summary for token in ["NOT_STARTED", "IN_PROGRESS", "DONE_AND_VERIFIED"]):
+            errors.append("EMP-011 summary missing lifecycle state")
     if CHECKLIST.is_file():
         checklist = read(CHECKLIST)
         for token in ["pre-implementation boundary", "owner decisions", "CODEX_PROMPT"]:

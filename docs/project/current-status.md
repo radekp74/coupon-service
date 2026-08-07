@@ -2,7 +2,7 @@
 
 - **Data:** 2026-08-07
 - **Termin:** 2026-08-10, koniec dnia
-- **Faza:** `EMP011_READY`
+- **Faza:** `EMP011_FINAL_REVIEW`
 - **Active task:** `EMP-011 — final review, README i closeout`
 - **EMP-004 refinement:** `ACCEPTED`
 - **Implementation EMP-004:** `DONE_AND_VERIFIED`; verification remediation `COMPLETED`
@@ -16,7 +16,7 @@
 - **EMP-008:** `DONE_AND_VERIFIED`; refinement `ACCEPTED`, JaCoCo implementation `DONE_AND_VERIFIED`, coverage evidence `MEASURED_AND_VERIFIED`, implementation allowed `YES`
 - **EMP-009:** `DONE_AND_VERIFIED`; refinement `ACCEPTED`, evidence `COMPLETE`, implementation `DONE_AND_VERIFIED`, implementation allowed `YES`
 - **EMP-010:** `DONE_AND_VERIFIED`; refinement `ACCEPTED`, implementation `DONE_AND_VERIFIED`, `Implementation-Allowed: YES`, CI/delivery/observability evidence `MEASURED_AND_VERIFIED`, finalny verified SHA `35fa7c7e07ac341a410fad38c8ced030ac30ed25`
-- **EMP-011:** `READY`; refinement `ACCEPTED`, implementation `NOT_STARTED`, `Implementation-Allowed: YES`, final review/public repo evidence `NOT_MEASURED`
+- **EMP-011:** `IN_PROGRESS`; refinement `ACCEPTED`, implementation `IN_PROGRESS`, `Implementation-Allowed: YES`, final review evidence `MEASURED`, public repo evidence `NOT_MEASURED`
 - **Kod aplikacji:** create coupon, Client IP/GeoIP i transactional redemption są zaimplementowane oraz lokalnie zweryfikowane
 - **OpenAPI/Swagger UI:** canonical `/openapi.yaml` zawiera `createCoupon` i `redeemCoupon`; Swagger UI używa tej specyfikacji
 - **Javadoc/DocLint policy:** `ACTIVE_AND_VERIFIED`
@@ -61,8 +61,10 @@ Implementacja już dostarczyła:
 
 ## Następny krok
 
-EMP-008 jest `DONE_AND_VERIFIED`. Pierwszy raport JaCoCo wynosił 89.23%/70.26% globalnie i 88.13%/70.52% dla critical aggregate. Po report-driven remediation finalny pełny gate potwierdził 96.07% LINE / 86.27% BRANCH globalnie oraz 96.46% / 88.81% dla critical aggregate, bez exclusions. `make verify` przeszedł z 106 unit + 22 integration tests, report checkerem i jego negatywnymi self-testami oraz Docker smoke na dynamicznym `127.0.0.1:55008`. DocLint ma 0 errors i finalny jawnie zaakceptowany budget 5 technicznych/małowartościowych warnings.
+Dokończyć EMP-011 w zamrożonym zakresie: finalny checker, pełny `make verify`, commit, post-commit `make delivery-check`, deterministyczny source export, push SSH i zielony GitHub Actions dla finalnego SHA. Dopiero po tym EMP-011 może przejść do `DONE_AND_VERIFIED`.
 
 ## Blokery
 
-Brak blokera technicznego. EMP-008, EMP-009 i EMP-010 są `DONE_AND_VERIFIED`. Finalny EMP-010 SHA `35fa7c7e07ac341a410fad38c8ced030ac30ed25` przeszedł lokalny canonical gate, reproducible delivery i zielony GitHub Actions `CI #2`. Następny checkpoint to EMP-011 — finalny review, README i repo closeout.
+Brak blokera technicznego. EMP-010 jest `DONE_AND_VERIFIED`; EMP-011 nie zmienia kodu produkcyjnego ani publicznego API.
+
+- **Evidence EMP-011:** `LOCAL_EMP011_GATE_PASS`; finalny GitHub Actions pozostaje wymagany do closeoutu.

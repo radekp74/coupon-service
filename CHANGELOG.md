@@ -105,3 +105,11 @@ Wszystkie istotne zmiany projektu są rejestrowane w tym pliku. Format jest insp
 - obecność zaakceptowanego refinementu dla zadania `READY`;
 - spójność linków lokalnych i indeksu dokumentacji;
 - brak deklarowania kodu aplikacji jako ukończonego.
+
+## 2026-08-07 — EMP-011 final review
+
+- przebudowano README na recruiter-first final state;
+- usunięto stale-current-state z API/architecture/testing/refinement registry;
+- zreconciliowano risk register z istniejącym evidence;
+- dodano finalny checker EMP-011 do canonical `make verify`;
+- bez zmian w kodzie produkcyjnym, POM, migracjach i canonical OpenAPI.

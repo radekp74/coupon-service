@@ -21,8 +21,8 @@
 | skalowalność | stateless app + DB coordination | EMP-004/010 | architecture + concurrency test |
 | czytelność i jakość | modularny monolit, quality gates | wszystkie | review + static gates |
 | testy | unit, integration, API, concurrency | EMP-008/009 | CI report |
-| README z uzasadnieniem | źródłowa dokumentacja i ADR | EMP-011 | final review |
-| publiczne repozytorium | czysty source export, bez sekretów | EMP-010/011 | repository URL + package gate |
+| README z uzasadnieniem | recruiter-first README + ADR + jawne trade-offy/ograniczenia | EMP-011 | final checker + canonical gate |
+| publiczne repozytorium | clean Git history + CI + deterministyczny source export bez sekretów | EMP-010/011 | green GitHub Actions + delivery-check + package hygiene |
 
 ## Wymagania dodane świadomie
 

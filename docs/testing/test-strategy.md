@@ -118,7 +118,7 @@ EMP-009 jest `DONE_AND_VERIFIED` i nie stworzył nowych scenariuszy biznesowych.
 
 ## Pokrycie — verified EMP-008
 
-JaCoCo `0.8.15` jest obowiązkową częścią Maven `verify`. Gate egzekwuje globalnie `LINE >= 80%` i `BRANCH >= 70%` oraz jeden critical aggregate `LINE >= 75%` i `BRANCH >= 65%`. Finalny measured report: global 464/483 LINE = 96.07% i 264/306 BRANCH = 86.27%; critical 382/396 LINE = 96.46% i 238/268 BRANCH = 88.81%. Coverage zawiera Surefire i Failsafe; 106 unit + 22 integration tests przeszły bez failures/errors.
+JaCoCo `0.8.15` jest obowiązkową częścią Maven `verify`. Gate egzekwuje globalnie `LINE >= 80%` i `BRANCH >= 70%` oraz jeden critical aggregate `LINE >= 75%` i `BRANCH >= 65%`. Finalny measured report po EMP-010: global 655/684 LINE = 95.76% i 292/338 BRANCH = 86.39%; critical 462/486 LINE = 95.06% i 247/280 BRANCH = 88.21%. Coverage zawiera Surefire i Failsafe; 112 unit + 23 integration tests przeszły bez failures/errors/skips.
 
 `verify` generuje `target/site/jacoco/index.html` i `target/site/jacoco/jacoco.xml`, a `scripts/check_emp008.py --report ... --self-test` niezależnie przelicza progi i testuje fail-closed. Raport nie trafia do Git ani exportu. Nie ma exclusions; report-driven remediation dodało tylko wartościowe security/domain tests wskazane przez manualny missed-branch review.
 
@@ -169,9 +169,9 @@ Wymagane asercje bezpieczeństwa:
 
 Refinement wymaga snapshot lookup przed GeoIP, osobnego proxied transaction bean, `READ COMMITTED`, `SELECT ... FOR UPDATE`, named unique constraint mapping oraz conditional increment. Canonical OpenAPI i Swagger UI są rozszerzone razem z endpointem.
 
-`UserId` będzie testowany jako opaque i case-sensitive `^[!-~]{1,128}$`, bez trimowania i normalizacji. Testy integracyjne muszą potwierdzić zgodność Bean Validation, PostgreSQL `CHECK` i OpenAPI; ta migracja nie należy do dokumentacyjnego checkpointu.
+`UserId` jest testowany jako opaque i case-sensitive `^[!-~]{1,128}$`, bez trimowania i normalizacji. Bean Validation, PostgreSQL V2 `CHECK`, OpenAPI i testy egzekwują ten sam kontrakt.
 
-Nowe wymagane scenariusze po akceptacji:
+Zweryfikowane scenariusze obejmują:
 
 - 404 nie wywołuje GeoIP;
 - GeoIP failure i wrong country nie rozpoczynają transakcji;
@@ -185,9 +185,9 @@ Nowe wymagane scenariusze po akceptacji:
 - wszystkie testy używają PostgreSQL i deterministycznego GeoIP stubu, bez `Thread.sleep`.
 
 
-## EMP-010 — zaakceptowany plan CI, delivery i obserwowalności
+## EMP-010 — zweryfikowane CI, delivery i obserwowalność
 
-Właściciel zaakceptował refinement 2026-08-07. Poniższy plan jest zamrożonym kontraktem przyszłej implementacji; nie stanowi jeszcze measured evidence.
+EMP-010 jest `DONE_AND_VERIFIED`. Ten sam canonical gate działa lokalnie i w GitHub Actions; finalny implementation SHA `35fa7c7e07ac341a410fad38c8ced030ac30ed25` ma zielone CI, a closeout SHA `057614309c24c38101877d68d914b8ce3aff8de5` również przeszedł CI.
 
 - request ID: valid safe incoming value, invalid/multiple fallback UUID, response header, MDC cleanup/no leakage;
 - metrics: `SimpleMeterRegistry` dla exact meter names/tag vocabularies; bez IP, userId, coupon code, request ID i country labels;
@@ -197,5 +197,5 @@ Właściciel zaakceptował refinement 2026-08-07. Poniższy plan jest zamrożony
 - OpenAPI: response `X-Request-Id` jest opisany dla publicznych odpowiedzi;
 - Docker smoke: dynamiczny loopback + health/OpenAPI/Swagger + Prometheus/request ID/JSON logging;
 - CI: `DOCKER=docker make verify` na Ubuntu 24.04, minimal permissions i full action SHA;
-- delivery: dwa eksporty tego samego clean commita mają identyczny SHA-256, a stale checksum lub prohibited file powoduje failure;
+- delivery: dwa eksporty tego samego clean commita dały byte-for-byte identyczny SHA-256, a stale checksum i prohibited file failują zamknięcie;
 - brak publicznej sieci w testach, brak H2, brak `Thread.sleep`, brak publish/deploy side effects.

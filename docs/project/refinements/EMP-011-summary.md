@@ -23,4 +23,9 @@ Closeout ma wymagać `make verify`, czystego committed tree, `make delivery-chec
 
 ## Stan
 
-`READY / ACCEPTED / NOT_STARTED / Implementation-Allowed: YES`. Właściciel zaakceptował wszystkie osiem decyzji 2026-08-07; scope jest zamrożony przed implementacją finalnego review.
+`IN_PROGRESS / ACCEPTED / IN_PROGRESS / Implementation-Allowed: YES`. Final review usuwa bieżące niespójności, dodaje finalny checker i pozostawia kod produkcyjny/API zamrożone; measured local/CI evidence zostanie zapisane po wykonaniu gate.
+
+
+## Local evidence po implementacji
+
+Pełny canonical `make verify` przeszedł na kandydacie EMP-011. Final review evidence jest `MEASURED`; public repo evidence pozostaje `NOT_MEASURED` do czasu zielonego GitHub Actions dla commita implementacyjnego.

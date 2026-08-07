@@ -7,7 +7,7 @@
 | R-003 | MEDIUM | OPEN | hot coupon powoduje kontencję | krótka transakcja, brak calli sieciowych pod lockiem | timing test / review |
 | R-004 | HIGH | MITIGATED | GeoIP timeout, limit lub awaria | provider port, HTTPS, 500 ms connect, 1 s response, brak retry, 503 | EMP-006 WireMock: timeout/status/success=false/body limit |
 | R-005 | HIGH | MITIGATED | spoofing `Forwarded` / `X-Forwarded-For` | direct default, CIDR trust, right-to-left chain, malformed header fail-closed | EMP-006 resolver: direct spoofing, field-lines, precedence i trusted chain |
-| R-006 | HIGH | OPEN | H2 ukrywa różnice PostgreSQL | wyłącznie Testcontainers PostgreSQL | EMP-008 |
+| R-006 | HIGH | MITIGATED | H2 ukrywa różnice PostgreSQL | wyłącznie Testcontainers PostgreSQL | EMP-008 |
 | R-007 | HIGH | MITIGATED | case-insensitive duplikat w race condition | canonical field + unique constraint + exact-count concurrency test | EMP-003: 3 × 24 prób, każdorazowo 1 sukces, 23 konflikty, 1 rekord |
 | R-008 | MEDIUM | MITIGATED | governance większe niż samo zadanie | jeden refinement MVP i ograniczony zestaw dokumentów | docs-check PASS |
 | R-009 | MEDIUM | OPEN | timeout klienta po commit prowadzi do retry | naturalny unique user conflict i stabilny error code | EMP-004/007; EMP-005 jest scalone z EMP-004 |
@@ -15,30 +15,30 @@
 | R-011 | HIGH | MITIGATED | utrwalanie lub logowanie IP zwiększa ryzyko prywatności | memory-only raw IP, brak hash/storage, redaction i provider data minimization | EMP-006 source/privacy review + testy wyjątków bez IP |
 | R-012 | MEDIUM | OPEN | darmowy provider ma limit i brak SLA | port, external HTTPS config, jawny limit, brak deklaracji production readiness | EMP-006/011 |
 | R-013 | MEDIUM | MITIGATED | flaky concurrency test | barrier start, bounded executor, exact assertions, brak sleep-based sync | EMP-004: 3 × 100/10, same-user i last-slot na PostgreSQL Testcontainers |
-| R-014 | MEDIUM | OPEN | nadmierne użycie AI bez zrozumienia | małe checkpointy, ADR-y, review każdej decyzji | final technical review |
+| R-014 | MEDIUM | MITIGATED | nadmierne użycie AI bez zrozumienia | małe checkpointy, ADR-y, review każdej decyzji | final technical review |
 | R-015 | HIGH | MITIGATED | lokalny GeoIP stub zostaje przypadkowo aktywowany w produkcji | bean/profile guard + startup failure poza `local`/`test` + configuration test | EMP-006 profile startup tests |
 | R-016 | HIGH | MITIGATED | OpenAPI i runtime API rozchodzą się | jeden canonical YAML pakowany do artefaktu + checker + HTTP test | EMP-007 |
-| R-017 | MEDIUM | OPEN | mechaniczne komentarze obniżają czytelność i szybko się dezaktualizują | Javadoc tylko dla kontraktów i nieoczywistych decyzji + DocLint + review | EMP-007/011 |
+| R-017 | MEDIUM | MITIGATED | mechaniczne komentarze obniżają czytelność i szybko się dezaktualizują | Javadoc tylko dla kontraktów i nieoczywistych decyzji + DocLint + review | EMP-007/011 |
 
 | R-018 | HIGH | MITIGATED | parser IP wykonuje DNS lub akceptuje hostname | strict literal parser, brak `getByName` na niezweryfikowanym tekście, testy hostname/zone ID | EMP-006 literal parser tests |
 | R-019 | HIGH | MITIGATED | prywatny lub specjalny adres jest wysyłany do publicznego GeoIP | IANA special-purpose policy przed adapterem HTTP | EMP-006 table-driven special-purpose tests |
 | R-020 | MEDIUM | MITIGATED | długi łańcuch proxy powoduje koszt CPU lub niejednoznaczność | 4096 znaków, maks. 20 hopów, fail-closed | EMP-006 header boundary tests |
 | R-021 | HIGH | MITIGATED | wielokrotne field-lines lub redirect/body dostawcy omijają granicę zaufania | fail-closed, redirect disabled, 16 KiB bounded read, testy WireMock | EMP-006 field-line, redirect exactly-one-request i body boundary tests |
 
-| R-022 | HIGH | OPEN | GeoIP lub Client IP zostaje omyłkowo wykonane pod row lockiem | osobny non-transactional orchestrator i osobny proxied transaction bean | EMP-004 transaction boundary tests/review |
-| R-023 | HIGH | OPEN | błędna kolejność already/exhausted/country daje niestabilny kontrakt | zamrożona precedence i kombinacyjne testy API | EMP-004 |
+| R-022 | HIGH | MITIGATED | GeoIP lub Client IP zostaje omyłkowo wykonane pod row lockiem | osobny non-transactional orchestrator i osobny proxied transaction bean | EMP-004 transaction boundary tests/review |
+| R-023 | HIGH | MITIGATED | błędna kolejność already/exhausted/country daje niestabilny kontrakt | zamrożona precedence i kombinacyjne testy API | EMP-004 |
 | R-024 | MEDIUM | OPEN | client-asserted userId może zostać podszyty bez auth | jawne ograniczenie zadania, bez deklaracji prawdziwej tożsamości | README/EMP-011 |
-| R-025 | HIGH | OPEN | insert redemption commitnie się bez incrementu albo odwrotnie | jedna transakcja, conditional update i fault-injection rollback tests | EMP-004 |
+| R-025 | HIGH | MITIGATED | insert redemption commitnie się bez incrementu albo odwrotnie | jedna transakcja, conditional update i fault-injection rollback tests | EMP-004 |
 | R-026 | MEDIUM | OPEN | retry po utracie 201 jest mylony z nowym użyciem | stabilny 409 `COUPON_ALREADY_REDEEMED`, jawny brak idempotency key | EMP-004/011 |
-| R-027 | MEDIUM | OPEN | kontrakt UserId rozchodzi się między EMP-001, aplikacją i V1 | zaakceptowany amendment EMP-001 zamraża `^[!-~]{1,128}$` bez trimowania/normalizacji; implementacja EMP-004 musi dodać zgodne Bean Validation, PostgreSQL `CHECK`, OpenAPI i testy | EMP-004 implementation evidence |
+| R-027 | MEDIUM | MITIGATED | kontrakt UserId rozchodzi się między EMP-001, aplikacją i V1 | zaakceptowany amendment EMP-001 zamraża `^[!-~]{1,128}$` bez trimowania/normalizacji; implementacja EMP-004 musi dodać zgodne Bean Validation, PostgreSQL `CHECK`, OpenAPI i testy | EMP-004 implementation evidence |
 | R-028 | MEDIUM | MITIGATED | formalne concurrency evidence może nie klasyfikować wszystkich wyników albo stanów końcowych | EMP-009 sprawdza exact 90 `COUPON_EXHAUSTED`, 10 unikalnych userId i dokładnie jednego last-slot usera; checker + pełny gate | EMP-009 verified evidence |
-| R-029 | MEDIUM | MITIGATED | brak mierzalnego gate coverage może ukryć niepokryte gałęzie mimo silnego evidence integration | JaCoCo 0.8.15, global 80/70, critical 75/65, brak exclusions, niezależny report checker i manualny missed-branch review | EMP-008: global 96.07/86.27, critical 96.46/88.81, full `make verify` PASS |
+| R-029 | MEDIUM | MITIGATED | brak mierzalnego gate coverage może ukryć niepokryte gałęzie mimo silnego evidence integration | JaCoCo 0.8.15, global 80/70, critical 75/65, brak exclusions, niezależny report checker i manualny missed-branch review | EMP-008/010: global 95.76/86.39, critical 95.06/88.21, full `make verify` PASS |
 
-| R-030 | HIGH | OPEN | CI różni się od lokalnego gate i daje fałszywe green | jeden `DOCKER=docker make verify`, jawny Ubuntu 24.04, brak osobnego DB service | EMP-010 green GitHub Actions run |
-| R-031 | HIGH | OPEN | mutable GitHub Action/base-image reference może zmienić supply chain bez zmiany repo | full action SHA i Docker `@sha256` digest pins | EMP-010 static checker + CI |
-| R-032 | MEDIUM | OPEN | obecny source ZIP nie jest byte-reproducible przez wall-clock i metadata | tracked files, normalized ZIP metadata, clean commit, two-run SHA equality | EMP-010 delivery-check |
-| R-033 | HIGH | OPEN | metryki/logi ujawnią IP/userId/coupon code lub eksplodują cardinality | zamknięte tag vocabularies, privacy tests, brak danych requestu w MDC/labels | EMP-010 metrics/log tests + Prometheus scrape |
-| R-034 | MEDIUM | OPEN | client request ID prowadzi do log injection albo MDC leakage | strict regex/single field-line, UUID fallback, `finally` cleanup | EMP-010 request-ID tests |
+| R-030 | HIGH | MITIGATED | CI różni się od lokalnego gate i daje fałszywe green | jeden `DOCKER=docker make verify`, jawny Ubuntu 24.04, brak osobnego DB service | EMP-010 green GitHub Actions run |
+| R-031 | HIGH | MITIGATED | mutable GitHub Action/base-image reference może zmienić supply chain bez zmiany repo | full action SHA i Docker `@sha256` digest pins | EMP-010 static checker + CI |
+| R-032 | MEDIUM | MITIGATED | obecny source ZIP nie jest byte-reproducible przez wall-clock i metadata | tracked files, normalized ZIP metadata, clean commit, two-run SHA equality | EMP-010 delivery-check |
+| R-033 | HIGH | MITIGATED | metryki/logi ujawnią IP/userId/coupon code lub eksplodują cardinality | zamknięte tag vocabularies, privacy tests, brak danych requestu w MDC/labels | EMP-010 metrics/log tests + Prometheus scrape |
+| R-034 | MEDIUM | MITIGATED | client request ID prowadzi do log injection albo MDC leakage | strict regex/single field-line, UUID fallback, `finally` cleanup | EMP-010 request-ID tests |
 
 ## Zasada statusu
 

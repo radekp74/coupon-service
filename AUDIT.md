@@ -152,3 +152,9 @@ Bieżący kandydat implementacyjny ma `EMP-010 = IN_PROGRESS/ACCEPTED`, implemen
 Finalny implementation SHA `35fa7c7e07ac341a410fad38c8ced030ac30ed25` przeszedł pełny lokalny canonical gate: 112 unit i 23 integration tests bez failures/errors, JaCoCo 95.76%/86.39% globalnie i 95.06%/88.21% dla critical aggregate oraz kompletny Docker smoke health/OpenAPI/Swagger/Prometheus/request-ID/structured JSON. Deterministyczny delivery gate odtworzył byte-for-byte SHA-256 `ed3791e735485bb452209c3c4c8e2bdd32a9eab8df36f1e28f3375d770b8e3fa` i poprawnie odrzucił stale checksum mutation.
 
 Pierwszy GitHub Actions run `43b4331` wykrył portability defect smoke checka CRLF, nie błąd runtime request-ID. Repair `35fa7c7` poprawił wyłącznie przenośność smoke checka i testowy transport GeoIP, bez zmiany produkcyjnego timeoutu/semantyki. GitHub Actions `CI #2` dla `35fa7c7` zakończył się zielono w 2m48s. `EMP-010 = DONE_AND_VERIFIED`; CI/delivery/observability evidence są `MEASURED_AND_VERIFIED`; kolejnym zadaniem jest EMP-011.
+
+## EMP-011 — final review (2026-08-07)
+
+Finalny audyt repo wykrył i koryguje wyłącznie bieżące niespójności dokumentacyjne F-01..F-10. Kod produkcyjny, POM, migracje i canonical OpenAPI pozostają zamrożone. README jest przebudowane pod rekrutera; risk register zostaje reconciliowany na podstawie istniejącego evidence; warningi Flyway/Mockito/@MockBean pozostają maintenance debt bez dependency churn. Finalny status `DONE_AND_VERIFIED` wymaga jeszcze pełnego local gate, delivery i zielonego CI finalnego SHA.
+
+EMP-011 local canonical evidence: pełny `make verify` PASS po finalnych zmianach dokumentacyjnych/checkerze; publiczne CI finalnego SHA pozostaje warunkiem closeoutu.

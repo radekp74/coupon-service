@@ -555,3 +555,9 @@ EMP-010 zakończono po finalnym repair `35fa7c7e07ac341a410fad38c8ced030ac30ed25
 Post-commit `make delivery-check` potwierdził byte-for-byte reproducibility oraz fail-closed dla stale checksum. Deterministyczny source artifact `coupon-service-source-35fa7c7e07ac.zip` ma SHA-256 `ed3791e735485bb452209c3c4c8e2bdd32a9eab8df36f1e28f3375d770b8e3fa`.
 
 Pierwszy zdalny run dla `43b4331` wykrył nieprzenośny CRLF regex w smoke checku, mimo że runtime zwracał poprawny header. Minimalna korekta oraz stabilizacja testowego GeoIP transportu nie zmieniły produkcyjnego kontraktu. GitHub Actions `CI #2` dla `35fa7c7` na `main` zakończył się zielonym wynikiem w 2m48s. Stan: `EMP-010 = DONE_AND_VERIFIED`, CI/delivery/observability evidence `MEASURED_AND_VERIFIED`. Następne zadanie: EMP-011.
+
+## EMP-011 — final review checkpoint (2026-08-07)
+
+Refinement zaakceptowany przez właściciela. Final review aktualizuje bieżącą dokumentację i recruiter-facing README, dodaje checker anty-regresyjny oraz reconciliuje ryzyka. Funkcjonalność aplikacji pozostaje zamrożona; closeout wymaga local `make verify`, delivery-check, source export i zielonego CI finalnego SHA.
+
+Local EMP-011 canonical `make verify` zakończył się sukcesem; implementation checkpoint może zostać zacommitowany i wypchnięty, ale status pozostaje `IN_PROGRESS` do zielonego CI finalnego SHA.
