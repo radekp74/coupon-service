@@ -30,7 +30,10 @@ Dokument ze stanem `DRAFT` nie zezwala na implementację.
 - [EMP-007 — OpenAPI, Swagger UI i Javadoc](EMP-007.md) — `ACCEPTED`
 - [EMP-007 — podsumowanie](EMP-007-summary.md)
 - [EMP-007 — review checklist](EMP-007-review-checklist.md) — `PASS`
+- [EMP-009 — deterministyczne concurrency evidence](EMP-009.md) — `ACCEPTED`
+- [EMP-009 — podsumowanie](EMP-009-summary.md)
+- [EMP-009 — review checklist](EMP-009-review-checklist.md) — `PASS_WITH_IMPLEMENTATION_GAPS`
 
 ## Pokrycie zadań
 
-`EMP-001` zamraża kontrakt całego MVP i zawiera amendment UserId dla EMP-004. `EMP-003` uszczegóławia tworzenie kuponu, `EMP-007` tester-facing OpenAPI i zasady dokumentacji kodu, a zweryfikowany `EMP-006` definiuje granicę zaufania Client IP oraz provider-neutral GeoIP. Zaakceptowany EMP-004 opisuje atomowy redemption i włącza kryteria EMP-005; implementacja pozostaje osobnym, jeszcze nierozpoczętym checkpointem. Zasady amendmentu opisuje [proces refinementu](../refinement-process.md).
+`EMP-001` zamraża kontrakt całego MVP i zawiera amendment UserId dla EMP-004. EMP-003 i EMP-004 są zweryfikowanymi właścicielami implementacji create/redemption. `EMP-009` nie kopiuje ich testów: w stanie `DRAFT` formalizuje reuse concurrency evidence i trzy pozostałe exact assertions. Zasady amendmentu opisuje [proces refinementu](../refinement-process.md).

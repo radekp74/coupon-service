@@ -6,6 +6,9 @@ Wszystkie istotne zmiany projektu są rejestrowane w tym pliku. Format jest insp
 
 ### Added
 
+- draft refinement EMP-009: formalne mapowanie concurrency evidence EMP-003/EMP-004, standard deterministyczności i `make emp009-refinement-check`; wskazane trzy pozostałe exact assertions przed closeoutem;
+- formalnie zaakceptowany refinement EMP-009: przyszły checkpoint jest ograniczony do trzech exact assertions w istniejących testach i implementacyjnego checkera, bez JaCoCo, API ani zmian produkcyjnych;
+
 - remediation EMP-004 po audycie EMP-008/EMP-009: bezpośrednie testy `UserId` i orchestratora, HTTP 403/503, exact same-user 1/19, last-slot 1/1, dowód braku globalnego JVM locka oraz PostgreSQL rollback/constraint evidence;
 - checker EMP-004 wymaga teraz rzeczywistych testów remediation, a checkery późniejszych checkpointów rozpoznają jawny stan `IMPLEMENTED` podczas wznowionej weryfikacji;
 

@@ -5,17 +5,19 @@ REST-owy serwis do tworzenia i bezpiecznego wykorzystywania kuponów rabatowych.
 
 ## Aktualny stan
 
-- **Checkpoint:** `0.0.16-emp-004-verified`
-- **Data stanu:** `2026-08-06`
+- **Checkpoint:** `0.0.17-emp-004-verification-remediation`
+- **Data stanu:** `2026-08-07`
 - **Termin oddania:** `2026-08-10`, koniec dnia
 - **EMP-000–EMP-003:** `DONE_AND_VERIFIED`
 - **EMP-007:** `DONE_AND_VERIFIED`
 - **EMP-006:** `DONE_AND_VERIFIED`
-- **Aktywne zadanie:** oczekuje na refinement EMP-008
+- **Aktywne zadanie:** EMP-009 — implementation of missing exact assertions and checker
 - **Refinement EMP-006:** `ACCEPTED`
 - **Implementation EMP-006:** `DONE_AND_VERIFIED`
 - **EMP-004:** `DONE_AND_VERIFIED`; refinement i implementation `DONE_AND_VERIFIED`
 - **EMP-005:** `MERGED_INTO_EMP-004`; user-once pozostaje obowiązkowym invariantem i evidence EMP-004
+- **EMP-008:** `PLANNED`; JaCoCo i coverage są poza tym checkpointem
+- **EMP-009:** `READY`, refinement `ACCEPTED`; evidence `PARTIAL`, implementation `NOT_STARTED`, implementation allowed `YES`
 - **Kod biznesowy:** `CREATE_COUPON_DONE_AND_VERIFIED`
 - **OpenAPI/Swagger UI:** `DONE_AND_VERIFIED`
 - **Javadoc/DocLint policy:** `ACTIVE_AND_VERIFIED`
@@ -40,7 +42,7 @@ EMP-004 dostarcza transakcyjny endpoint redemption z server-side Client IP/GeoIP
 - test 24 równoległych wariantów case z dokładnie jednym sukcesem;
 - machine-readable `docs/api/openapi.yaml` dla operacji create.
 
-Endpoint wykorzystania kuponu pozostaje niezaimplementowany. EMP-007 udostępnia testerom pełny kontrakt aktualnie zaimplementowanego create coupon przez Swagger UI, a EMP-006 dostarcza wewnętrzne porty potrzebne przyszłemu redemption.
+Endpoint wykorzystania kuponu jest zaimplementowany i opisany w canonical OpenAPI/Swagger UI. EMP-009 nie zmienia API; mapuje istniejące evidence współbieżności i nie jest jeszcze zamknięte.
 
 ## Zamrożony kierunek techniczny
 

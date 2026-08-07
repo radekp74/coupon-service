@@ -112,6 +112,10 @@ WireMock:
 - test może być powtórzony kilka razy w dedykowanym profilu;
 - assertions opierają się na exact counts, nie „co najmniej”.
 
+## EMP-009 — refinement concurrency evidence
+
+EMP-009 jest `ACCEPTED` i nie tworzy nowych scenariuszy biznesowych. Formalnie mapuje `CreateCouponApiIT.concurrentCaseVariantsProduceExactlyOneCreatedCoupon` oraz metody concurrency `CouponRedemptionApiIT`. Evidence jest `PARTIAL`: przyszły checkpoint może wyłącznie sklasyfikować 90 konfliktów jako `COUPON_EXHAUSTED`, sprawdzić 10 unikalnych userId i jednego zapisanego usera last-slot oraz dodać checker. JaCoCo i 42 warnings Javadoc są scope EMP-008, nie EMP-009.
+
 ## Pokrycie
 
 - JaCoCo line minimum 80%;

@@ -52,6 +52,10 @@ echo "=== EMP-007 STATIC OPENAPI AND JAVADOC CONTRACT ==="
 python3 scripts/check_emp007.py
 
 echo
+echo "=== EMP-009 REFINEMENT CONTRACT ==="
+python3 scripts/check_emp009_refinement.py
+
+echo
 echo "=== SCRIPT SYNTAX ==="
 PYCACHE_DIR="$(mktemp -d)"
 trap 'rm -rf "$PYCACHE_DIR"' EXIT
@@ -64,6 +68,7 @@ PYTHONPYCACHEPREFIX="$PYCACHE_DIR" python3 -m py_compile \
   scripts/check_emp006_refinement.py \
   scripts/check_emp006.py \
   scripts/check_emp007.py \
+  scripts/check_emp009_refinement.py \
   scripts/generate_checksums.py
 bash -n verify.sh scripts/package_source.sh scripts/docker_smoke.sh mvnw
 
@@ -79,6 +84,7 @@ grep -Eq '^emp004-check:$' Makefile
 grep -Eq '^emp006-refinement-check:$' Makefile
 grep -Eq '^emp006-check:$' Makefile
 grep -Eq '^emp007-check:$' Makefile
+grep -Eq '^emp009-refinement-check:$' Makefile
 grep -Eq '^docker-check:$' Makefile
 grep -Eq '^compose-config: docker-check$' Makefile
 grep -Eq '^docker-build: compose-config$' Makefile
@@ -94,6 +100,7 @@ make -n emp004-check >/dev/null
 make -n emp006-refinement-check >/dev/null
 make -n emp006-check >/dev/null
 make -n emp007-check >/dev/null
+make -n emp009-refinement-check >/dev/null
 make -n docker-check >/dev/null
 make -n compose-config >/dev/null
 make -n docker-build >/dev/null

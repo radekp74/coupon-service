@@ -1,9 +1,9 @@
 # Aktualny status projektu
 
-- **Data:** 2026-08-06
+- **Data:** 2026-08-07
 - **Termin:** 2026-08-10, koniec dnia
-- **Faza:** `TRANSACTIONAL_REDEMPTION_DONE_AND_VERIFIED`
-- **Active task:** `awaiting next refinement`
+- **Faza:** `CONCURRENCY_EVIDENCE_REFINEMENT_ACCEPTED`
+- **Active task:** `EMP-009 — implementation of missing exact assertions and checker`
 - **EMP-004 refinement:** `ACCEPTED`
 - **Implementation EMP-004:** `DONE_AND_VERIFIED`; verification remediation `COMPLETED`
 - **Implementation allowed:** `YES` dla `EMP-004` na podstawie accepted własnego refinementu
@@ -13,6 +13,8 @@
 - **Implementation EMP-006:** `DONE_AND_VERIFIED`
 - **Implementation allowed EMP-006:** `YES`
 - **EMP-007:** `DONE_AND_VERIFIED`
+- **EMP-008:** `PLANNED`; JaCoCo i warning budget pozostają poza aktywnym scope
+- **EMP-009:** `READY`; refinement `ACCEPTED`, evidence `PARTIAL`, implementation `NOT_STARTED`, implementation allowed `YES`
 - **Kod aplikacji:** create coupon, Client IP/GeoIP i transactional redemption są zaimplementowane oraz lokalnie zweryfikowane
 - **OpenAPI/Swagger UI:** canonical `/openapi.yaml` zawiera `createCoupon` i `redeemCoupon`; Swagger UI używa tej specyfikacji
 - **Javadoc/DocLint policy:** `ACTIVE_AND_VERIFIED`
@@ -55,7 +57,7 @@ Implementacja już dostarczyła:
 
 ## Następny krok
 
-EMP-009 — refinement i formalne mapowanie istniejącego evidence współbieżności; EMP-009 nie jest jeszcze zamknięte.
+EMP-009 — implementation of missing exact assertions and checker. Właściciel zaakceptował wyłącznie klasyfikację 90 exhausted, 10 unikalnych userId, jednego last-slot usera oraz checker; EMP-009 nie jest jeszcze zamknięte.
 
 ## Blokery
 

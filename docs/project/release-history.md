@@ -476,3 +476,11 @@ DocLint: 0 errors (42 pre-existing Maven Javadoc warnings)
 - `EMP-004`: `DONE_AND_VERIFIED`; implementation `DONE_AND_VERIFIED`; verification remediation `COMPLETED`;
 - `EMP-005`: `DONE`, `MERGED_INTO_EMP-004`, evidence owner EMP-004;
 - `EMP-008` i `EMP-009`: `PLANNED`; EMP-009 wymaga osobnego refinementu/mapowania przed ewentualnym closeoutem.
+
+## 2026-08-07 — EMP-009 refinement draft
+
+Dokumentacyjny draft mapuje istniejące Testcontainers evidence: EMP-003 ma `CreateCouponApiIT.concurrentCaseVariantsProduceExactlyOneCreatedCoupon` z 3 × 24 prób, a EMP-004 ma 3 × 100/10, same-user 1/19, last-slot 1/1 i row-lock coupon-A/coupon-B. Review oznaczył `EVIDENCE_PARTIAL`: nie wolno zamknąć EMP-009 bez późniejszej asercji kodu konfliktu i unikalnych userId 100/10 oraz dokładnie jednego nowego usera last-slot. Nie uruchomiono Maven ani `make verify`, ponieważ ten checkpoint nie zmienia kodu/testów.
+
+## 2026-08-07 — EMP-009 refinement accepted
+
+Radosław Piątek zaakceptował refinement przy `Evidence-State: PARTIAL`. Zamrożony przyszły checkpoint może zmienić wyłącznie trzy brakujące exact assertions w istniejących testach oraz dodać `scripts/check_emp009.py` i jego bramkę. Nie zaakceptowano nowych scenariuszy, kodu produkcyjnego, endpointów, OpenAPI, JaCoCo ani EMP-008. EMP-009 jest `READY`, implementation `NOT_STARTED`; nie jest to evidence DONE.

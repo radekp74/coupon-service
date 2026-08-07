@@ -111,6 +111,10 @@ Audyt zakresu EMP-008/EMP-009 wykrył rzeczywistą lukę: historyczny closeout E
 
 Pełne lokalne `./mvnw -B -ntp clean verify` przeszło: 60 testów unit i 22 integracyjne. DocLint miał 0 błędów (42 istniejące ostrzeżenia Javadoc). Dopiero to evidence pozwala ponownie ustawić EMP-004 jako `DONE_AND_VERIFIED`; EMP-009 pozostaje planowanym, odrębnym review formalnego mapowania evidence współbieżności.
 
+## Draft EMP-009
+
+EMP-009 nie uznaje poprzednich deklaracji za automatyczny closeout. Mapa kodu przypisuje konkretne metody Testcontainers z EMP-003 i EMP-004, ale oznacza `EVIDENCE_PARTIAL`: 100/10 nie klasyfikuje kodu 90 konfliktów ani 10 unikalnych userId, a last-slot nie potwierdza jednego zapisanego nowego użytkownika. Radosław Piątek formalnie zaakceptował 2026-08-07 ograniczony checkpoint trzech asercji i implementacyjnego checkera; EMP-009 pozostaje `READY`, implementation `NOT_STARTED` i nie jest zamknięte.
+
 
 ## Refinement EMP-004
 
