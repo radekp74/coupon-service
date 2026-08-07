@@ -18,12 +18,14 @@
 | scope creep | PASS | auth/idempotency/deploy/security-scanner/SBOM poza zakresem |
 | final verification | PASS | local verify + delivery + export + GitHub CI + Swagger |
 | owner decisions | PASS | wszystkie 8 decyzji zaakceptowane 2026-08-07 |
-| implementation | IN_PROGRESS | final review w zaakceptowanym zakresie; kod produkcyjny/API zamrożone |
+| implementation | PASS | `DONE_AND_VERIFIED`; kod produkcyjny/API pozostały zamrożone |
 | CODEX_PROMPT | PASS | plik zabroniony |
 
 ## Wynik
 
-Refinement został formalnie zaakceptowany. Implementacja EMP-011 jest dozwolona wyłącznie w zamrożonym zakresie.
+Refinement został formalnie zaakceptowany i wykonany wyłącznie w zamrożonym zakresie. EMP-011 jest `DONE_AND_VERIFIED`.
 
 | local canonical `make verify` | PASS | measured po final-review implementation |
-| public GitHub Actions final SHA | PENDING | wymagane przed `DONE_AND_VERIFIED` |
+| public GitHub Actions final SHA | PASS | `CI #5` green dla `5c7d3f5` na `main` |
+
+| deterministic delivery | PASS | source SHA-256 `579f49576318bba67d8a2a553cb548b0fa6118b05058c4bd730ad83d6b897d63` |

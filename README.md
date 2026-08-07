@@ -123,6 +123,10 @@ Kolejność publicznych decyzji jest zamrożona jako: `not found → GeoIP unava
 
 Constraint `UNIQUE(coupon_id, user_id)` broni reguły jednego użycia również wtedy, gdy aplikacja popełni błąd. Fault-injection tests potwierdzają rollback całej transakcji, a testy współbieżności używają exact counts zamiast probabilistycznych asercji.
 
+## Status końcowy
+
+`EMP-011 = DONE_AND_VERIFIED`. Finalny implementation/review SHA `5c7d3f5b9e48ff88a90f11047f45b249b4ee7e65` przeszedł lokalny canonical `make verify`, deterministyczny delivery oraz zielony GitHub Actions `CI #5` na `main`. Publiczne repozytorium i reviewer-facing dokumentacja są finalnym stanem zadania.
+
 ## Evidence jakości
 
 Finalny canonical gate po EMP-010/EMP-011 opiera się na:

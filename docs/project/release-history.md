@@ -561,3 +561,9 @@ Pierwszy zdalny run dla `43b4331` wykrył nieprzenośny CRLF regex w smoke check
 Refinement zaakceptowany przez właściciela. Final review aktualizuje bieżącą dokumentację i recruiter-facing README, dodaje checker anty-regresyjny oraz reconciliuje ryzyka. Funkcjonalność aplikacji pozostaje zamrożona; closeout wymaga local `make verify`, delivery-check, source export i zielonego CI finalnego SHA.
 
 Local EMP-011 canonical `make verify` zakończył się sukcesem; implementation checkpoint może zostać zacommitowany i wypchnięty, ale status pozostaje `IN_PROGRESS` do zielonego CI finalnego SHA.
+
+## 2026-08-07 — EMP-011 DONE_AND_VERIFIED
+
+Zaakceptowany refinement został wykonany bez zmian funkcjonalnych. Commit `799a4bd` zapisał akceptację EMP-011, a finalny implementation/review SHA `5c7d3f5b9e48ff88a90f11047f45b249b4ee7e65` przebudował recruiter-facing README, usunął stale-current-state dokumentacji, zreconciliował risk register i dodał finalny checker. Produkcyjne Java, POM, migracje, Dockerfile, Compose i canonical OpenAPI pozostały zamrożone.
+
+Lokalny `make verify` zakończył się PASS: 112 unit + 23 integration, JaCoCo 95.76% LINE / 86.39% BRANCH globalnie i 95.06% / 88.21% critical, Docker health/OpenAPI/Swagger/Prometheus/request-ID/structured logging PASS. `make delivery-check` odtworzył byte-for-byte source SHA-256 `579f49576318bba67d8a2a553cb548b0fa6118b05058c4bd730ad83d6b897d63`. GitHub Actions `CI #5` dla `5c7d3f5` na `main` zakończył się zielono w 2m05s. Stan końcowy: `EMP-011 = DONE_AND_VERIFIED`, final review/public repo evidence `MEASURED_AND_VERIFIED`.

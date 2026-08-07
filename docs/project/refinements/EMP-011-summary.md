@@ -23,9 +23,9 @@ Closeout ma wymagać `make verify`, czystego committed tree, `make delivery-chec
 
 ## Stan
 
-`IN_PROGRESS / ACCEPTED / IN_PROGRESS / Implementation-Allowed: YES`. Final review usuwa bieżące niespójności, dodaje finalny checker i pozostawia kod produkcyjny/API zamrożone; measured local/CI evidence zostanie zapisane po wykonaniu gate.
+`DONE_AND_VERIFIED / ACCEPTED / DONE_AND_VERIFIED / Implementation-Allowed: YES`. Final review usunął bieżące niespójności, dodał finalny checker i pozostawił kod produkcyjny/API zamrożone.
 
 
 ## Local evidence po implementacji
 
-Pełny canonical `make verify` przeszedł na kandydacie EMP-011. Final review evidence jest `MEASURED`; public repo evidence pozostaje `NOT_MEASURED` do czasu zielonego GitHub Actions dla commita implementacyjnego.
+Pełny canonical `make verify` przeszedł na EMP-011. Finalny SHA `5c7d3f5b9e48ff88a90f11047f45b249b4ee7e65` przeszedł także deterministyczny delivery i zielony GitHub Actions `CI #5` na `main`; final review i public repo evidence są `MEASURED_AND_VERIFIED`.

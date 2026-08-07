@@ -155,6 +155,6 @@ Pierwszy GitHub Actions run `43b4331` wykrył portability defect smoke checka CR
 
 ## EMP-011 — final review (2026-08-07)
 
-Finalny audyt repo wykrył i koryguje wyłącznie bieżące niespójności dokumentacyjne F-01..F-10. Kod produkcyjny, POM, migracje i canonical OpenAPI pozostają zamrożone. README jest przebudowane pod rekrutera; risk register zostaje reconciliowany na podstawie istniejącego evidence; warningi Flyway/Mockito/@MockBean pozostają maintenance debt bez dependency churn. Finalny status `DONE_AND_VERIFIED` wymaga jeszcze pełnego local gate, delivery i zielonego CI finalnego SHA.
+Finalny audyt repo wykrył i koryguje wyłącznie bieżące niespójności dokumentacyjne F-01..F-10. Kod produkcyjny, POM, migracje i canonical OpenAPI pozostają zamrożone. README jest przebudowane pod rekrutera; risk register zostaje reconciliowany na podstawie istniejącego evidence; warningi Flyway/Mockito/@MockBean pozostają maintenance debt bez dependency churn. Finalny local gate i delivery przeszły bez zmian funkcjonalnych.
 
-EMP-011 local canonical evidence: pełny `make verify` PASS po finalnych zmianach dokumentacyjnych/checkerze; publiczne CI finalnego SHA pozostaje warunkiem closeoutu.
+EMP-011 closeout evidence: `5c7d3f5b9e48ff88a90f11047f45b249b4ee7e65` przeszedł pełny `make verify` (112 unit + 23 integration, JaCoCo 95.76/86.39 global i 95.06/88.21 critical), Docker smoke, deterministic delivery SHA-256 `579f49576318bba67d8a2a553cb548b0fa6118b05058c4bd730ad83d6b897d63` oraz zielony GitHub Actions `CI #5` na `main` w 2m05s. `EMP-011 = DONE_AND_VERIFIED`; final review i public repo evidence są `MEASURED_AND_VERIFIED`.

@@ -2,8 +2,8 @@
 
 - **Data:** 2026-08-07
 - **Termin:** 2026-08-10, koniec dnia
-- **Faza:** `EMP011_FINAL_REVIEW`
-- **Active task:** `EMP-011 — final review, README i closeout`
+- **Faza:** `FINAL_DONE_AND_VERIFIED`
+- **Active task:** `awaiting next refinement`
 - **EMP-004 refinement:** `ACCEPTED`
 - **Implementation EMP-004:** `DONE_AND_VERIFIED`; verification remediation `COMPLETED`
 - **Implementation allowed:** `YES` dla `EMP-004` na podstawie accepted własnego refinementu
@@ -16,16 +16,17 @@
 - **EMP-008:** `DONE_AND_VERIFIED`; refinement `ACCEPTED`, JaCoCo implementation `DONE_AND_VERIFIED`, coverage evidence `MEASURED_AND_VERIFIED`, implementation allowed `YES`
 - **EMP-009:** `DONE_AND_VERIFIED`; refinement `ACCEPTED`, evidence `COMPLETE`, implementation `DONE_AND_VERIFIED`, implementation allowed `YES`
 - **EMP-010:** `DONE_AND_VERIFIED`; refinement `ACCEPTED`, implementation `DONE_AND_VERIFIED`, `Implementation-Allowed: YES`, CI/delivery/observability evidence `MEASURED_AND_VERIFIED`, finalny verified SHA `35fa7c7e07ac341a410fad38c8ced030ac30ed25`
-- **EMP-011:** `IN_PROGRESS`; refinement `ACCEPTED`, implementation `IN_PROGRESS`, `Implementation-Allowed: YES`, final review evidence `MEASURED`, public repo evidence `NOT_MEASURED`
+- **EMP-011:** `DONE_AND_VERIFIED`; refinement `ACCEPTED`, implementation `DONE_AND_VERIFIED`, `Implementation-Allowed: YES`, final review evidence `MEASURED_AND_VERIFIED`, public repo evidence `MEASURED_AND_VERIFIED`, verified SHA `5c7d3f5b9e48ff88a90f11047f45b249b4ee7e65`
 - **Kod aplikacji:** create coupon, Client IP/GeoIP i transactional redemption są zaimplementowane oraz lokalnie zweryfikowane
 - **OpenAPI/Swagger UI:** canonical `/openapi.yaml` zawiera `createCoupon` i `redeemCoupon`; Swagger UI używa tej specyfikacji
 - **Javadoc/DocLint policy:** `ACTIVE_AND_VERIFIED`
-- **Runtime verification:** `LOCAL_EMP010_GATE_PASS`, `GITHUB_CI_EMP010_PASS`
+- **Runtime verification:** `LOCAL_EMP011_GATE_PASS`, `GITHUB_CI_5c7d3f5_PASS`
 - **Historyczne evidence bootstrapu:** `BOOTSTRAP_DONE_AND_VERIFIED`, `LOCAL_DOCKER_GATE_PASS`
 - **Historyczne evidence EMP-003:** `CREATE_COUPON_DONE_AND_VERIFIED`, `LOCAL_EMP003_GATE_PASS`
 - **Historyczne evidence EMP-007:** `OPENAPI_DOCUMENTATION_DONE_AND_VERIFIED`, `LOCAL_EMP007_GATE_PASS`
 - **Evidence EMP-009:** `CONCURRENCY_EVIDENCE_DONE_AND_VERIFIED`, `LOCAL_EMP009_GATE_PASS`
 - **Evidence EMP-010:** `CI_DELIVERY_OBSERVABILITY_DONE_AND_VERIFIED`, `LOCAL_EMP010_GATE_PASS`, `GITHUB_CI_35fa7c7_PASS`
+- **Evidence EMP-011:** `FINAL_REVIEW_DONE_AND_VERIFIED`, `LOCAL_EMP011_GATE_PASS`, `DELIVERY_579f4957_PASS`, `GITHUB_CI_5c7d3f5_PASS`
 
 ## Ukończone i zweryfikowane
 
@@ -61,10 +62,8 @@ Implementacja już dostarczyła:
 
 ## Następny krok
 
-Dokończyć EMP-011 w zamrożonym zakresie: finalny checker, pełny `make verify`, commit, post-commit `make delivery-check`, deterministyczny source export, push SSH i zielony GitHub Actions dla finalnego SHA. Dopiero po tym EMP-011 może przejść do `DONE_AND_VERIFIED`.
+Brak kolejnego zadania implementacyjnego w zakresie rekrutacyjnym. Repozytorium jest gotowe do przekazania reviewerowi; ewentualne dalsze zmiany wymagają nowego refinementu zamiast rozszerzania zamkniętego EMP-011.
 
 ## Blokery
 
-Brak blokera technicznego. EMP-010 jest `DONE_AND_VERIFIED`; EMP-011 nie zmienia kodu produkcyjnego ani publicznego API.
-
-- **Evidence EMP-011:** `LOCAL_EMP011_GATE_PASS`; finalny GitHub Actions pozostaje wymagany do closeoutu.
+Brak. EMP-011 jest `DONE_AND_VERIFIED`; kod produkcyjny i publiczne API pozostały zamrożone podczas final review.

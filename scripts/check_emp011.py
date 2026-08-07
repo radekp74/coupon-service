@@ -77,7 +77,7 @@ def main() -> int:
 
     registry = read("docs/project/refinements/README.md")
     require(registry, "EMP-010 — CI, delivery hardening i obserwowalność](EMP-010.md) — `ACCEPTED`, `DONE_AND_VERIFIED`", errors, "refinements/README.md")
-    require(registry, "EMP-011 — finalny review, README i closeout](EMP-011.md) — `ACCEPTED`, status `IN_PROGRESS`", errors, "refinements/README.md")
+    require(registry, "EMP-011 — finalny review, README i closeout](EMP-011.md) — `ACCEPTED`, `DONE_AND_VERIFIED`", errors, "refinements/README.md")
     forbid(registry, "evidence pozostaje `NOT_MEASURED`", errors, "refinements/README.md")
 
     risks = read("docs/project/risk-register.md")
@@ -90,19 +90,32 @@ def main() -> int:
 
     trace = read("docs/product/requirements-traceability.md")
     require(trace, "recruiter-first README", errors, "requirements-traceability.md")
-    require(trace, "green GitHub Actions + delivery-check + package hygiene", errors, "requirements-traceability.md")
+    require(trace, "green CI #5 on `5c7d3f5` + delivery SHA `579f4957…` + package hygiene", errors, "requirements-traceability.md")
 
     ref = read("docs/project/refinements/EMP-011.md")
     for token in [
         "Stan-Refinementu: ACCEPTED",
         "Implementation-Allowed: YES",
         "Scope-Frozen: YES",
-        "Status: IN_PROGRESS",
-        "Implementation: IN_PROGRESS",
+        "Status: DONE_AND_VERIFIED",
+        "Implementation: DONE_AND_VERIFIED",
+        "Final-Review-Evidence: MEASURED_AND_VERIFIED",
+        "Public-Repo-Evidence: MEASURED_AND_VERIFIED",
+        "Review-Result: PASS",
+        "5c7d3f5b9e48ff88a90f11047f45b249b4ee7e65",
+        "CI #5",
     ]:
         require(ref, token, errors, "EMP-011.md")
     if len(re.findall(r"^\d+\. \*\*[^\n]+— ACCEPT\.\*\*$", ref, re.MULTILINE)) != 8:
         errors.append("EMP-011.md must retain exactly 8 accepted owner decisions")
+    backlog = read("docs/project/backlog.md")
+    require(backlog, "| EMP-011 | EMP-001 | P0 | DONE_AND_VERIFIED | EMP-011 |", errors, "backlog.md")
+    status_doc = read("docs/project/current-status.md")
+    require(status_doc, "EMP-011:** `DONE_AND_VERIFIED`", errors, "current-status.md")
+    require(status_doc, "GITHUB_CI_5c7d3f5_PASS", errors, "current-status.md")
+    checklist = read("docs/project/refinements/EMP-011-review-checklist.md")
+    require(checklist, "public GitHub Actions final SHA | PASS", errors, "EMP-011-review-checklist.md")
+    require(checklist, "579f49576318bba67d8a2a553cb548b0fa6118b05058c4bd730ad83d6b897d63", errors, "EMP-011-review-checklist.md")
 
     # Frozen functional contract: EMP-011 must not introduce additional public API methods.
     openapi = read("docs/api/openapi.yaml")
