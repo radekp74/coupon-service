@@ -30,10 +30,13 @@ Dokument ze stanem `DRAFT` nie zezwala na implementację.
 - [EMP-007 — OpenAPI, Swagger UI i Javadoc](EMP-007.md) — `ACCEPTED`
 - [EMP-007 — podsumowanie](EMP-007-summary.md)
 - [EMP-007 — review checklist](EMP-007-review-checklist.md) — `PASS`
+- [EMP-008 — coverage, JaCoCo i quality evidence](EMP-008.md) — `ACCEPTED`, implementation `NOT_STARTED`
+- [EMP-008 — podsumowanie](EMP-008-summary.md)
+- [EMP-008 — review checklist](EMP-008-review-checklist.md) — `ACCEPTED`
 - [EMP-009 — deterministyczne concurrency evidence](EMP-009.md) — `ACCEPTED`, implementation `DONE_AND_VERIFIED`
 - [EMP-009 — podsumowanie](EMP-009-summary.md)
 - [EMP-009 — review checklist](EMP-009-review-checklist.md) — `PASS`
 
 ## Pokrycie zadań
 
-`EMP-001` zamraża kontrakt całego MVP i zawiera amendment UserId dla EMP-004. EMP-003 i EMP-004 są zweryfikowanymi właścicielami implementacji create/redemption. EMP-009 nie skopiował ich testów: sformalizował reuse concurrency evidence, uzupełnił trzy exact assertions i zweryfikował je własnym checkerem. Zasady amendmentu opisuje [proces refinementu](../refinement-process.md).
+`EMP-001` zamraża kontrakt całego MVP i zawiera amendment UserId dla EMP-004. EMP-003 i EMP-004 są zweryfikowanymi właścicielami implementacji create/redemption. EMP-009 sformalizował concurrency evidence; EMP-008 jest zaakceptowanym refinementem quality gate, ale JaCoCo pozostaje niezaimplementowane do własnego checkpointu. Zasady amendmentu opisuje [proces refinementu](../refinement-process.md).

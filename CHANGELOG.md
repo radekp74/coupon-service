@@ -6,6 +6,8 @@ Wszystkie istotne zmiany projektu są rejestrowane w tym pliku. Format jest insp
 
 ### Added
 
+- draft refinement EMP-008: polityka JaCoCo LINE/BRANCH, manualny gap review, minimalne exclusions, quality evidence i warning budget; bez implementacji POM/testów;
+- formalnie zaakceptowany refinement EMP-008: JaCoCo 0.8.15, global 80/70, critical group 75/65, no-default-exclusions, Javadoc budget <=5 i PIT `OUT_OF_SCOPE`; coverage pozostaje `NOT_MEASURED` do implementation checkpointu;
 - draft refinement EMP-009: formalne mapowanie concurrency evidence EMP-003/EMP-004, standard deterministyczności i `make emp009-refinement-check`; wskazane trzy pozostałe exact assertions przed closeoutem;
 - formalnie zaakceptowany refinement EMP-009: przyszły checkpoint jest ograniczony do trzech exact assertions w istniejących testach i implementacyjnego checkera, bez JaCoCo, API ani zmian produkcyjnych;
 - rozpoczęto EMP-009 wyłącznie w zaakceptowanym zakresie trzech exact assertions i checkera; evidence pozostaje `PARTIAL` do pełnego gate;

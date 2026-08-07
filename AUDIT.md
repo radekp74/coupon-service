@@ -121,6 +121,10 @@ Minimalna implementacja zmieniła wyłącznie istniejące testy współbieżnoś
 
 Pełne `./mvnw -B -ntp clean verify` zakończyło się sukcesem: 60 testów unit i 22 integration, DocLint 0 błędów (42 istniejące ostrzeżenia). Pełne `make verify` przeszło z własnym projektem Compose i dynamicznym loopback `127.0.0.1:55006`; health, canonical OpenAPI i Swagger UI przeszły, a stack został usunięty. To jest evidence dla `EMP-009 = DONE_AND_VERIFIED`; nie zmienia historii remediation EMP-004.
 
+## Accepted refinement EMP-008
+
+Aktualny audyt po remediation EMP-004 i closeoucie EMP-009 potwierdza 60 unit i 22 integration tests z realnym evidence domeny, GeoIP/WireMock, PostgreSQL/Flyway, HTTP, rollbacków, OpenAPI i runtime Docker. Nie ma skonfigurowanego JaCoCo ani zmierzonego LINE/BRANCH baseline’u. Radosław Piątek zaakceptował przyszłe JaCoCo `0.8.15`, globalne `LINE >= 80%` i `BRANCH >= 70%`, krytyczną grupę `75%/65%`, brak default exclusions, manualny review oraz finalny justified Javadoc budget <=5. `Coverage-Evidence` pozostaje `NOT_MEASURED`; refinement jest `ACCEPTED`, a implementation dozwolona, lecz `NOT_STARTED`.
+
 
 ## Refinement EMP-004
 

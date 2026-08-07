@@ -5,18 +5,18 @@ REST-owy serwis do tworzenia i bezpiecznego wykorzystywania kuponów rabatowych.
 
 ## Aktualny stan
 
-- **Checkpoint:** `0.0.18-emp-009-verified`
+- **Checkpoint:** `0.0.20-emp-008-refinement-accepted`
 - **Data stanu:** `2026-08-07`
 - **Termin oddania:** `2026-08-10`, koniec dnia
 - **EMP-000–EMP-003:** `DONE_AND_VERIFIED`
 - **EMP-007:** `DONE_AND_VERIFIED`
 - **EMP-006:** `DONE_AND_VERIFIED`
-- **Aktywne zadanie:** EMP-008 — refinement coverage/JaCoCo
+- **Aktywne zadanie:** EMP-008 — implementation coverage/JaCoCo
 - **Refinement EMP-006:** `ACCEPTED`
 - **Implementation EMP-006:** `DONE_AND_VERIFIED`
 - **EMP-004:** `DONE_AND_VERIFIED`; refinement i implementation `DONE_AND_VERIFIED`
 - **EMP-005:** `MERGED_INTO_EMP-004`; user-once pozostaje obowiązkowym invariantem i evidence EMP-004
-- **EMP-008:** `PLANNED`; JaCoCo i coverage są poza tym checkpointem
+- **EMP-008:** `READY`, refinement `ACCEPTED`; implementation `NOT_STARTED`, implementation allowed `YES`; JaCoCo i coverage evidence pozostają `NOT_MEASURED`
 - **EMP-009:** `DONE_AND_VERIFIED`, refinement `ACCEPTED`; evidence `COMPLETE`, implementation `DONE_AND_VERIFIED`
 - **Kod biznesowy:** `CREATE_COUPON_DONE_AND_VERIFIED`
 - **OpenAPI/Swagger UI:** `DONE_AND_VERIFIED`
@@ -96,6 +96,7 @@ make emp004-refinement-check
 make emp006-refinement-check
 make emp006-check
 make emp007-check
+make emp008-refinement-check
 make emp009-refinement-check
 make emp009-check
 ```
@@ -116,7 +117,7 @@ Swagger UI:       http://localhost:18080/swagger-ui
 OpenAPI YAML:     http://localhost:18080/openapi.yaml
 ```
 
-Swagger UI korzysta bezpośrednio z wersjonowanego `docs/api/openapi.yaml`. Tester może przejrzeć istniejący endpoint, requesty, odpowiedzi, walidację i przykłady. Specyfikacja opisuje tylko endpointy rzeczywiście zaimplementowane. Ewentualny generated `/v3/api-docs` jest jedynie diagnostycznym widokiem runtime i nie zastępuje wersjonowanego kontraktu. Redemption i GeoIP nie są jeszcze zaimplementowane.
+Swagger UI korzysta bezpośrednio z wersjonowanego `docs/api/openapi.yaml`. Tester może przejrzeć istniejące endpointy, requesty, odpowiedzi, walidację i przykłady. Specyfikacja opisuje tylko endpointy rzeczywiście zaimplementowane. Ewentualny generated `/v3/api-docs` jest jedynie diagnostycznym widokiem runtime i nie zastępuje wersjonowanego kontraktu. Redemption oraz server-side GeoIP są zaimplementowane; EMP-008 nie zmienia API.
 
 ## Docker na macOS
 

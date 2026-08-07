@@ -2,8 +2,8 @@
 
 - **Data:** 2026-08-07
 - **Termin:** 2026-08-10, koniec dnia
-- **Faza:** `CONCURRENCY_EVIDENCE_DONE_AND_VERIFIED`
-- **Active task:** `EMP-008 — refinement coverage/JaCoCo`
+- **Faza:** `COVERAGE_QUALITY_REFINEMENT_ACCEPTED`
+- **Active task:** `EMP-008 — implementation coverage/JaCoCo`
 - **EMP-004 refinement:** `ACCEPTED`
 - **Implementation EMP-004:** `DONE_AND_VERIFIED`; verification remediation `COMPLETED`
 - **Implementation allowed:** `YES` dla `EMP-004` na podstawie accepted własnego refinementu
@@ -13,7 +13,7 @@
 - **Implementation EMP-006:** `DONE_AND_VERIFIED`
 - **Implementation allowed EMP-006:** `YES`
 - **EMP-007:** `DONE_AND_VERIFIED`
-- **EMP-008:** `PLANNED`; JaCoCo i warning budget pozostają poza aktywnym scope
+- **EMP-008:** `READY`; refinement `ACCEPTED`, JaCoCo `NOT_CONFIGURED`, coverage evidence `NOT_MEASURED`, implementation `NOT_STARTED`, implementation allowed `YES`
 - **EMP-009:** `DONE_AND_VERIFIED`; refinement `ACCEPTED`, evidence `COMPLETE`, implementation `DONE_AND_VERIFIED`, implementation allowed `YES`
 - **Kod aplikacji:** create coupon, Client IP/GeoIP i transactional redemption są zaimplementowane oraz lokalnie zweryfikowane
 - **OpenAPI/Swagger UI:** canonical `/openapi.yaml` zawiera `createCoupon` i `redeemCoupon`; Swagger UI używa tej specyfikacji
@@ -58,8 +58,8 @@ Implementacja już dostarczyła:
 
 ## Następny krok
 
-EMP-008 — refinement coverage/JaCoCo. EMP-009 zakończyło ograniczony scope: exact 90 exhausted, 10 unikalnych userId, dokładnie jeden last-slot user oraz checker; pełny gate potwierdził evidence `COMPLETE`.
+EMP-008 — implementation coverage/JaCoCo. Zaakceptowany scope obejmuje JaCoCo 0.8.15, future global 80/70 i critical 75/65, report-driven test remediation oraz Javadoc warning policy; nie oznacza jeszcze zmierzonego coverage.
 
 ## Blokery
 
-Brak blockerów. EMP-008 pozostaje `PLANNED` do własnego refinementu; EMP-009 jest `DONE_AND_VERIFIED`.
+Brak blokera technicznego. EMP-008 ma formalnie zaakceptowane decyzje właściciela; implementation checkpoint musi najpierw wygenerować realny raport i nie może zmienić progów ani exclusions bez amendmentu. EMP-009 jest `DONE_AND_VERIFIED`.

@@ -32,6 +32,7 @@
 | R-026 | MEDIUM | OPEN | retry po utracie 201 jest mylony z nowym użyciem | stabilny 409 `COUPON_ALREADY_REDEEMED`, jawny brak idempotency key | EMP-004/011 |
 | R-027 | MEDIUM | OPEN | kontrakt UserId rozchodzi się między EMP-001, aplikacją i V1 | zaakceptowany amendment EMP-001 zamraża `^[!-~]{1,128}$` bez trimowania/normalizacji; implementacja EMP-004 musi dodać zgodne Bean Validation, PostgreSQL `CHECK`, OpenAPI i testy | EMP-004 implementation evidence |
 | R-028 | MEDIUM | MITIGATED | formalne concurrency evidence może nie klasyfikować wszystkich wyników albo stanów końcowych | EMP-009 sprawdza exact 90 `COUPON_EXHAUSTED`, 10 unikalnych userId i dokładnie jednego last-slot usera; checker + pełny gate | EMP-009 verified evidence |
+| R-029 | MEDIUM | OPEN | brak mierzalnego gate coverage może ukryć niepokryte gałęzie mimo silnego evidence integration | accepted EMP-008 zamraża JaCoCo 0.8.15, global 80/70, critical 75/65, brak default exclusions i manualny missed-branch review | EMP-008 implementation + realny coverage evidence |
 
 ## Zasada statusu
 

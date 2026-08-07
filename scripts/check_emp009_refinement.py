@@ -106,8 +106,8 @@ if not any(f"| EMP-009 | EMP-001 | P0 | {status} | EMP-009 |" in backlog for sta
     errors.append("EMP-009 backlog must reference its own refinement in an allowed status")
 if state and state.group(1) == "DRAFT" and "Active task:** `EMP-009 — refinement deterministycznego concurrency evidence`" not in current:
     errors.append("draft current status must identify EMP-009 refinement as active")
-if "EMP-008" not in backlog or "| EMP-008 | EMP-001 | P0 | PLANNED |" not in backlog:
-    errors.append("EMP-008 must remain PLANNED")
+if "EMP-008" not in backlog:
+    errors.append("EMP-008 must remain present in the backlog")
 if list(ROOT.rglob("CODEX_PROMPT.md")):
     errors.append("forbidden CODEX_PROMPT.md")
 if errors:

@@ -116,12 +116,13 @@ WireMock:
 
 EMP-009 jest `DONE_AND_VERIFIED` i nie stworzył nowych scenariuszy biznesowych. Formalnie mapuje `CreateCouponApiIT.concurrentCaseVariantsProduceExactlyOneCreatedCoupon` oraz metody concurrency `CouponRedemptionApiIT`; 100/10 klasyfikuje 90 odpowiedzi po publicznym `code=COUPON_EXHAUSTED` i sprawdza 10 unikalnych userId, a last-slot potwierdza zapis dokładnie jednego konkurenta. `make emp009-check` analizuje to evidence, a pełny gate uruchamia checker. JaCoCo i 42 warnings Javadoc są scope EMP-008, nie EMP-009.
 
-## Pokrycie
+## Pokrycie — accepted refinement EMP-008
 
-- JaCoCo line minimum 80%;
-- JaCoCo branch minimum 70%;
-- krytyczne invariants muszą mieć jawne scenariusze nawet po osiągnięciu progu;
-- excluded mogą być tylko trivial configuration/generated OpenAPI, z uzasadnieniem.
+JaCoCo nie jest jeszcze skonfigurowane, więc `Coverage-Evidence` jest `NOT_MEASURED`. Właściciel zaakceptował przyszły gate `org.jacoco:jacoco-maven-plugin:0.8.15`: globalnie `LINE >= 80%` i `BRANCH >= 70%` oraz dla jednej krytycznej grupy logicznej `LINE >= 75%` i `BRANCH >= 65%`. Te wartości nie są jeszcze wynikiem projektu ani aktywnym thresholdem.
+
+Przyszły `verify` ma generować `target/site/jacoco/index.html` i `target/site/jacoco/jacoco.xml`, agregować Surefire/Failsafe i failować przy regresji. Report nie trafia do Git ani exportu; closeout wymaga manualnego review missed branches. Na początku nie ma exclusions — także dla bootstrap, configuration, DTO, exceptions i records. Domain/application/persistence/security logic nie mogą zostać wyłączone, a nowy test musi udowadniać zachowanie, nie podnosić sam procent.
+
+DocLint pozostaje 0 errors. EMP-008 naprawia 18 kategorii A i indywidualnie rozstrzyga 19 kategorii D; po remediation pozostaje najwyżej 5 jawnie uzasadnionych warnings, przy `new warnings = 0`. PIT pozostaje `OUT_OF_SCOPE`.
 
 ## Bramka
 
